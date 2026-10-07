@@ -10,3 +10,5 @@ work/
 .env.*
 dist-parquet/
 dist-duckdb-sink/
+
+dist-extensions/

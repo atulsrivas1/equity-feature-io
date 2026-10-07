@@ -1,0 +1,43 @@
+name: Third-party extension checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  extensions:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: component
+      - uses: actions/checkout@v4
+        with:
+          repository: atulsrivas1/equity-features
+          ref: 7a6db8c2317de1ee9dd9116e0897cbf6445e359e
+          path: core
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-dev.txt
+        working-directory: component
+      - run: python -m pip install --no-deps --no-build-isolation -e ../core/packages/contracts -e ../core/packages/features -e packages/io-contracts -e packages/io-sdk -e examples/factory_consumer -e examples/third_party
+        working-directory: component
+      - run: python -m mypy --strict examples/third_party/src
+        working-directory: component
+      - run: python -c "from pathlib import Path; Path('work').mkdir(exist_ok=True)"
+        working-directory: component
+      - run: python tests/extensions/test_extensions.py --report-json work/extensions-development.json
+        working-directory: component
+      - run: python tools/build_extensions.py --core-root ../core
+        working-directory: component
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extensions-${{ github.sha }}-${{ matrix.os }}
+          path: component/dist-extensions/
+          retention-days: 30
+          if-no-files-found: error

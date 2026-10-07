@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "equity-feature-example-extensions"
+version = "0.1.0a0"
+description = "Synthetic public-protocol source and in-memory sink tutorial"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = ["equity-feature-contracts==0.0.4a4", "equity-feature-io-sdk==0.1.0a2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+equity_feature_example_extensions = ["py.typed"]
