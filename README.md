@@ -7,3 +7,5 @@ Canonical scope: [EQ-121](https://github.com/atulsrivas1/equity-features/issues/
 CPython3.12 x64 Windows/Linux only. Experimental version0.1.0a0 foundations expose version markers; no unimplemented operation is advertised. See [build/install](docs/BUILD_DELIVERY.md), [compatibility](docs/COMPATIBILITY.md) and [continuity](docs/SESSION_HANDOFF.md). Code is Apache-2.0; data rights are separate. No registry release or stable tag.
 
 [Foundation source delivery evidence](docs/EQ121_DELIVERY.md) records reviewed heads/native artifact hashes; canonical issue278 records actual acceptance after main publication/readback.
+
+EQ122 extracts the compatible [DuckDB source adapter](docs/DUCKDB_MIGRATION.md), independently packaged without I/O SDK/workers; its current API/docs live here and canonical279 records actual delivery acceptance.

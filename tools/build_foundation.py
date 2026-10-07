@@ -88,6 +88,10 @@ def inspect(path, name):
     assert not any(p.endswith("/entry_points.txt") for p in files)
 
 
+def foundation_sources(root):
+    return [p for p in sorted((root / 'packages').iterdir()) if tomllib.loads((p / 'pyproject.toml').read_text(encoding='utf-8'))['project']['name'] in EXPECTED]
+
+
 def build(source, output):
     output.mkdir(parents=True, exist_ok=True)
     run(sys.executable, "-m", "build", "--no-isolation", "--outdir", output, source, env=dict(os.environ, SOURCE_DATE_EPOCH=str(EPOCH)))
@@ -164,10 +168,10 @@ def main():
             io_source = snapshot(io_root, dependency_commit["equity-feature-io"], stage / "io-source")
             for folder in ("io-contracts", "io-sdk"):
                 build(io_source / "packages" / folder, dependencies)
-        packages = [tomllib.loads((p / "pyproject.toml").read_text(encoding="utf-8"))["project"]["name"] for p in sorted((component_source / "packages").iterdir())]
+        packages = [tomllib.loads((p / "pyproject.toml").read_text(encoding="utf-8"))["project"]["name"] for p in foundation_sources(component_source)]
         first, repeat = stage / "first", stage / "repeat"
         for target in (first, repeat):
-            for source in sorted((component_source / "packages").iterdir()):
+            for source in foundation_sources(component_source):
                 build(source, target)
         artifacts = sorted(first.iterdir())
         assert len(artifacts) == 2 * len(packages)

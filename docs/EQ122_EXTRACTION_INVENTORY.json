@@ -1,0 +1,34 @@
+{
+  "allowed_runtime_differences": {
+    "packages/duckdb/src/equity_feature_duckdb/__init__.py": "package version .a7 -> .a8",
+    "packages/duckdb/src/equity_feature_duckdb/evidence.py": "receipt adapter_version .a7 -> .a8"
+  },
+  "canonical_baseline": "2cd51cd35c0a3081f88e1752c7c1c41ffe0e62af",
+  "mathematical_changes": false,
+  "schema": "extraction1",
+  "source_sha256_utf8_git_bytes": {
+    "benchmarks/duckdb_read.py": "853cc142559f0ee9320505e003d734d9f2d635b3c5b47b141860323a38f5c348",
+    "benchmarks/resource_behavior.py": "47b19ccb282b7d99d84d342166ea0c3763b7afb0df94fb25c66c1877109674b0",
+    "benchmarks/run_baseline.py": "a481f45163d3a0061de24920357a168a57d08690aa47394b0e7e288177b12579",
+    "examples/duckdb_conformance.py": "b29a1a46f39ff4a28823e0b3375968d7a229879aa63854dbf20f56751f4940f8",
+    "packages/duckdb/LICENSE": "c95bae1d1ce0235ecccd3560b772ec1efb97f348a79f0fbe0a634f0c2ccefe2c",
+    "packages/duckdb/README.md": "20da28b27970a73674b51ed707a4895345ebdd570c50139938b06ac683d16e0a",
+    "packages/duckdb/pyproject.toml": "b1d0ce2b8257602bcd2c93f6f0cb23e40e7f196bccddbbf23a4faaa9048dea0d",
+    "packages/duckdb/src/equity_feature_duckdb/__init__.py": "751e203547b5057018e0f97bfe4545ebf5548e810e5a2ac801f1fd946d399954",
+    "packages/duckdb/src/equity_feature_duckdb/evidence.py": "76d4351a342e3bd0a68fc1811238b4860bd2ce0b6ef41f7aa4cde12037cfa305",
+    "packages/duckdb/src/equity_feature_duckdb/governance.py": "b150d2a36ec998742e71d2471eccaef0491827e22549e3c4eb38a3379854b638",
+    "packages/duckdb/src/equity_feature_duckdb/mapping.py": "eb0a3343b65816fd860e5802e29269a389a14711f2f7c102785f344266117c16",
+    "packages/duckdb/src/equity_feature_duckdb/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "packages/duckdb/src/equity_feature_duckdb/reader.py": "e2f5f584bdab01e46da95fb9c71148a1a4e6a2fd35eb50325adf3a26d8cc079e",
+    "packages/duckdb/src/equity_feature_duckdb/resolver.py": "c5ac77632bcd413f7518fbcea54dce6df43987706609134abc1202a87d1807f9",
+    "requirements-duckdb.txt": "74939c92d0adc877c3c237bdb13018e0874d7533ff5e1ceeac64ba93c16bc446",
+    "tests/duckdb/test_evidence.py": "94d0897b7b28da296d1df905b9e9ed801041baddade7751bd82d19cd47c26473",
+    "tests/duckdb/test_governance.py": "ee2dd91ee8df365bc0509e7ce6ebbd3dc17e69ea0bf5bd8dfa0e0e7b727a48a7",
+    "tests/duckdb/test_mapping.py": "5e5d799e65947324a2f48663997626a1ff71cee2e55984bb0ba3e03bf323e8c5",
+    "tests/duckdb/test_native_timestamps.py": "8cae9b580e95e3fa289b3ed132ab443bb2d0ee4c8c55b428f79f98f57f914a9e",
+    "tests/duckdb/test_packaging.py": "875f392dfbf1d347a70944f4fab03d0018c7935001f8fa27329185cece616209",
+    "tests/duckdb/test_reader.py": "6fdc8ea3f26aec7afc59427be0fe647fd7ee18d03765b82c9c5b0d94f5ce678c",
+    "tests/duckdb/test_resolver.py": "f5bf29fba7f8bb1bbd5541113d7da344fb8b95213342470966150016d8be2097",
+    "tests/duckdb/test_sdk_conformance.py": "bcef9a51dbd6086efd5fa13ee0b9fbc9f304ec16cdc17de14fcd9147a8b70662"
+  }
+}

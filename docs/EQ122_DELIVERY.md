@@ -1,0 +1,11 @@
+# EQ122 extraction evidence
+
+Canonical [issue279](https://github.com/atulsrivas1/equity-features/issues/279); pre-code [core PR292](https://github.com/atulsrivas1/equity-features/pull/292). This document records extraction preparation and source checks. Actual final-head/native/installed/main acceptance is pending.
+
+The [inventory](EQ122_EXTRACTION_INVENTORY.json) binds accepted coremain2cd51cd Git bytes. `tools/check_extraction.py --core-root <canonical-checkout>` verifies19 runtime/fixture/measurement files, allowing only package0.1.0a8, receipt adapter_version0.1.0a8 and the corresponding expected fixture stamp. Resolver/mapping/governance/reader, all other public fixtures, conformance and measurement code remain byte-identical. Distribution repository metadata and current ownership documentation move to I/O. Canonical contracts/features remain0.0.4a4; DuckDB1.5.6/NumPy2.2.6 remain pinned.
+
+Development checks on CPython3.12.10 WindowsAMD64:94tests pass in31.434s; strict typing7source/example files passes; committed Git archive provenance regression passes. Fresh artifact builds and final review remain required. The foundation builder now selects only the declared foundation distributions; its independent fixture verifies DuckDB is excluded.
+
+`tools/build_duckdb.py --core-root <canonical-checkout>` builds from committed Git archives, repeats6archives, installs actual wheels/sdists into fresh environments, executes94cases plus30SDK/16independent numerical checks, strict typing and core byte invariance. Optional CI executes these gates natively on Windows/Linux. Foundation CI retains backend-free installation. `tools/check_compatibility.py` compares actual installed a7/a8 readers against identical synthetic catalog/Parquet files, canonical batches/mapping/provenance/receipt fields/non-timing metrics/error behavior, excluding only declared version stamps and receipt digest. Reports disclose producer/execution bindings; no private/full-corpus qualification is implied.
+
+The core active adapter is retained until actual standalone publication and readback pass. [Migration](DUCKDB_MIGRATION.md) preserves imports, behavior, historical R4 receipts and finite-retention experimental channel limits. No registry release, stable tag, source-store migration or worker operation is introduced.
