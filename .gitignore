@@ -12,3 +12,4 @@ dist-parquet/
 dist-duckdb-sink/
 
 dist-extensions/
+dist-matrix/

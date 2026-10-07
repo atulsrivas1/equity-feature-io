@@ -1,3 +1,11 @@
+## EQ129 supported combination under qualification
+
+The concrete [canonical matrix plan](https://github.com/atulsrivas1/equity-features/blob/codex/eq-129-compatibility-matrix/docs/stories/EQ-129_PLAN.md) freezes core/contracts0.0.4a4, IO contracts/SDK0.1.0a2, standalone DuckDBsource0.1.0a8, both sinks0.1.0a0, exampleextensions0.1.0a0 and workers skeleton0.1.0a1. Optional engines are DuckDB1.5.6/NumPy2.2.6/PyArrow20.0.0, explicitly installed only for full composition. Core works independently; extension needs only canonical contracts+SDK. Workers.a1 pins SDK.a2 and exports version only, no commands/runtime. Historical workers.a0/SDK.a0 remains separately scoped; forcing oldworker.a0 with newSDK.a2 or IOcontracts.a1 with SDK.a2 must fail actual resolver/pipcheck. This does not certify untested versions/platforms.
+
+Migration: consumers keep original pure contracts/features imports. Standalone acquisition imports equity_feature_duckdb; output implementations equity_feature_parquet/equity_feature_duckdb_sink and custom extension examples remain explicit consumer-selected dependencies. Never add I/O/workers to calculation requirements or rely on automatic registry discovery. Choose a complete declared artifact combination, run pip check, preserve canonical schema/algorithm/config/source/timing/units/nulls, and retain per-backend physical/resource/retention/rights limits. No private/provider/backend/source/math behavior is changed by matrix tests. No source/WAL-present/private rerun is claimed; accepted immutable private receipt bindings remain intact.
+
+Actual native/fresh-form matrix and separate final-head review/current artifact publication/readback remain pending. Old accepted story evidence below stays historical. This qualification does not implement R5 or authorize stable tags/registry/services/private generation.
+
 # Compatible DuckDB extraction — EQ122
 
 Canonical [issue279](https://github.com/atulsrivas1/equity-features/issues/279) and [pre-code plan](https://github.com/atulsrivas1/equity-features/blob/codex/eq-122-extract-duckdb/docs/stories/EQ-122_PLAN.md). Current source/API/tests/harness move from equity-features to this repository; original R4 Git history/receipts remain canonical. No provider data/store migration or source deletion.

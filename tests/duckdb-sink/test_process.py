@@ -3,6 +3,7 @@ import dataclasses
 import hashlib
 from importlib.metadata import version
 import json
+import os
 from pathlib import Path
 import platform
 import subprocess
@@ -10,6 +11,7 @@ import sys
 from tempfile import TemporaryDirectory
 import time
 import unittest
+import uuid
 
 from equity_feature_factory_fixture.publication_facts import synthetic_results
 from equity_feature_io_contracts import SinkRequirements
@@ -31,29 +33,81 @@ def envelope(facts=FACTS,**changes):
 class ProcessTests(unittest.TestCase):
     def setUp(self):
         self.temp=TemporaryDirectory();self.root=Path(self.temp.name)/'destination';self.children=[]
+        self.runtime_pids={};self.runtime_handles={};self.ownership_tokens={}
+        if sys.platform=='win32':
+            import ctypes
+            from ctypes import wintypes
+            self.kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+            self.kernel.OpenProcess.argtypes=(wintypes.DWORD,wintypes.BOOL,wintypes.DWORD);self.kernel.OpenProcess.restype=wintypes.HANDLE
+            self.kernel.WaitForSingleObject.argtypes=(wintypes.HANDLE,wintypes.DWORD);self.kernel.WaitForSingleObject.restype=wintypes.DWORD
+            self.kernel.TerminateProcess.argtypes=(wintypes.HANDLE,wintypes.UINT);self.kernel.TerminateProcess.restype=wintypes.BOOL
+            self.kernel.CloseHandle.argtypes=(wintypes.HANDLE,);self.kernel.CloseHandle.restype=wintypes.BOOL
 
     def stop(self,child):
-        if child.poll() is None:
-            child.terminate()
-            try:child.wait(timeout=10)
-            except subprocess.TimeoutExpired:
-                child.kill();child.wait(timeout=10)
-        for stream in (child.stdin,child.stdout,child.stderr):
-            if stream is not None:stream.close()
+        # Windows venv python.exe is a launcher: waiting its Popen handle does
+        # not establish that the interpreter holding the sink lease has exited.
+        runtime_handle=self.runtime_handles.pop(child,None)
+        kernel=self.kernel if sys.platform=='win32' else None
+        try:
+            if runtime_handle is not None:
+                terminated=kernel.TerminateProcess(runtime_handle,1)
+                if not terminated:
+                    self.assertEqual(kernel.WaitForSingleObject(runtime_handle,0),0,'failed termination only allowed for already-exited owned runtime')
+                self.assertEqual(kernel.WaitForSingleObject(runtime_handle,10000),0,'actual owned runtime must exit before storage observation')
+                # Its launcher now exits naturally; never close stdin to resume SQL.
+                child.wait(timeout=10)
+            elif child.poll() is None:
+                child.terminate()
+                try:child.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    child.kill();child.wait(timeout=10)
+        finally:
+            try:
+                if runtime_handle is not None:
+                    try:
+                        if kernel.WaitForSingleObject(runtime_handle,0)!=0:
+                            kernel.TerminateProcess(runtime_handle,1)
+                            self.assertEqual(kernel.WaitForSingleObject(runtime_handle,10000),0,'owned runtime cleanup must finish')
+                    finally:kernel.CloseHandle(runtime_handle)
+                if child.poll() is None:
+                    child.terminate()
+                    try:child.wait(timeout=10)
+                    except subprocess.TimeoutExpired:child.kill();child.wait(timeout=10)
+            finally:
+                for stream in (child.stdin,child.stdout,child.stderr):
+                    if stream is not None:stream.close()
 
     def tearDown(self):
-        for child in self.children:self.stop(child)
-        self.temp.cleanup()
+        try:
+            for child in self.children:
+                try:self.stop(child)
+                except Exception as error:self.addCleanup(self.fail,'owned child cleanup failed: '+repr(error))
+        finally:self.temp.cleanup()
 
     def child(self,phase,*,different=False):
         marker=Path(self.temp.name)/('checkpoint'+str(len(self.children))+'.json')
-        args=[sys.executable,'-I',str(CHILD),phase,str(self.root),str(marker)]
+        token=uuid.uuid4().hex
+        args=[sys.executable,'-I',str(CHILD),phase,str(self.root),str(marker),'--ownership-token',token]
         if different:args.append('--different')
         child=subprocess.Popen(args,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,encoding='utf-8')
         self.children.append(child)
+        self.ownership_tokens[child]=token
+        ownership=marker.with_suffix('.owner.json')
+        record=self.read_checkpoint(child,ownership)
+        self.runtime_pids[child]=record['runtime_pid']
+        if sys.platform=='win32':
+            handle=self.kernel.OpenProcess(0x100001,False,record['runtime_pid'])
+            self.assertTrue(handle,'controlled runtime handle required before startup acknowledgement')
+            self.runtime_handles[child]=handle
+        child.stdin.write('1');child.stdin.flush()
         return child,marker
 
     def checkpoint(self,child,marker):
+        record=self.read_checkpoint(child,marker)
+        self.assertEqual(record['runtime_pid'],self.runtime_pids[child])
+        return record
+
+    def read_checkpoint(self,child,marker):
         deadline=time.monotonic()+30
         while not marker.exists():
             if child.poll() is not None:
@@ -62,7 +116,12 @@ class ProcessTests(unittest.TestCase):
             time.sleep(.02)
         # The observer flushes its complete JSON before pausing.
         for _ in range(100):
-            try:return json.loads(marker.read_text(encoding='utf-8'))
+            try:
+                record=json.loads(marker.read_text(encoding='utf-8'))
+                self.assertEqual(record['ownership_token'],self.ownership_tokens[child])
+                self.assertIs(type(record['runtime_pid']),int);self.assertGreater(record['runtime_pid'],0)
+                self.assertNotEqual(record['runtime_pid'],os.getpid())
+                return record
             except json.JSONDecodeError:time.sleep(.01)
         self.fail('incomplete checkpoint')
 
@@ -172,7 +231,7 @@ if __name__=='__main__':
     result=unittest.main(exit=False).result
     if report is not None:
         report.write_text(json.dumps(dict(schema='duckdb-sink-process1',tests=result.testsRun,passed=result.wasSuccessful(),
-            installed_public_execution=installed,actual_owned_child_processes=True,python=platform.python_version(),
+            installed_public_execution=installed,actual_owned_child_processes=True,actual_runtime_exit_wait=True,controlled_ownership_nonce=True,ownership_before_storage=True,python=platform.python_version(),
             system=platform.system(),machine=platform.machine(),duckdb_sink=version('equity-feature-duckdb-sink'),duckdb=version('duckdb'),
             io_sdk=version('equity-feature-io-sdk'),child_sha256=hashlib.sha256(CHILD.read_bytes()).hexdigest(),
             test_suite_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),

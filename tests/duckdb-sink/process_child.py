@@ -2,9 +2,21 @@
 import argparse
 import dataclasses
 import json
+import os
 from pathlib import Path
 import platform
 import sys
+
+parser=argparse.ArgumentParser()
+parser.add_argument('phase',choices=('reservation','partial','components','before_manifest','after_manifest','publish','source_wal'))
+parser.add_argument('root',type=Path);parser.add_argument('checkpoint',type=Path)
+parser.add_argument('--different',action='store_true')
+parser.add_argument('--ownership-token',required=True);args=parser.parse_args()
+ownership=args.checkpoint.with_suffix('.owner.json')
+ownership.write_text(json.dumps(dict(runtime_pid=os.getpid(),ownership_token=args.ownership_token)),encoding='utf-8')
+# No backend imports or storage access before the parent owns our process handle.
+# EOF or any other input during failed startup cannot resume the SQL workload.
+if sys.stdin.read(1)!='1':sys.exit(2)
 
 from equity_feature_factory_fixture.publication_facts import synthetic_results
 from equity_feature_io_contracts.publication import CompletionReceipt,SinkError
@@ -13,10 +25,6 @@ from equity_feature_io_sdk.publication import prepare_publication
 from equity_feature_duckdb_sink import DuckDBSink
 from equity_feature_duckdb_sink.sink import DEFAULT_LIMITS
 
-parser=argparse.ArgumentParser()
-parser.add_argument('phase',choices=('reservation','partial','components','before_manifest','after_manifest','publish','source_wal'))
-parser.add_argument('root',type=Path);parser.add_argument('checkpoint',type=Path)
-parser.add_argument('--different',action='store_true');args=parser.parse_args()
 facts=list(synthetic_results())
 if args.different:
     facts[1]=dataclasses.replace(facts[1],values=(dataclasses.replace(facts[1].values[0],values=(-(2**63)+1,)),))
@@ -25,7 +33,7 @@ envelope=prepare_publication(facts,destination_scope='synthetic-process',generat
 
 
 def pause(session):
-    args.checkpoint.write_text(json.dumps(dict(phase=args.phase,key=idempotency_key(envelope.identity),
+    args.checkpoint.write_text(json.dumps(dict(phase=args.phase,runtime_pid=os.getpid(),ownership_token=args.ownership_token,key=idempotency_key(envelope.identity),
         attempt_id=session.attempt_id,python=platform.python_version(),system=platform.system())),encoding='utf-8')
     sys.stdin.read(1)
 
@@ -49,7 +57,7 @@ try:
         connection=connect(str(args.root))
         connection.execute('CREATE TABLE source_data(id BIGINT)')
         connection.execute('INSERT INTO source_data VALUES (1)')
-        args.checkpoint.write_text(json.dumps(dict(phase='source_wal')),encoding='utf-8')
+        args.checkpoint.write_text(json.dumps(dict(phase='source_wal',runtime_pid=os.getpid(),ownership_token=args.ownership_token)),encoding='utf-8')
         sys.stdin.read(1)
         connection.close()
         sys.exit(0)
