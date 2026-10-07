@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "equity-feature-io-sdk"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "Typed explicit equity I/O factory composition"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{name = "Equity Features contributors"}]
-dependencies = ["equity-feature-io-contracts==0.1.0a1"]
+dependencies = ["equity-feature-io-contracts==0.1.0a2"]
 
 [project.urls]
 Repository = "https://github.com/atulsrivas1/equity-feature-io"

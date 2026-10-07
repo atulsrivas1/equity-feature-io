@@ -20,7 +20,7 @@ EPOCH = 1700000000
 CORE_COMMIT = "7a6db8c2317de1ee9dd9116e0897cbf6445e359e"
 EXPECTED = {
     "equity-feature-io-contracts": ["equity-feature-contracts==0.0.4a4"],
-    "equity-feature-io-sdk": ["equity-feature-io-contracts==0.1.0a1"],
+    "equity-feature-io-sdk": ["equity-feature-io-contracts==0.1.0a2"],
     "equity-feature-workers": ["equity-feature-io-sdk==0.1.0a0"],
 }
 
@@ -120,7 +120,7 @@ print(json.dumps(result,sort_keys=True))
     return json.loads(subprocess.check_output([str(py), "-I", "-c", code], cwd=cwd, text=True))
 
 
-def qualify(dependencies, artifacts, form, packages, probe, factory_probe):
+def qualify(dependencies, artifacts, form, packages, probe, factory_probe, publication_probe):
     with tempfile.TemporaryDirectory(prefix="install-", dir=ROOT / "work") as temporary:
         location = Path(temporary)
         run(sys.executable, "-m", "venv", location)
@@ -138,8 +138,16 @@ def qualify(dependencies, artifacts, form, packages, probe, factory_probe):
         run(py, "-I", factory_probe, "--installed", "--report-json", factory_report, cwd=location)
         factories = json.loads(factory_report.read_text(encoding="utf-8"))
         assert factories["synthetic_factory_tests"] == 21 and factories["installed_public_execution"]
-        assert factories["io_contracts"] == factories["io_sdk"] == "0.1.0a1" and factories["consumer"] == "0.1.0a0"
+        assert factories["io_contracts"] == factories["io_sdk"] == "0.1.0a2" and factories["consumer"] == "0.1.0a1"
         assert factories["test_suite_sha256"] == sha(factory_probe)
+        publication_report = location / "publication-report.json"
+        run(py, "-I", publication_probe, "--installed", "--report-json", publication_report, cwd=location)
+        publications = json.loads(publication_report.read_text(encoding="utf-8"))
+        assert publications["publication_tests"] == 25 and publications["installed_public_execution"]
+        assert publications["io_contracts"] == publications["io_sdk"] == "0.1.0a2" and publications["consumer"] == "0.1.0a1"
+        assert publications["test_suite_sha256"] == sha(publication_probe)
+        assert publications["hand_golden_sha256"] == sha(publication_probe.with_name("publication_goldens.json"))
+        assert not publications["backend_durability_certification"] and not publications["private_execution"]
         after = fingerprint(py, location)
         assert before == after, "Companion install/import changed canonical core"
         for name in packages:
@@ -148,6 +156,9 @@ def qualify(dependencies, artifacts, form, packages, probe, factory_probe):
         caller = location / "caller.py"
         caller.write_text('''from equity_feature_factory_fixture import SourceFactory, SyntheticSource
 from equity_feature_io_sdk import SourceRegistry
+from equity_feature_io_contracts import ResultSink
+from equity_feature_factory_fixture.publication import MemorySink
+sink: ResultSink = MemorySink()
 r: SourceRegistry[SyntheticSource] = SourceRegistry()
 r.register("custom.source", SourceFactory())
 ''', encoding="utf-8")
@@ -162,7 +173,7 @@ SinkRequirements(max_results="wrong")
         rejected = subprocess.run([str(py), "-I", "-m", "mypy", "--strict", str(caller)], cwd=location, text=True, encoding="utf-8", capture_output=True)
         assert rejected.returncode == 1 and rejected.stdout.count("error:") == 2, rejected.stdout
         fp = hashlib.sha256(json.dumps(before, sort_keys=True).encode()).hexdigest()
-        return {"form": form, "packages": packages, "core_before_sha256": fp, "core_after_sha256": fp, "installed_typing": True, "inward_dependencies": True, "source_imports": False, "independent_bar_goldens": True, "factories": factories, "external_positive_typing": True, "external_rejected_invalid_calls": 2}
+        return {"form": form, "packages": packages, "core_before_sha256": fp, "core_after_sha256": fp, "installed_typing": True, "inward_dependencies": True, "source_imports": False, "independent_bar_goldens": True, "factories": factories, "publications": publications, "external_positive_typing": True, "external_rejected_invalid_calls": 2}
 
 
 def main():
@@ -205,12 +216,12 @@ def main():
         for path in artifacts:
             assert sha(path) == sha(repeat / path.name), "Non-repeatable archive: " + path.name
             name = next(n for n in packages + ["equity-feature-factory-fixture"] if path.name.startswith(n.replace("-", "_") + "-"))
-            inspect(path, name, ["equity-feature-io-sdk==0.1.0a1"] if name == "equity-feature-factory-fixture" else None)
+            inspect(path, name, ["equity-feature-io-sdk==0.1.0a2"] if name == "equity-feature-factory-fixture" else None)
         deps = sorted(dependencies.glob("*.whl"))
         reports = []
         for form in ("wheel", "sdist"):
             selected = [p for p in artifacts if (p.suffix == ".whl") == (form == "wheel")]
-            reports.append(qualify(deps, selected, form, packages, component_source / "tests/probe_foundation.py", component_source / "tests/test_factories.py"))
+            reports.append(qualify(deps, selected, form, packages, component_source / "tests/probe_foundation.py", component_source / "tests/test_factories.py", component_source / "tests/test_publication.py"))
         import shutil
         assert not list(output.glob("*.whl")) and not list(output.glob("*.tar.gz")), "Use a fresh dist directory"
         for path in artifacts + deps:
@@ -218,7 +229,7 @@ def main():
         assert git(ROOT, "rev-parse", "HEAD") == component_commit, "Source head changed during qualification"
         assert not git(ROOT, "status", "--porcelain", "--", *source_paths), "Source changed during qualification"
         assert sha(Path(__file__)) == builder_sha and sha(ROOT / "tests/probe_foundation.py") == probe_sha
-        record = {"schema": "foundation2", "commit": component_commit, "epoch": EPOCH, "python": platform.python_version(), "system": platform.system(), "machine": platform.machine(), "dependency_commits": dependency_commit, "artifacts": {p.name: sha(p) for p in artifacts}, "dependency_artifacts": {p.name: sha(p) for p in deps}, "probe_sha256": probe_sha, "builder_sha256": builder_sha, "factory_probe_sha256": sha(component_source / "tests/test_factories.py"), "forms": reports}
+        record = {"schema": "foundation3", "commit": component_commit, "epoch": EPOCH, "python": platform.python_version(), "system": platform.system(), "machine": platform.machine(), "dependency_commits": dependency_commit, "artifacts": {p.name: sha(p) for p in artifacts}, "dependency_artifacts": {p.name: sha(p) for p in deps}, "probe_sha256": probe_sha, "builder_sha256": builder_sha, "factory_probe_sha256": sha(component_source / "tests/test_factories.py"), "publication_probe_sha256": sha(component_source / "tests/test_publication.py"), "publication_goldens_sha256": sha(component_source / "tests/publication_goldens.json"), "forms": reports}
         (output / "manifest.json").write_text(json.dumps(record, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     print("Actual repeat artifacts, both fresh forms, inward graph and independent goldens PASS")
 
