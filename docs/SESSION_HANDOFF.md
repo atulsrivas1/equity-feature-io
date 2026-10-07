@@ -1,3 +1,11 @@
+# EQ124 explicit factories implementation
+
+Canonical281 In progress under core pre-code61b08d9/PR294 after accepted EQ123 (Released6029468862/postread6029469345). Contracts/SDK.a1 implement typed factory/config/credential/error/capability views and explicit per-run registries/direct admission; existing canonical inputs/results/mathematics and DuckDB.a8 unchanged. Synthetic installed consumer fixture is factory qualification, not a production sink. Localdev23tests (21factory+2provenance), strict5files and accepted design29/4closure/manualgolden checks pass. No release/artifact/backend/private acceptance yet.
+
+Updated foundation2 captures committed source/probe/test/consumer materialization, repeats six archives, fresh both forms/21factory cases/publictyping/negativecalls/core invariance; source-changing build must abort. First design of count22 corrected to actually executed21factory cases (developmenttotal23includes2provenance); no extra test evidence invented. Next freeze component source, current native CI/current actual packages, separate final-head review/findings/currentheadcoverage, finaldocs/source/main artifacts/report/channel/owner/hash readback, canonical Released/Done. Worker.a0 oldpair remains skeleton; currentcompositionalignment remainsEQ129. EQ125+ gated, STOPbeforeR5.
+
+Earlier snapshots below preserve historical status; live canonical Project is authority.
+
 # EQ123 contract specification preparation
 
 Canonical issue280 is In progress after verified EQ121/EQ122 Done and pre-implementation core plan052cc25/PR293. This companion change will freeze normative source/sink APIs and publication encoding/identity/lifecycle/capabilities/errors, with hand-worked vectors. Runtime publication types/conformance remain EQ125; factories EQ124. Existing canonical inputs/results, pure mathematics, current io-contracts/SDK foundations and DuckDB.a8 source remain unchanged.

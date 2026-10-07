@@ -25,6 +25,10 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -r requirements-dev.txt
         working-directory: component
+      - run: python -m pip install --no-deps --no-build-isolation -e ../core/packages/contracts -e packages/io-contracts -e packages/io-sdk -e examples/factory_consumer
+        working-directory: component
+      - run: python -m mypy --strict packages/io-contracts/src packages/io-sdk/src examples/factory_consumer/src
+        working-directory: component
       - run: python -m unittest discover -s tests -p test_*.py
         working-directory: component
       - run: python tools/check_io_spec.py --core-root ../core

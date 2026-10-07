@@ -31,12 +31,13 @@ def core_check():
     finally: sys.meta_path.remove(deny)
 
 core_check()
-expected={'equity-feature-io-contracts':['equity-feature-contracts==0.0.4a4'],'equity-feature-io-sdk':['equity-feature-io-contracts==0.1.0a0'],'equity-feature-workers':['equity-feature-io-sdk==0.1.0a0']}
+expected={'equity-feature-io-contracts':['equity-feature-contracts==0.0.4a4'],'equity-feature-io-sdk':['equity-feature-io-contracts==0.1.0a1'],'equity-feature-workers':['equity-feature-io-sdk==0.1.0a0']}
 for name in sys.argv[1:]:
     if name=='core':continue
     module=importlib.import_module(name.replace('-','_'))
-    assert module.__version__ == '0.1.0a0'
-    assert module.__all__ == ['__version__']
+    assert module.__version__ == ('0.1.0a0' if name == 'equity-feature-workers' else '0.1.0a1')
+    expected_exports = {'equity-feature-io-contracts': ['__version__','ComponentFactory','ConfigValue','CredentialProvider','FactoryError','FactoryErrorCode','PublicConfig','SinkCandidate','SinkCapabilitiesView','SinkRequirements','SourceCandidate'], 'equity-feature-io-sdk': ['__version__','SinkRegistry','SourceRegistry','admit_sink','admit_source'], 'equity-feature-workers': ['__version__']}
+    assert module.__all__ == expected_exports[name]
     assert 'site-packages' in Path(module.__file__).resolve().parts
     assert sorted(distribution(name).requires or []) == sorted(expected[name])
     assert not distribution(name).entry_points

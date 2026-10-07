@@ -1,3 +1,3 @@
 # equity-feature-io-contracts
 
-Experimental0.1.0a0 typed version-marker foundation. Canonical EQ121 tracks actual review/build/release acceptance. No operations implemented.
+Experimental0.1.0a1: Typed factory/configuration/credential/error and structural capability interfaces. Canonical [EQ124](https://github.com/atulsrivas1/equity-features/issues/281) tracks actual review/build/release acceptance. [Public factory API](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/FACTORIES.md) describes immutable scalar configuration, separate credential providers and exact capability/version admission. No import-time plugin registration, default global registry, acquisition or sink publication operation. Full runtime sink lifecycle/codec/conformance remainsEQ125; backend guarantees require separate qualification. Existing canonical inputs/results/mathematics stay unchanged.
