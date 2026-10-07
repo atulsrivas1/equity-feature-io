@@ -152,6 +152,16 @@ class DuckDBSink:
         os.rename(temporary, self._path)
 
     def _reservation(self, connection: Connection, key: str) -> tuple[PublicationEnvelope, PublicationState, str] | None:
+        try:
+            return self._verified_reservation(connection, key)
+        except SinkError as error:
+            if error.code is SinkErrorCode.RESOURCE_LIMIT:
+                raise
+            raise SinkError(SinkErrorCode.CORRUPTION) from None
+        except Exception as error:
+            raise engine_error(error, SinkErrorCode.CORRUPTION) from None
+
+    def _verified_reservation(self, connection: Connection, key: str) -> tuple[PublicationEnvelope, PublicationState, str] | None:
         lengths = connection.execute("SELECT octet_length(envelope),length(state),length(attempt) FROM efio_reservations WHERE pub_key=?", [key]).fetchall()
         if not lengths:
             return None
@@ -267,6 +277,11 @@ class DuckDBSink:
             if self._active is not None:
                 if self._active.key == key and _binding(envelope) != _binding(self._active.envelope):
                     raise SinkError(SinkErrorCode.CONFLICT)
+                if self._active.key == key:
+                    complete = self._complete(self._active.control, key)
+                    if complete is not None:
+                        self._finish(self._active, PublicationState.COMMITTED)
+                        return complete[1]
                 raise SinkError(SinkErrorCode.BUSY)
             lock: WriterLock | None = None
             control: Connection | None = None

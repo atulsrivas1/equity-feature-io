@@ -123,6 +123,13 @@ class DuckDBTests(unittest.TestCase):
                     self.reject(SinkErrorCode.CORRUPTION,action)
             finally:
                 con=duckdb.connect(str(self.root));con.execute(f'UPDATE efio_results SET {field}=?',[original]);con.close()
+        con=duckdb.connect(str(self.root));original=con.execute('SELECT envelope FROM efio_reservations').fetchone()[0]
+        con.execute('UPDATE efio_reservations SET envelope=?',[b'x']);con.close()
+        try:
+            for action in (lambda:sink.begin(e),lambda:sink.lookup(receipt.idempotency_key),lambda:sink.read(receipt),lambda:sink.abort(session)):
+                self.reject(SinkErrorCode.CORRUPTION,action)
+        finally:
+            con=duckdb.connect(str(self.root));con.execute('UPDATE efio_reservations SET envelope=?',[original]);con.close()
 
     def test_typed_projection_corruption_even_with_unchanged_valid_blobs(self):
         sink=self.sink();receipt=publish(sink,envelope((FACTS[1],)),(FACTS[1],))
@@ -180,7 +187,9 @@ class DuckDBTests(unittest.TestCase):
         self.assertEqual(sink.abort(session).state,PublicationState.ABORTED)
         session=sink.begin(e);sink.write(session,0,FACTS[1]);session.data=Proxy(session.data,'COMMIT')
         self.reject(SinkErrorCode.COMMIT_UNKNOWN,lambda:sink.commit(session))
-        receipt=sink.lookup(session.key).receipt
+        receipt=sink.begin(e)
+        self.assertIsInstance(receipt,CompletionReceipt)
+        self.assertEqual(sink.lookup(session.key).receipt,receipt)
         self.assertEqual(sink.read(receipt),(FACTS[1],));self.assertEqual(sink.abort(session).receipt,receipt)
 
     def test_oversize_sql_payload_rejected_before_blob_fetch(self):

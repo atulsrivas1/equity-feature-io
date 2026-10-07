@@ -101,4 +101,3 @@ def exact(value: object) -> object:
     if type(value) in (tuple, list):
         return tuple(exact(v) for v in cast(list[object] | tuple[object, ...], value))
     return (type(value).__name__, value)
-
