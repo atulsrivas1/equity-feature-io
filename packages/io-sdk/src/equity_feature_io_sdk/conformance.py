@@ -115,7 +115,14 @@ def qualify_sink(factory: Callable[[], ResultSink], results: tuple[FeatureResult
                 sink.write(original, 0, results[0])
             except SinkError as error:
                 status = sink.lookup(key)
-                return "exclusive_restart" if error.code is SinkErrorCode.INVALID_SESSION and status.state is PublicationState.STAGING and status.receipt is None else "incorrect_restart"
+                if error.code is not SinkErrorCode.INVALID_SESSION or status.state is not PublicationState.STAGING or status.receipt is not None:
+                    return "incorrect_restart"
+                for ordinal, result in enumerate(results):
+                    sink.write(restarted, ordinal, result)
+                receipt = sink.commit(restarted)
+                observed = sink.read(receipt)
+                verify_receipt(receipt, envelope, observed)
+                return "exclusive_restart" if tuple(map(encode_result, observed)) == tuple(map(encode_result, results)) else "incorrect_restart"
         return "multiple_owners"
 
     def aborted_retry() -> str:

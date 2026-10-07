@@ -196,6 +196,30 @@ class PublicationTests(unittest.TestCase):
         self.assertTrue(qualify_sink(Restarting,results,LIMITS,staging_recovery='restart').passed)
         self.assertFalse(qualify_sink(Restarting,results,LIMITS,staging_recovery='busy').passed)
         self.assertFalse(qualify_sink(MemorySink,results,LIMITS,staging_recovery='restart').passed)
+        class DeadHandle(Restarting):
+            def begin(self,envelope):
+                before=self.lookup(idempotency_key(envelope.identity)).state
+                started=super().begin(envelope)
+                return object() if before is PublicationState.STAGING else started
+        self.assertFalse(qualify_sink(DeadHandle,results,LIMITS,staging_recovery='restart').passed)
+
+    def test_factual_corruption_cannot_become_success_through_abort_or_lookup(self):
+        class CorruptCommit(MemorySink):
+            def commit(self,session):
+                receipt=super().commit(session)
+                self.captured=receipt
+                self.corrupt(receipt.idempotency_key,0,b'corrupt')
+                self.read(receipt)  # factual physical-hash corruption, not an invented transient
+                return receipt
+        results=(golden_result('count'),);e=envelope(results);sink=CorruptCommit()
+        self.reject(SinkErrorCode.CORRUPTION,lambda:publish(sink,e,results))
+        self.reject(SinkErrorCode.CORRUPTION,lambda:sink.begin(e))
+        self.reject(SinkErrorCode.CORRUPTION,lambda:sink.lookup(idempotency_key(e.identity)))
+        self.reject(SinkErrorCode.CORRUPTION,lambda:sink.read(sink.captured))
+        class CorruptLookup(MemorySink):
+            def lookup(self,key):
+                raise SinkError(SinkErrorCode.CORRUPTION)
+        self.reject(SinkErrorCode.CORRUPTION,lambda:publish(CorruptLookup('after_commit'),e,results))
 
     def test_key_operational_fields_excluded_content_change_conflicts(self):
         original = golden_result('count'); changed = dataclasses.replace(original, values=(dataclasses.replace(original.values[0], values=(1,)),))

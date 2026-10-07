@@ -136,6 +136,8 @@ def _confirmed(sink: ResultSink, envelope: PublicationEnvelope,
     # A failed/unknown lookup never establishes absence or rollback.
     try:
         status = sink.lookup(idempotency_key(envelope.identity))
+    except SinkError as error:
+        raise SinkError(SinkErrorCode.CORRUPTION if error.code is SinkErrorCode.CORRUPTION else SinkErrorCode.COMMIT_UNKNOWN) from None
     except Exception:
         raise SinkError(SinkErrorCode.COMMIT_UNKNOWN) from None
     if type(status) is not PublicationStatus or status.state is not PublicationState.COMMITTED or status.receipt is None:
@@ -148,6 +150,8 @@ def _abort(sink: ResultSink, session: WriteSession, envelope: PublicationEnvelop
            results: tuple[FeatureResult, ...]) -> CompletionReceipt | None:
     try:
         outcome = sink.abort(session)
+    except SinkError as error:
+        raise SinkError(SinkErrorCode.CORRUPTION if error.code is SinkErrorCode.CORRUPTION else SinkErrorCode.COMMIT_UNKNOWN) from None
     except Exception:
         raise SinkError(SinkErrorCode.COMMIT_UNKNOWN) from None
     if type(outcome) is not AbortOutcome:
@@ -195,6 +199,8 @@ def publish(sink: ResultSink, envelope: PublicationEnvelope, results: tuple[Feat
         if cancellation is not None and cancellation.is_cancelled():
             raise SinkError(SinkErrorCode.CANCELLED)
     except Exception as error:
+        if isinstance(error, SinkError) and error.code is SinkErrorCode.CORRUPTION:
+            raise SinkError(SinkErrorCode.CORRUPTION) from None
         accepted = _abort(sink, session, envelope, results)
         if accepted is not None:
             return accepted
@@ -203,6 +209,8 @@ def publish(sink: ResultSink, envelope: PublicationEnvelope, results: tuple[Feat
     try:
         receipt = _call(lambda: sink.commit(session), SinkErrorCode.COMMIT_UNKNOWN)
     except SinkError as error:
+        if error.code is SinkErrorCode.CORRUPTION:
+            raise SinkError(SinkErrorCode.CORRUPTION) from None
         if error.code is SinkErrorCode.COMMIT_UNKNOWN:
             return _confirmed(sink, envelope, results)
         accepted = _abort(sink, session, envelope, results)

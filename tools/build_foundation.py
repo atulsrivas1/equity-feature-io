@@ -143,7 +143,7 @@ def qualify(dependencies, artifacts, form, packages, probe, factory_probe, publi
         publication_report = location / "publication-report.json"
         run(py, "-I", publication_probe, "--installed", "--report-json", publication_report, cwd=location)
         publications = json.loads(publication_report.read_text(encoding="utf-8"))
-        assert publications["publication_tests"] == 24 and publications["installed_public_execution"]
+        assert publications["publication_tests"] == 25 and publications["installed_public_execution"]
         assert publications["io_contracts"] == publications["io_sdk"] == "0.1.0a2" and publications["consumer"] == "0.1.0a1"
         assert publications["test_suite_sha256"] == sha(publication_probe)
         assert publications["hand_golden_sha256"] == sha(publication_probe.with_name("publication_goldens.json"))

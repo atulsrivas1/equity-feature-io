@@ -68,6 +68,7 @@ class MemorySink:
                 if any(len(data) > min(envelope.max_chunk_bytes, caps.max_chunk_bytes) for data in previous.data):
                     raise SinkError(SinkErrorCode.RESOURCE_LIMIT)
                 assert previous.receipt is not None
+                self.read(previous.receipt)
                 return previous.receipt
             if previous.state is PublicationState.STAGING:
                 raise SinkError(SinkErrorCode.BUSY)
@@ -138,6 +139,8 @@ class MemorySink:
     def abort(self, session: WriteSession) -> AbortOutcome:
         reservation = self._owned(session, staging=False)
         if reservation.state is PublicationState.COMMITTED:
+            assert reservation.receipt is not None
+            self.read(reservation.receipt)
             return AbortOutcome(PublicationState.COMMITTED, reservation.receipt)
         reservation.state = PublicationState.ABORTED
         reservation.data.clear()
@@ -148,6 +151,9 @@ class MemorySink:
         if self.fault == "unknown_lookup":
             return PublicationStatus(PublicationState.UNKNOWN, None)
         reservation = self._reservations.get(idempotency_key)
+        if reservation is not None and reservation.state is PublicationState.COMMITTED:
+            assert reservation.receipt is not None
+            self.read(reservation.receipt)
         return PublicationStatus(PublicationState.ABSENT, None) if reservation is None else PublicationStatus(reservation.state, reservation.receipt)
 
     def read(self, receipt: CompletionReceipt) -> tuple[FeatureResult, ...]:
@@ -160,7 +166,18 @@ class MemorySink:
             if artifact.byte_length != len(data) or artifact.byte_sha256 != hashlib.sha256(data).hexdigest():
                 raise SinkError(SinkErrorCode.CORRUPTION)
         try:
-            return tuple(decode_result(data) for data in reservation.data)
+            results = tuple(decode_result(data) for data in reservation.data)
+            hasher = hashlib.sha256(b"efio-content1\0")
+            for data in reservation.data:
+                hasher.update(len(data).to_bytes(8, "big"))
+                hasher.update(data)
+            cells = sum(len(c.entities) for r in results for c in r.values)
+            evidence = sum(len(r.evidence) for r in results)
+            if receipt.identity != reservation.envelope.identity or receipt.idempotency_key != idempotency_key(receipt.identity) or tuple(_descriptor(r) for r in results) != receipt.identity.result_descriptors:
+                raise SinkError(SinkErrorCode.CORRUPTION)
+            if (len(results), cells, evidence, sum(map(len, reservation.data)), hasher.hexdigest()) != (receipt.result_count, receipt.cell_count, receipt.evidence_count, receipt.content_bytes, receipt.content_sha256):
+                raise SinkError(SinkErrorCode.CORRUPTION)
+            return results
         except Exception:
             raise SinkError(SinkErrorCode.CORRUPTION) from None
 
