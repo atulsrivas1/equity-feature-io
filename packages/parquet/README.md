@@ -1,5 +1,7 @@
 # Experimental Parquet result sink
 
+Version0.1.0a1 corrects publication lookup under cooperating reader/writer interleavings by observing immutable completion before its reservation binding. Genuine stable corruption remains rejected; storage format and canonical results are unchanged. [BUG-005](https://github.com/atulsrivas1/equity-features/issues/301) records exact tested artifacts, publication and acceptance; historical .a0 receipts remain version-bound evidence.
+
 `equity_feature_parquet` receives complete canonical results through the accepted I/O contracts/SDK0.1.0a2. PyArrow20.0.0 is an optional backend dependency; calculations remain pure. See the [pre-code plan](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/EQ126_PLAN.md) and canonical [EQ126](https://github.com/atulsrivas1/equity-features/issues/283) for current delivery stage and version-bound qualification evidence.
 
 The [public API/layout/recovery/bounds](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/PARQUET_SINK.md) describes direct ParquetSink context management and explicit ParquetSinkFactory registry configuration. Store complete canonical records plus verified typed cell/evidence projections; receipts bind all3components. Qualified configurations and actual native installed/process/resource reports belong to the linked delivery record. No automatic cleanup/global registration, hard RSS cap, network-filesystem or universal durability guarantee is claimed.

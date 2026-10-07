@@ -1,3 +1,7 @@
+## BUG-005 correction candidate
+
+Parquet0.1.0a1 corrects cooperating-reader completion observation; other accepted nine-package versions remain unchanged. Current matrix expectations select.a1 and independently repeat/qualify its archives. Historical accepted .a0 hashes remain preserved and still constrain unchanged packages; exclusions explicitly identify changed Parquet and already separately-qualified worker archives. No arbitrary version/platform claim. Review/CI/installed/current-main readback remain required on canonical301 before acceptance. Source adapter/private/calculation semantics are unchanged; no worker commands.
+
 ## EQ130 release audit under qualification
 
 EQ121–129 are accepted; EQ130 is the sole active docs/audit story. [canonical R4.1 audit](https://github.com/atulsrivas1/equity-features/blob/main/docs/R4_1_ACCEPTANCE.md) and [canonical R5 resume](https://github.com/atulsrivas1/equity-features/blob/main/docs/R5_AUTONOMOUS_HANDOFF.md) bind actual accepted versions/heads/receipts, separate automated reviews, source/backend/composed evidence and preserved rights/limits. Final current head review/CI/artifact/publication/readback and canonical287Done precede epic/milestone closure and EQ057#65 Ready. R5 is prepared only; this chat stops before its implementation. No runtime/test/workflow/package/math/private execution change. Live Project/issue evidence is authority; earlier snapshots below preserve history.

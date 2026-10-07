@@ -183,8 +183,8 @@ class ParquetSink:
     def _reservation(self, key: str) -> tuple[PublicationEnvelope, PublicationState, str] | None:
         path = self._path(key, "reservation.json")
         if not path.exists():
-            if self._path(key, "complete.json").exists():
-                raise SinkError(SinkErrorCode.CORRUPTION)
+            # Absence can precede first publication during this observation.
+            # A stable completion's required reservation is checked in _complete.
             return None
         value = self._control_read(path, {"schema", "attempt_id", "envelope", "state"})
         try:
@@ -209,11 +209,14 @@ class ParquetSink:
             raise SinkError(SinkErrorCode.RESOURCE_LIMIT)
 
     def _complete(self, key: str) -> tuple[PublicationEnvelope, CompletionReceipt, str] | None:
-        reservation = self._reservation(key)
         path = self._path(key, "complete.json")
         if not path.exists():
             return None
         value = self._control_read(path, {"schema", "attempt_id", "envelope", "receipt"})
+        # Completion is published last and is immutable under cooperating writers.
+        # Observe it before its reservation to avoid mixing a precommit attempt
+        # with a newly committed completion. Validate both records as before.
+        reservation = self._reservation(key)
         try:
             envelope = decode_envelope(value["envelope"].encode("ascii"))
             receipt = decode_receipt(value["receipt"].encode("ascii"))
