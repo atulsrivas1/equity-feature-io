@@ -27,6 +27,8 @@ jobs:
         working-directory: component
       - run: python -m unittest discover -s tests -p test_*.py
         working-directory: component
+      - run: python tools/check_io_spec.py --core-root ../core
+        working-directory: component
       - run: python tools/build_foundation.py --core-root ../core
         working-directory: component
       - uses: actions/upload-artifact@v4

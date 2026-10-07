@@ -1,3 +1,11 @@
+# EQ123 contract specification preparation
+
+Canonical issue280 is In progress after verified EQ121/EQ122 Done and pre-implementation core plan052cc25/PR293. This companion change will freeze normative source/sink APIs and publication encoding/identity/lifecycle/capabilities/errors, with hand-worked vectors. Runtime publication types/conformance remain EQ125; factories EQ124. Existing canonical inputs/results, pure mathematics, current io-contracts/SDK foundations and DuckDB.a8 source remain unchanged.
+
+Specification and hand-authored vectors now prepared. Local checker passes exact canonical closure29records/fourenums,607-byte empty result/three framed SHA digests and canonical empty/missing/partial/signed-zero facts. Twenty hand-worked protocol traces remain design expectations, not executed backend tests. Next: semantic separate final-head review, applicable current native CI/unchanged installed artifacts, actual successful-main source/archive/report readback; then canonical Released/Done. One active story, workers untouched, STOP before R5.
+
+Earlier snapshots below are retained history and superseded by current canonical authority.
+
 # EQ122 qualified source / publication pending
 
 Current canonical279 is Test. Exact implementationeecde5a8 local repeat/currentbothforms and nativeWindows/Linux CI/downloaded12archives/8PRchecks/old-new same-file comparisons pass; currentfoundation artifacts remain byte-identical accepted121. All4downloaded optional producer/forms execute new private retained suite on Windows3.12.10, each68numeric/9acquisitions/3blocked, immutablebindings/coreinvariance pass. [Source receipt](EQ122_SOURCE_RECEIPT.json), [delivery](EQ122_DELIVERY.md) preserve exact source/native/execution/report bindings and limitations. Earlier2c02805 source build superseded. Separate finalsource reviewer resolves P3 link/no unresolved findings; sourceheadguard corrected. Next: renewed documentation-head review/currentCI, exact-head standalone merge, actual successful-main artifact/hash/report/private-byte-equality/public-tree/owner readback, then active core removal/redirects/finalreview/pure CI/coremain readback and canonical Released/Done. Core still retains active adapter. EQ123+ dependency-gated, workers untouched, STOPbeforeR5.

@@ -1,0 +1,55 @@
+{
+  "empty_feature_result_ascii": "{\"fields\":{\"evidence\":[],\"metadata\":{\"fields\":{\"availability\":{\"fields\":{\"evaluation_ns\":{\"int\":\"10\"},\"knowledge_cutoff_ns\":{\"int\":\"10\"},\"market_cutoff_ns\":{\"int\":\"10\"},\"mode\":\"known_at\",\"reconstruction_reason\":null},\"record\":\"specs.AvailabilitySpec\"},\"backend_id\":\"synthetic\",\"backend_version\":\"1\",\"config_digest\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"evidence_limit\":{\"int\":\"0\"},\"inputs\":[],\"math_policy_version\":\"v1\",\"namespace\":\"synthetic\",\"schema_version\":\"1\",\"session_id\":\"S\"},\"record\":\"results.ResultMetadata\"},\"quality\":[],\"values\":[]},\"record\":\"results.FeatureResult\"}",
+  "empty_feature_result_bytes": 607,
+  "framed_null_example_sha256": "0ad90d4e9f98e3d5db9259809fbbb128ed36524c115234474107c9e66737576a",
+  "one_empty_result_content_sha256": "c44d3b04e6f721a11dcce6d0232b2125d61a48a55d73f8cc168deb43e27b1a2c",
+  "registry_enums": {
+    "inputs": [
+      "DataKind"
+    ],
+    "results": [
+      "Status",
+      "Reason",
+      "ValueType"
+    ]
+  },
+  "registry_records": {
+    "inputs": [
+      "BatchMetadata",
+      "SourceBinding",
+      "Coverage",
+      "PriceUnit",
+      "AdjustmentSpec",
+      "InputScope",
+      "IntervalCoverage"
+    ],
+    "results": [
+      "EntityKey",
+      "BreadthCounts",
+      "BreadthFraction",
+      "IntervalOHLCVRow",
+      "IntervalVolumeShareRow",
+      "IntervalOHLCV",
+      "IntervalVolumeShares",
+      "TopKTradeRow",
+      "TopKTrades",
+      "QuoteStateCounts",
+      "QuoteObservation",
+      "SampledSpread",
+      "QuoteDurations",
+      "TimeWeightedSpread",
+      "FeatureColumn",
+      "QualityRow",
+      "InputBinding",
+      "ResultMetadata",
+      "EvidenceRow",
+      "FeatureResult"
+    ],
+    "specs": [
+      "AvailabilitySpec",
+      "IntervalSpec"
+    ]
+  },
+  "schema": "eq123-hand-authored-vector1",
+  "zero_results_content_sha256": "fbe925a7019c2ebb4df50356cc17f1666e1e0f6d39b01dcd4bdc6a2b24fe9a43"
+}
