@@ -9,3 +9,5 @@ CPython3.12 x64 Windows/Linux only. Experimental version0.1.0a0 foundations expo
 [Foundation source delivery evidence](docs/EQ121_DELIVERY.md) records reviewed heads/native artifact hashes; canonical issue278 records actual acceptance after main publication/readback.
 
 EQ122 extracts the compatible [DuckDB source adapter](docs/DUCKDB_MIGRATION.md), independently packaged without I/O SDK/workers; its current API/docs live here and canonical279 records actual delivery acceptance.
+
+[Experimental I/O v1 specification](docs/contracts/IO_V1.md) and [independent expected vectors](docs/contracts/IO_V1_VECTORS.md) freeze EQ123 design. Runtime publication types/conformance remain EQ125; no installed sink operation is claimed by the specification.
