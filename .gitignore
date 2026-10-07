@@ -8,3 +8,4 @@ work/
 .mypy_cache/
 .env
 .env.*
+dist-parquet/
