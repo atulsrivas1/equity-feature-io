@@ -21,7 +21,7 @@ runtime. DuckDB1.5.6 create_function requires NumPy in the observed fresh enviro
 the development environment had masked this dependency. Install DuckDB1.5.6 and
 NumPy2.2.6 explicitly before --no-deps project archive installation. Core runtime
 dependencies remain unchanged; NumPy's existing upstream notice/hash provenance
-is recorded in [release integrity](../../docs/RELEASE_INTEGRITY.md). Both native installed forms must verify
+is recorded in [release integrity](https://github.com/atulsrivas1/equity-features/blob/main/docs/RELEASE_INTEGRITY.md). Both native installed forms must verify
 this exact runtime. Null timestamps pass through the parser and fail closed, following
 [DuckDB UDF null semantics](https://www.duckdb.org/docs/current/clients/python/function).
 

@@ -69,6 +69,21 @@ def qualify(output, form):
         run(str(py),'-m','pip','install','--no-index','--no-deps','--no-build-isolation',str(adapter))
         run(str(py),'-m','pip','check')
         assert before==core_fingerprint(py),'adapter installation changed installed core'
+        old_env = env/'old-installed'
+        run(sys.executable,'-m','venv',str(old_env))
+        old_py = old_env/('Scripts/python.exe' if os.name=='nt' else 'bin/python')
+        if form=='gz':run(str(old_py),'-m','pip','install','--no-deps','setuptools==80.9.0')
+        old_adapter = next(p for p in (ROOT/'work/duckdb-baseline').glob('equity_feature_duckdb-*') if (p.suffix=='.whl')==(form=='whl'))
+        run(str(old_py),'-m','pip','install','--no-deps','duckdb==1.5.6','numpy==2.2.6')
+        run(str(old_py),'-m','pip','install','--no-index','--no-deps','--no-build-isolation',*[str(p) for p in paths],str(old_adapter))
+        run(str(old_py),'-m','pip','check')
+        compatibility_path=output/f'compatibility-{platform.system()}-{form}.json'
+        run(sys.executable,str(ROOT/'tools/check_compatibility.py'),'--old-python',str(old_py),
+            '--new-python',str(py),'--output',str(compatibility_path))
+        compatibility=json.loads(compatibility_path.read_text())
+        compatibility.update(system=platform.system(),form=form,core_source_commit=CORE_COMMIT,
+            old_adapter_artifact={old_adapter.name:digest(old_adapter)},new_artifacts={p.name:digest(p) for p in [*paths,adapter]})
+        compatibility_path.write_text(json.dumps(compatibility,sort_keys=True,indent=2)+'\n',encoding='utf-8')
         run(str(py),'-I','-c',"from pathlib import Path; import equity_feature_duckdb as d,duckdb,numpy; assert 'site-packages' in Path(d.__file__).parts; assert d.__version__=='0.1.0a8'; assert duckdb.__version__=='1.5.6'; assert numpy.__version__=='2.2.6'",cwd=env)
         result=subprocess.run([str(py),'-I','-m','unittest','discover','-s',str(ROOT/'tests/duckdb')],cwd=env,text=True,capture_output=True)
         print(result.stdout+result.stderr)
@@ -118,15 +133,23 @@ def main():
     work=ROOT/'work';work.mkdir(exist_ok=True)
     staging=tempfile.TemporaryDirectory(prefix='source-',dir=work)
     source_root=Path(staging.name)
-    core=snapshot(args.core_root.resolve(),CORE_COMMIT,source_root/'core',('packages/contracts','packages/features'))
+    run(sys.executable,str(ROOT/'tools/check_extraction.py'),'--core-root',str(args.core_root.resolve()))
+    core=snapshot(args.core_root.resolve(),CORE_COMMIT,source_root/'core',('packages/contracts','packages/features','packages/duckdb'))
     component_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     component=snapshot(ROOT,component_commit,source_root/'component',('packages/duckdb',))
     output=ROOT/'dist/duckdb';repeat=ROOT/'work/duckdb-repeat'
     build_env=dict(os.environ,SOURCE_DATE_EPOCH=str(EPOCH))
+    baseline=ROOT/'work/duckdb-baseline'
+    baseline.mkdir(parents=True,exist_ok=True)
+    for old in baseline.glob('equity_feature_duckdb-*'):
+        assert old.is_file()
+        old.unlink()
+    run(sys.executable,'-m','build','--no-isolation','--outdir',str(baseline),str(core/'packages/duckdb'),env=build_env)
+    for path in baseline.glob('*.tar.gz'):normalize_sdist(path)
     for out in (output,repeat):
         assert out.resolve().is_relative_to(ROOT.resolve())
         out.mkdir(parents=True,exist_ok=True)
-        for pattern in ('equity_feature_duckdb-*','equity_feature_contracts-*','equity_features-*','installed-*.json','read-*.json','conformance-*.json','manifest.json'):
+        for pattern in ('equity_feature_duckdb-*','equity_feature_contracts-*','equity_features-*','installed-*.json','read-*.json','conformance-*.json','compatibility-*.json','manifest.json'):
             for old in out.glob(pattern):
                 assert old.is_file()
                 old.unlink()
