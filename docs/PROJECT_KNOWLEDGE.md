@@ -1,6 +1,6 @@
 ## Current execution entry, October7 UTC
 
-EQ121–125 accepted under canonical issue/Project evidence; matching I/OcontractsSDK.a2/fixture.a1 and DuckDBsource.a8. Current next EQ126 pre-code optional Parquet sink; see SESSION_HANDOFF.md/EQ126_PLAN.md and canonical283. Earlier preparation text below is historical, not execution authority. Pure core0.0.4a4 unchanged; stop after130 beforeR5.
+EQ121–125 accepted under canonical issue/Project evidence; matching I/OcontractsSDK.a2/fixture.a1 and DuckDBsource.a8. Current EQ126 Test: optional Parquet implementation/source native qualification complete at8892ff6; final documentation-head/current artifact review and successful-main acceptance pending; see SESSION_HANDOFF.md/EQ126_PLAN.md and canonical283. Earlier preparation text below is historical, not execution authority. Pure core0.0.4a4 unchanged; stop after130 beforeR5.
 
 # Project knowledge
 
