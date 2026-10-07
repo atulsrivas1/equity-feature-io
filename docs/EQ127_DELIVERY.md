@@ -66,3 +66,32 @@ or hosted/human reviewer certificate; no R5/provider/service/stable tag work.
 EQ127 rework [6031028441](https://github.com/atulsrivas1/equity-features/issues/284#issuecomment-6031028441): separate exact-source reviews [IO6031030267](https://github.com/atulsrivas1/equity-feature-io/pull/7#issuecomment-6031030267)/[core6031030775](https://github.com/atulsrivas1/equity-features/pull/297#issuecomment-6031030775) independently reproduced same-owner replay after actual COMMIT/lostresponse returning BUSY, and malformed stored reservation returning INVALID_CONTENT rather than CORRUPTION. Corrections inspect independent committed completion before same-owner BUSY and normalize stored decode failures to CORRUPTION; existing18-method suite now exercises both regressions. Historical handoff/lesson UTF8 bytes are restored exactly from pre-code sources, retaining only new EQ127 entries; trim EOF/ignore outputs. Initial a799907 native push37572041776 bothforms/14archives/two serverZIP hashes/allfiles and localrepeat/bothforms pass but are superseded/excluded from corrected acceptance; preserved in ignored eq127-duckdb-sink-initial and eq127-a799907-dist-duckdb-sink. Canonical284 returned Code review -> In progress. Renewed exact-head review/current native/freshinstalled/source/main gates remain mandatory.
 
 Corrected local18-method suite (41.586s) and strict6files pass after both P2 regressions; git diff against pre-code has no whitespace errors. Historical text equals pre-code after removing new entries. Renewed native/fresh installed/review/main gates remain pending. Public API guide: [DuckDB sink](api/DUCKDB_SINK.md).
+
+## Corrected source qualification / Test
+
+
+Reviewed IO f178d62573a201177a9297b9c1ecb134abd92ced/coreacc3f0e5a9ca293b501c48ab82e721ccc25e0d17; corrected separate reviews [6031112127](https://github.com/atulsrivas1/equity-feature-io/pull/7#issuecomment-6031112127)/[6031112734](https://github.com/atulsrivas1/equity-features/pull/297#issuecomment-6031112734), no unresolved. [Test entry6031117239](https://github.com/atulsrivas1/equity-features/issues/284#issuecomment-6031117239).
+
+[Actual source receipt](EQ127_SOURCE_RECEIPT.json), SHA9f732037dd8a235a0d8c5e26253307ac9af2d5673c5ddfb3c59b13cb4ef072f5, verifies68archivefiles (16foundation/12source/14Parquet/14DuckDBsink/12core),tenactualserverZIP digests/all118files/currentreports/publicsourceowner/blobtree/finiteexpiry. Count includes repeated dependency distributions, not68unique packages.
+
+Actual successfulpushes foundation37572814563/source37572814532/Parquet37572814531/DuckDBsink37572814556/core37572820833/docs37572820814. Newfourfreshsinkforms18methods/9realprocess/all18facts/21actualSDKcases/sourceDB+WALbyteinvariance/uncertaintyregressions/2measuredworkloads/publictyping/2negativecalls/coreinvariance/noNumPyPandasPyArrow; all14newarchivefiles equalqualifiedlocalWindows/matchingnativefoundationdependencies.
+
+Raw currentCI confirms foundation48developmentx2/fourinstalled21factory25publication; DuckDB18developmentand9process eachx6; core633x6. Source94tests/30SDK16numerical unchanged, accepted private/sourcearchivebindings retained without new privateexecution. Parquet17methods/8process/two workloads retained.
+
+| Native fresh form | Runtime / filesystem | Cells | Logical / row-BLOB / DB / WAL bytes | Write seconds | Lifetime peak RSS bytes |
+| --- | --- | --- | --- | --- | --- |
+| Linux wheel | 3.12.14 / ext4 | 64 | 25378 / 38609 / 3682304 / 0 | 0.171906 | 89980928 |
+| Linux wheel | 3.12.14 / ext4 | 2048 | 793226 / 1223137 / 4730880 / 0 | 5.390651 | 118980608 |
+| Linux sdist | 3.12.14 / ext4 | 64 | 25378 / 38609 / 3682304 / 0 | 0.172891 | 89911296 |
+| Linux sdist | 3.12.14 / ext4 | 2048 | 793226 / 1223137 / 4730880 / 0 | 5.415412 | 125136896 |
+| Windows wheel | 3.12.10 / NTFS | 64 | 25378 / 38609 / 3682304 / 0 | 0.476541 | 59670528 |
+| Windows wheel | 3.12.10 / NTFS | 2048 | 793226 / 1223137 / 4730880 / 0 | 15.193008 | 81518592 |
+| Windows sdist | 3.12.10 / NTFS | 64 | 25378 / 38609 / 3682304 / 0 | 0.480648 | 60473344 |
+| Windows sdist | 3.12.10 / NTFS | 2048 | 793226 / 1223137 / 4730880 / 0 | 15.175872 | 80072704 |
+
+
+Queriedengine128MiB/1thread/0Bspill/external+autoload+autoinstallfalse in each fresh process. LifetimeRSS is observation, not hardcap; DB/WAL/namespacegrowth remainscallerquota. CoreLinuxproducer3.12.15 differs from newDuckDBsink3.12.14; actualruntime retained per report, no extrapolation.
+
+Initial ignored readback-helper count substitution accidentally changed expected epoch1700000000 to1800000000. Failed verification and dependent missing-readback aggregate were excluded; restore exact fixed epoch1700000000 and rerun full actual68/tenZIP/118files validation successfully. No package/build epoch change occurred.
+
+Next finalmetadatahead separate review/currentCI/currentarchives/sourceguard, exact-head merges and actualsuccessfulmain newreports/archives/ZIP/sourceowner readback; only then Released/postreadDone. Current source qualification is not actualmain release acceptance. STOPbeforeR5.
