@@ -121,10 +121,16 @@ class _BoundedWriter(io.RawIOBase):
                 super().close()
 
 
+def _allocation_bytes(data: list[Row]) -> int:
+    # Conservative nullable fixed-width/offset/validity allowance per field,
+    # plus all repeated variable payloads (including list children).
+    return sum(32 * len(row) + sum(_payload_bytes(value) for value in row.values()) for row in data)
+
+
 def write_projection(path: Path, data: list[Row], schema: object, physical_limit: int) -> None:
     # Repeated namespace/header strings can expand a small logical result dramatically.
     # Admit the actual repeated payload before Arrow buffers and limit every physical write.
-    payload = sum(_payload_bytes(value) for row in data for value in row.values())
+    payload = _allocation_bytes(data)
     if payload > physical_limit:
         raise SinkError(SinkErrorCode.RESOURCE_LIMIT)
     table = pa.Table.from_pylist(data, schema=schema)
@@ -155,13 +161,43 @@ def _exact(value: object) -> object:
     return (type(value).__name__, value)
 
 
-def verify_projection(path: Path, expected: list[Row], schema: object) -> None:
+def verify_projection(path: Path, expected: list[Row], schema: object, physical_limit: int) -> None:
+    if _allocation_bytes(expected) > physical_limit:
+        raise SinkError(SinkErrorCode.CORRUPTION)
     file = pq.ParquetFile(path, memory_map=False, pre_buffer=False,
                           thrift_string_size_limit=1048576, thrift_container_size_limit=1048576)
     try:
         if not file.schema_arrow.equals(schema, check_metadata=True) or file.metadata.num_rows != len(expected):
             raise SinkError(SinkErrorCode.CORRUPTION)
-        # Physical hash/size and footer bounds are admitted by the caller before allocation.
+        # Only the qualified writer format is admitted. Small compressed or
+        # dictionary payloads can otherwise allocate huge buffers before parity
+        # rejects them. Footer rows alone do not bound variable-width buffers.
+        metadata = file.metadata
+        if metadata.num_row_groups > max(1, (len(expected) + 4095) // 4096):
+            raise SinkError(SinkErrorCode.CORRUPTION)
+        uncompressed = 0
+        row_offset = 0
+        for group_index in range(metadata.num_row_groups):
+            group = metadata.row_group(group_index)
+            if group.num_rows > 4096:
+                raise SinkError(SinkErrorCode.CORRUPTION)
+            for column_index in range(group.num_columns):
+                column = group.column(column_index)
+                if (column.compression != "UNCOMPRESSED"
+                        or not set(column.encodings) <= {"PLAIN", "RLE"}
+                        or column.total_uncompressed_size < 0):
+                    raise SinkError(SinkErrorCode.CORRUPTION)
+                group_rows = expected[row_offset:row_offset + group.num_rows]
+                if column.path_in_schema == "quality_reasons.list.element":
+                    expected_values = sum(max(1, len(cast(list[object], row["quality_reasons"]))) for row in group_rows)
+                else:
+                    expected_values = group.num_rows
+                if column.num_values != expected_values:
+                    raise SinkError(SinkErrorCode.CORRUPTION)
+                uncompressed += column.total_uncompressed_size
+                if uncompressed > physical_limit:
+                    raise SinkError(SinkErrorCode.CORRUPTION)
+            row_offset += group.num_rows
         observed = cast(list[Row], file.read(use_threads=False).to_pylist())
         if _exact(observed) != _exact(expected):
             raise SinkError(SinkErrorCode.CORRUPTION)

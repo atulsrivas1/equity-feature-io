@@ -1,0 +1,49 @@
+name: Parquet sink checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  parquet:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: component
+      - uses: actions/checkout@v4
+        with:
+          repository: atulsrivas1/equity-features
+          ref: 7a6db8c2317de1ee9dd9116e0897cbf6445e359e
+          path: core
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-parquet.txt
+        working-directory: component
+      - run: python -m pip install --no-deps --no-build-isolation -e ../core/packages/contracts -e ../core/packages/features -e packages/io-contracts -e packages/io-sdk -e examples/factory_consumer -e packages/parquet
+        working-directory: component
+      - run: python -m mypy --strict packages/parquet/src
+        working-directory: component
+      - run: python -c "from pathlib import Path; Path('work').mkdir(exist_ok=True)"
+        working-directory: component
+      - run: python tests/parquet/test_parquet.py --report-json work/parquet-development.json
+        working-directory: component
+      - run: python tests/parquet/test_process.py --report-json work/parquet-process.json
+        working-directory: component
+      - run: python tests/parquet/resource_probe.py --report-json work/parquet-resources.json
+        working-directory: component
+      - run: python tools/build_parquet.py --core-root ../core
+        working-directory: component
+      - uses: actions/upload-artifact@v4
+        with:
+          name: parquet-${{ github.sha }}-${{ matrix.os }}
+          path: |
+            component/dist-parquet/
+            component/work/parquet-*.json
+          retention-days: 30
+          if-no-files-found: error

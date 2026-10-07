@@ -178,6 +178,43 @@ class ParquetTests(unittest.TestCase):
         control.write_text(json.dumps(record,sort_keys=True,separators=(',',':'),ensure_ascii=True),encoding='ascii')
         self.reject(SinkErrorCode.CORRUPTION,lambda: sink.lookup(receipt.idempotency_key))
 
+    def _reject_expanding_projection_before_read(self, compression, dictionary, payload):
+        import equity_feature_parquet.projections as projection
+        sink = self.sink(max_physical_bytes=131072)
+        receipt = publish(sink,envelope((FACTS[1],)),(FACTS[1],))
+        path = component(self.root,receipt,1)
+        with pq.ParquetFile(path) as file:
+            schema = file.schema_arrow;values = file.read().to_pylist()
+        values[0]['namespace'] = payload
+        pq.write_table(pa.Table.from_pylist(values,schema=schema),path,version='2.6',
+                       compression=compression,use_dictionary=dictionary,write_statistics=False)
+        data = path.read_bytes();self.assertLess(len(data),131072)
+        artifacts = list(receipt.artifacts)
+        artifacts[1] = dataclasses.replace(artifacts[1],byte_length=len(data),byte_sha256=hashlib.sha256(data).hexdigest())
+        changed = dataclasses.replace(receipt,artifacts=tuple(artifacts))
+        control = self.root/'.efio-parquet1'/receipt.idempotency_key/'complete.json'
+        record = json.loads(control.read_text(encoding='ascii'));record['receipt'] = encode_receipt(changed).decode('ascii')
+        control.write_text(json.dumps(record,sort_keys=True,separators=(',',':'),ensure_ascii=True),encoding='ascii')
+        actual = pq.ParquetFile
+        readers = []
+        def guarded(*args, **kwargs):
+            reader = actual(*args, **kwargs)
+            proxy = mock.Mock(wraps=reader)
+            proxy.schema_arrow = reader.schema_arrow;proxy.metadata = reader.metadata
+            proxy.read = mock.Mock(side_effect=AssertionError('unqualified allocation'))
+            readers.append(proxy)
+            return proxy
+        with mock.patch.object(projection.pq,'ParquetFile',side_effect=guarded):
+            self.reject(SinkErrorCode.CORRUPTION,lambda: sink.lookup(receipt.idempotency_key))
+        self.assertEqual(len(readers),1)
+        readers[0].read.assert_not_called();readers[0].close.assert_called_once()
+
+    def test_compressed_expansion_rejected_before_arrow_read(self):
+        self._reject_expanding_projection_before_read('ZSTD',False,'n'*2097152)
+
+    def test_dictionary_encoding_rejected_before_arrow_read(self):
+        self._reject_expanding_projection_before_read('NONE',True,'n'*10000)
+
     def test_control_corruption_missing_component_and_mismatched_receipt(self):
         sink = self.sink();receipt = publish(sink,envelope((FACTS[1],)),(FACTS[1],))
         self.reject(SinkErrorCode.CORRUPTION,lambda: sink.read(dataclasses.replace(receipt,caller_committed_at_ns=1)))
