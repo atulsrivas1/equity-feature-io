@@ -9,3 +9,4 @@ work/
 .env
 .env.*
 dist-parquet/
+dist-duckdb-sink/

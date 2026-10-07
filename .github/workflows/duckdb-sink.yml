@@ -1,0 +1,49 @@
+name: DuckDB sink checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  duckdb-sink:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: component
+      - uses: actions/checkout@v4
+        with:
+          repository: atulsrivas1/equity-features
+          ref: 7a6db8c2317de1ee9dd9116e0897cbf6445e359e
+          path: core
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-duckdb-sink.txt
+        working-directory: component
+      - run: python -m pip install --no-deps --no-build-isolation -e ../core/packages/contracts -e ../core/packages/features -e packages/io-contracts -e packages/io-sdk -e examples/factory_consumer -e packages/duckdb-sink
+        working-directory: component
+      - run: python -m mypy --strict packages/duckdb-sink/src
+        working-directory: component
+      - run: python -c "from pathlib import Path; Path('work').mkdir(exist_ok=True)"
+        working-directory: component
+      - run: python tests/duckdb-sink/test_sink.py --report-json work/duckdb-sink-development.json
+        working-directory: component
+      - run: python tests/duckdb-sink/test_process.py --report-json work/duckdb-sink-process.json
+        working-directory: component
+      - run: python tests/duckdb-sink/resource_probe.py --report-json work/duckdb-sink-resources.json
+        working-directory: component
+      - run: python tools/build_duckdb_sink.py --core-root ../core
+        working-directory: component
+      - uses: actions/upload-artifact@v4
+        with:
+          name: duckdb-sink-${{ github.sha }}-${{ matrix.os }}
+          path: |
+            component/dist-duckdb-sink/
+            component/work/duckdb-sink-*.json
+          retention-days: 30
+          if-no-files-found: error
