@@ -1,0 +1,3 @@
+# Current execution continuity
+
+EQ121 foundation implementation starts under [canonical issue278](https://github.com/atulsrivas1/equity-features/issues/278) and the published pre-code plan in [PR291](https://github.com/atulsrivas1/equity-features/pull/291). I/O contracts and SDK foundations; source/sink/factory implementations are pending their canonical stories. Final-head separate review, native Windows/Linux CI, fresh actual form qualification, main publication and downloaded artifact readback remain mandatory before canonical Done. No release acceptance yet. Next: freeze component head, review, resolve findings, CI/test, main artifacts/readback; then EQ122 after EQ121 Done.
