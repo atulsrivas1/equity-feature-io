@@ -1,5 +1,7 @@
 ## BUG005 coherent observation correction
 
+Owner explicitly requests boundedBUG005 separate localreview. Source8b0f975/current24checks/nativefourParquet+fourmatrix forms/localrepeat/sourcequalification pass; final metadata/currentCI/review/mainrelease/readback remain distinct. See [delivery](BUG005_DELIVERY.md), canonical301 and actualProject. No automatic R5 permission or worker dispatch. Earlier policy/test-pending snapshots are superseded for this repair only.
+
 Owner-authorized output-only repair of canonical301 uses completion-first immutable binding. Per-file atomic replace did not guarantee coherent multi-file observation. Deterministic regression interleavings fail old source; genuine stable mismatch validation remains. Parquet.a1 requires new archive identity/native/fresh/current-main qualification; historical.a0 qualification cannot be relabeled. Other package versions/math/private inputs unchanged. See BUG005_PLAN and current canonical issue for actual lifecycle. Stop after repair before R5 implementation/discussion.
 
 ## EQ130 release audit under qualification

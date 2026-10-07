@@ -1,5 +1,9 @@
 # Work agreements
 
+## BUG-005 bounded local review authorization — October 7, 2026
+
+After the explicit review-policy question, the owner requested "can you review". This authorizes separate local Codex review for BUG-005 #301, its component PR11 and canonical continuity PR302, including final-head findings disposition and delivery review. It does not authorize all R5 stories by inference or activate hosted review. Numerical, documentation, CI, installed-artifact and actual-publication/readback gates remain mandatory.
+
 All commits must use Atul Srivastava <102820540+atulsrivas1@users.noreply.github.com> as author and locally created committer. Do not use Codex attribution or Codex co-author trailers. Verify published attribution.
 
 Owner direction on October 5, 2026 resumes GOV-005: require a separate completed Codex PR review covering the final head, findings disposition and existing acceptance/CI gates before merge or Done. A request, reaction or self-review is not a completed review. Missing activation blocks Code review. See docs/CODE_REVIEW.md. This supersedes the October 4 deferral.

@@ -1,3 +1,7 @@
+## BUG-005 bounded local review authorization — October 7, 2026
+
+Owner responds to the explicit policy gate with "can you review". Separate local Codex review is authorized for canonical BUG-005 #301, componentPR11 and canonical continuityPR302, including final-head semantic/runtime/findings and delivery coverage. This is local automated review, not hosted activation or human review, and grants no general R5 authorization. Preserve all numerical/documentation/CI/installed/publication/readback gates; author self-review is insufficient. Earlier pending-authorization snapshots are superseded for this repair only.
+
 # Codex PR review workflow
 
 Status: repository guidance prepared; hosted activation and first review response are not yet verified. Setup: [GOV-005](https://github.com/atulsrivas1/equity-features/issues/119).
