@@ -1,3 +1,9 @@
+## EQ125 qualified source / final documentation review
+
+Companion0511b3b and coref6c5d20 have separate completed exact-head local automated reviews with no unresolved findings: [I/O](https://github.com/atulsrivas1/equity-feature-io/pull/5#issuecomment-6030086553) / [core](https://github.com/atulsrivas1/equity-features/pull/295#issuecomment-6030087063). All current push/PR checks succeed. Both native platforms pass48 development cases/strict11; four fresh wheel/sdist forms each pass21factory25publication, installed/external typing/two invalid calls/core invariance/independent bar goldens. Local Windows repeat/freshforms pass and actual archives match native Windows. Downloaded16foundation+12optional+12core archives/current reports/current probes, accepted canonical/optional/core byte parity and six actual server ZIP digests/allfiles/finite retention verified. [Source receipt](https://github.com/atulsrivas1/equity-feature-io/blob/codex/eq-125-publication-sdk/docs/EQ125_SOURCE_RECEIPT.json) records exact hashes/runtime/report bindings and limitations.
+
+Canonical282 remains Test pending final documentation-head review/current CI. Then exact-head Ready to release/publication, actual main source-owner/currentCI/all40archives/current reports/six ZIP hashes/allfiles/finite expiry and Released/postreadDone. No production/process/private/durability certificate. Later backend126127/examples128/composed129/audit130 remain pending; STOP before R5.
+
 ## EQ125 second review correction / In progress
 
 Separate review of companion32b785a/core0f82995 found two additional P2s: a restart conformance case accepted an unusable replacement handle, and publisher recovery could mask factual CORRUPTION with a COMMITTED abort receipt. [Companion review](https://github.com/atulsrivas1/equity-feature-io/pull/5#issuecomment-6030033580) and [core review](https://github.com/atulsrivas1/equity-features/pull/295#issuecomment-6030034106) preserve actual findings.
