@@ -1,3 +1,9 @@
+## EQ124 accepted / EQ125 pre-code
+
+Canonical281 Closed/ProjectDone after actualmain7c9e082/core3c8ecda/currentCI/all40archives/currentreports/sixZIP hashes/sourceowner/retention; acceptedfactorypair.a1/consumer.a0. See canonical Released6029783916/Done6029784487 and stories/EQ-124_RELEASE_RECEIPT.json. No operational sink/private/backend certification.
+
+Current canonical282 Inprogress; EQ125_PLAN.md published before code, core pre-code38c203b/PR295. Next implement exact frozen IOv1 typed contracts/static codec/lifecycle helper/reusableconformance/independentfakesink fixtures, matchingpair.a2/consumer.a1, nativefreshforms/separatefinalreview/mainreadback. Workeroldpair alignmentEQ129; purecanonical/DuckDB unchanged, STOPbeforeR5.
+
 ## EQ124 source qualification / Test
 
 Source8f3208d and core8542a24 current native push/PR checks all successful. Downloaded foundation16archives/fourfreshforms/21factory tests each/positive typing/two invalid calls/core invariance and optional12archives/currentreports/old-new parity passed; core12archives/12currentreports preserve acceptedbytes. Localrepeat/freshforms match Windows; separate reviewer no unresolved findings. See EQ124_DELIVERY.md and EQ124_SOURCE_RECEIPT.json. Next final documentation-head review/currentCI, exact-head publication, successful-main download/serverZIP hashes/allfiles/sourceowner/retention and Released/postreadDone. No private/backend certification, runtime lifecycle remainsEQ125, workers alignmentEQ129, STOPbeforeR5.
