@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "equity-feature-factory-fixture"
+version = "0.1.0a0"
+description = "Synthetic installed EQ124 factory qualification fixture"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = ["equity-feature-io-sdk==0.1.0a1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+equity_feature_factory_fixture = ["py.typed"]

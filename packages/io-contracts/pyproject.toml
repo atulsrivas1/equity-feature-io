@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "equity-feature-io-contracts"
-version = "0.1.0a0"
-description = "Typed experimental equity component foundation"
+version = "0.1.0a1"
+description = "Typed explicit equity I/O factory composition"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 license = "Apache-2.0"

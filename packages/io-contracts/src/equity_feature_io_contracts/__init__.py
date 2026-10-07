@@ -1,4 +1,8 @@
-"""Typed experimental foundation; operations arrive in later stories."""
+"""Explicit experimental composition interfaces; no storage operations."""
 
-__version__ = "0.1.0a0"
-__all__ = ["__version__"]
+from .factories import (
+    ComponentFactory, ConfigValue, CredentialProvider, FactoryError, FactoryErrorCode, PublicConfig, SinkCandidate, SinkCapabilitiesView, SinkRequirements, SourceCandidate
+)
+
+__version__ = "0.1.0a1"
+__all__ = ['__version__', 'ComponentFactory', 'ConfigValue', 'CredentialProvider', 'FactoryError', 'FactoryErrorCode', 'PublicConfig', 'SinkCandidate', 'SinkCapabilitiesView', 'SinkRequirements', 'SourceCandidate']
