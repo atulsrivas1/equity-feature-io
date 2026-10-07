@@ -13,3 +13,5 @@ EQ122 extracts the compatible [DuckDB source adapter](docs/DUCKDB_MIGRATION.md),
 [Experimental I/O v1 specification](docs/contracts/IO_V1.md) and [independent expected vectors](docs/contracts/IO_V1_VECTORS.md) freeze EQ123 design. Runtime publication types/conformance remain EQ125; no installed sink operation is claimed by the specification.
 
 EQ125 accepted logical publication: [typed API/extension kit](docs/api/PUBLICATION.md), [evidence](docs/EQ125_DELIVERY.md). EQ126 accepted [Parquet API](docs/api/PARQUET_SINK.md)/[delivery](docs/EQ126_DELIVERY.md). EQ127 [DuckDB sink API](docs/api/DUCKDB_SINK.md)/[delivery](docs/EQ127_DELIVERY.md) records implementation, resolved recovery findings and exact qualification/publication evidence; these backend guarantees do not certify worker execution or provider/private data.
+
+[Independent public extension tutorial](examples/third_party/README.md) demonstrates synthetic source->pure calculation->in-memory sink/directfactory composition; [EQ128 delivery](docs/EQ128_DELIVERY.md) and canonical285 record actual qualification gates.

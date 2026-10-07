@@ -95,3 +95,7 @@ Queriedengine128MiB/1thread/0Bspill/external+autoload+autoinstallfalse in each f
 Initial ignored readback-helper count substitution accidentally changed expected epoch1700000000 to1800000000. Failed verification and dependent missing-readback aggregate were excluded; restore exact fixed epoch1700000000 and rerun full actual68/tenZIP/118files validation successfully. No package/build epoch change occurred.
 
 Next finalmetadatahead separate review/currentCI/currentarchives/sourceguard, exact-head merges and actualsuccessfulmain newreports/archives/ZIP/sourceowner readback; only then Released/postreadDone. Current source qualification is not actualmain release acceptance. STOPbeforeR5.
+
+## Actual experimental release accepted
+
+[Released6031387736](https://github.com/atulsrivas1/equity-features/issues/284#issuecomment-6031387736) / [postreadDone6031394363](https://github.com/atulsrivas1/equity-features/issues/284#issuecomment-6031394363). Actualmain3a4b750/core584fa87 match reviewed ae119aa/core75523ea trees/Atulowner/138+381blobs; currentmain68archives/tenserverZIP hashes/all118files/currentreports/sourceguards/finite expiry verified. Allarchivefiles equal final qualifiedsource by platform. Actual release receipt preserved alongside this delivery. Earlier pending stages are historical. EQ128 next; no R5 or universal/backend/private certificate.
