@@ -11,6 +11,15 @@ builder=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
 
 class Provenance(unittest.TestCase):
+    def test_foundation_selection_excludes_optional_backend(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for directory, name in (('io-contracts', 'equity-feature-io-contracts'), ('io-sdk', 'equity-feature-io-sdk'), ('duckdb', 'equity-feature-duckdb')):
+                package = root / 'packages' / directory
+                package.mkdir(parents=True)
+                (package / 'pyproject.toml').write_text('[project]\nname = "' + name + '"\n', encoding='utf-8')
+            self.assertEqual([p.name for p in builder.foundation_sources(root)], ['io-contracts', 'io-sdk'])
+
     def test_only_declared_committed_bytes(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)/"repo";root.mkdir()
