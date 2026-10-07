@@ -1,0 +1,736 @@
+{
+  "all_main_archives_equal_qualified_final_source_by_platform": true,
+  "archives": 82,
+  "channel_records": [
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:45:33Z",
+      "digest": "sha256:3735cfa07fb0d8880211e0b9bad51f8d683037c20402f88fd019c0b1c77a4d8d",
+      "expires_at": "2026-11-06T05:45:32Z",
+      "files": 9,
+      "id": 11463466679,
+      "name": "foundation-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-ubuntu-24.04",
+      "size_in_bytes": 207227
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:46:21Z",
+      "digest": "sha256:cb42891ad85bea6754cc64d37883c63471e2a20e19d70748dfcae73d538fc061",
+      "expires_at": "2026-11-06T05:46:20Z",
+      "files": 9,
+      "id": 11462829155,
+      "name": "foundation-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-windows-latest",
+      "size_in_bytes": 208049
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:48:29Z",
+      "digest": "sha256:3f004fb0fe1a81c37e0890101685f99a7a53b6a0644ef255eb14efc8ae51f58b",
+      "expires_at": "2026-11-06T05:48:28Z",
+      "files": 15,
+      "id": 11463437225,
+      "name": "duckdb-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-windows-latest",
+      "size_in_bytes": 293144
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:46:45Z",
+      "digest": "sha256:42f2702789c19139987393834c3842330c91c842345bf3d0fe58b3c66d3d8437",
+      "expires_at": "2026-11-06T05:46:44Z",
+      "files": 15,
+      "id": 11462434474,
+      "name": "duckdb-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-ubuntu-24.04",
+      "size_in_bytes": 291854
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:45:44Z",
+      "digest": "sha256:80e601855c6ff10856b9d3e5426182b00c73e82acd11fadd34368e82bb026986",
+      "expires_at": "2026-11-06T05:45:43Z",
+      "files": 11,
+      "id": 11463705783,
+      "name": "parquet-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-ubuntu-24.04",
+      "size_in_bytes": 205716
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:48:12Z",
+      "digest": "sha256:d870d5f1ed67f336fd0a7581697a2ecdd5caaa254456740382b542ce55924c17",
+      "expires_at": "2026-11-06T05:48:11Z",
+      "files": 11,
+      "id": 11463511807,
+      "name": "parquet-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-windows-latest",
+      "size_in_bytes": 206497
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:49:38Z",
+      "digest": "sha256:8923f88a1e6193cf9c4bbdc82e68680b943d3049e81e23e306ac0fc7e0a0b45e",
+      "expires_at": "2026-11-06T05:49:37Z",
+      "files": 11,
+      "id": 11463397356,
+      "name": "duckdb-sink-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-windows-latest",
+      "size_in_bytes": 211641
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:47:13Z",
+      "digest": "sha256:3bbafdbb2045199c9cca6a2694ece81a90f2e39fce8a102e093c80172928e7e9",
+      "expires_at": "2026-11-06T05:47:12Z",
+      "files": 11,
+      "id": 11462414509,
+      "name": "duckdb-sink-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-ubuntu-24.04",
+      "size_in_bytes": 210681
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:46:30Z",
+      "digest": "sha256:8d71da32ba9a2b9e009b43d36362f8b185c7f070a3d3d3fc3334f331fd4fb73c",
+      "expires_at": "2026-11-06T05:46:29Z",
+      "files": 13,
+      "id": 11463715833,
+      "name": "foundation-45d0fb292234060f8196ba6569ce7805dd921846-ubuntu-24.04",
+      "size_in_bytes": 273828
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:47:30Z",
+      "digest": "sha256:9a97ed929b67486de733dc820b7d07aa1c3d1aec1d1405290ebaf1746a86fc83",
+      "expires_at": "2026-11-06T05:47:30Z",
+      "files": 13,
+      "id": 11463551631,
+      "name": "foundation-45d0fb292234060f8196ba6569ce7805dd921846-windows-latest",
+      "size_in_bytes": 275111
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:45:39Z",
+      "digest": "sha256:463d126f0c7c831a6a6b15729605ce09e485e7a5d62076c9fde6638b1ce0858b",
+      "expires_at": "2026-11-06T05:45:39Z",
+      "files": 8,
+      "id": 11463695816,
+      "name": "extensions-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-ubuntu-24.04",
+      "size_in_bytes": 200968
+    },
+    {
+      "actual_zip_sha256_verified": true,
+      "all_downloaded_files_equal": true,
+      "created_at": "2026-10-07T05:46:28Z",
+      "digest": "sha256:8e865f06b267049aa972bdabf0e479c6ab074c7f1b77f19e88f3746a3913ba3c",
+      "expires_at": "2026-11-06T05:46:28Z",
+      "files": 8,
+      "id": 11462119820,
+      "name": "extensions-395beba80b3bcb2e9db344c6a9d2bcab085be1a6-windows-latest",
+      "size_in_bytes": 201948
+    }
+  ],
+  "channels": 12,
+  "core_tests_per_execution": 633,
+  "downloaded_files": 134,
+  "duckdb_sink_physical_tests_per_form": 18,
+  "duckdb_sink_process_tests_per_form": 9,
+  "duckdb_sink_resource_workloads_per_form": 2,
+  "extension_complete_synthetic_results": 18,
+  "extension_conformance_cases_per_form": 21,
+  "extension_tests_per_form": 12,
+  "final_artifact_reviews": [
+    "https://github.com/atulsrivas1/equity-feature-io/pull/8#issuecomment-6031762971",
+    "https://github.com/atulsrivas1/equity-features/pull/298#issuecomment-6031763541"
+  ],
+  "final_head_reviews": [
+    "https://github.com/atulsrivas1/equity-feature-io/pull/8#issuecomment-6031735476",
+    "https://github.com/atulsrivas1/equity-features/pull/298#issuecomment-6031736124"
+  ],
+  "hard_rss_cap": false,
+  "installed_factory_tests_per_form": 21,
+  "installed_publication_tests_per_form": 25,
+  "main_release_readback": true,
+  "native_extension_runtimes": [
+    {
+      "python": "3.12.14",
+      "system": "Linux"
+    },
+    {
+      "python": "3.12.10",
+      "system": "Windows"
+    }
+  ],
+  "native_foundation_tests_per_platform": 48,
+  "native_runs": [
+    {
+      "all_success": true,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "repo": "equity-feature-io",
+      "run": 37577826128
+    },
+    {
+      "all_success": true,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "repo": "equity-feature-io",
+      "run": 37577826233
+    },
+    {
+      "all_success": true,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "repo": "equity-feature-io",
+      "run": 37577826256
+    },
+    {
+      "all_success": true,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "repo": "equity-feature-io",
+      "run": 37577826237
+    },
+    {
+      "all_success": true,
+      "head": "45d0fb292234060f8196ba6569ce7805dd921846",
+      "repo": "equity-features",
+      "run": 37577802708
+    },
+    {
+      "all_success": true,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "repo": "equity-feature-io",
+      "run": 37577826215
+    }
+  ],
+  "network_filesystem_qualification": false,
+  "parquet_physical_tests_per_form": 17,
+  "parquet_process_tests_per_form": 8,
+  "parquet_resource_workloads_per_form": 2,
+  "power_loss_certification": false,
+  "private_execution": false,
+  "publication": {
+    "equity-feature-io": {
+      "all_public_blobs_equal": 155,
+      "author": "Atul Srivastava",
+      "github_author": "atulsrivas1",
+      "graphql_rate_limit_blocked_cli": true,
+      "main": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "publication_api": "REST",
+      "published_tree": "afaf10f714e09721e3bd5a813bbfdbd0b767a15b",
+      "repo": "atulsrivas1/equity-feature-io",
+      "reviewed_head": "0e1b4dd09cc029d69f6812b085bcdc666246d693"
+    },
+    "equity-features": {
+      "all_public_blobs_equal": 385,
+      "author": "Atul Srivastava",
+      "github_author": "atulsrivas1",
+      "graphql_rate_limit_blocked_cli": true,
+      "main": "45d0fb292234060f8196ba6569ce7805dd921846",
+      "publication_api": "REST",
+      "published_tree": "057314ae40b9d975241cc4886cb9214e1bcb02ac",
+      "repo": "atulsrivas1/equity-features",
+      "reviewed_head": "1fcceff1cc770a04a00bf915ade70571f88c1dc3"
+    }
+  },
+  "readbacks": {
+    "core": {
+      "archives": 12,
+      "main": "45d0fb292234060f8196ba6569ce7805dd921846",
+      "records": [
+        {
+          "all_archive_bytes_equal": true,
+          "archives": 6,
+          "bundle": "foundation-45d0fb292234060f8196ba6569ce7805dd921846-ubuntu-24.04",
+          "python": "3.12.14",
+          "reports": [
+            "benchmark-Linux-gz.json",
+            "benchmark-Linux-whl.json",
+            "consumer-Linux-gz.json",
+            "consumer-Linux-whl.json",
+            "resource-Linux-gz.json",
+            "resource-Linux-whl.json"
+          ],
+          "system": "Linux"
+        },
+        {
+          "all_archive_bytes_equal": true,
+          "archives": 6,
+          "bundle": "foundation-45d0fb292234060f8196ba6569ce7805dd921846-windows-latest",
+          "python": "3.12.10",
+          "reports": [
+            "benchmark-Windows-gz.json",
+            "benchmark-Windows-whl.json",
+            "consumer-Windows-gz.json",
+            "consumer-Windows-whl.json",
+            "resource-Windows-gz.json",
+            "resource-Windows-whl.json"
+          ],
+          "system": "Windows"
+        }
+      ],
+      "reports": 12
+    },
+    "duckdb_sink": {
+      "archives": 14,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "records": [
+        {
+          "archives": {
+            "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "acaa84fc0340c4640ced2b7cdbef04d5ba7cfaec20cd0525b866b415147635cc",
+            "equity_feature_duckdb_sink-0.1.0a0-py3-none-any.whl": "dd8f175dba3ef547401341102d7e7ae1bc41ec3c53a67cfbaaec91c29a52bc7d",
+            "equity_feature_duckdb_sink-0.1.0a0.tar.gz": "7b54708c81e0f1721609182618fd8681959fe73bc6863214dfb589db55734a81",
+            "equity_feature_factory_fixture-0.1.0a1-py3-none-any.whl": "948d7c787a1c2f5cb8fab35c26024902a6021ea24d4ad42991b07a424ff170d3",
+            "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "ef4deb9adc03b0e77075a36236fc20fe30d9373218386a60dc769d0145c09c99",
+            "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "71c2316ab93d3382b24701ce6f4990b1355f90b8f66e562c8b1d34e539d60783",
+            "equity_features-0.0.4a4-py3-none-any.whl": "cf8965e1600a3d8ef10dbefcfdea21f2d48ad8c8f80e0268abe12c365b1cd26e"
+          },
+          "filesystem_types": [
+            "ext4"
+          ],
+          "fresh_forms": 2,
+          "logical_physical_workloads": {
+            "2048": [
+              "a63a2d5a5e83078654f2e1e92ed1242fd5df5309a16cad46e774d751db1c7225",
+              793226,
+              1223137
+            ],
+            "64": [
+              "313ca3488c13611674238b813e945b5d2debabb578f1c5e35c012f1f6a5ab238",
+              25378,
+              38609
+            ]
+          },
+          "measured_workloads_per_form": 2,
+          "python": "3.12.14",
+          "real_process_tests_per_form": 9,
+          "system": "Linux",
+          "tests_per_form": 18
+        },
+        {
+          "archives": {
+            "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "3fb31963c1f51b64c4b82fc874c1c38cc9c73461b933fb06d52f84bb29b7c7b2",
+            "equity_feature_duckdb_sink-0.1.0a0-py3-none-any.whl": "fc0f132f477ddc595daccbdd5342b357aca5bcf689e2c70a7d3fe967b00da4c9",
+            "equity_feature_duckdb_sink-0.1.0a0.tar.gz": "4bd740701d98db09d16cd2c667bb750ae62009a589021b3e6fbf01ced7492637",
+            "equity_feature_factory_fixture-0.1.0a1-py3-none-any.whl": "fca745e4bfe4b039a391b0e195dda32a02d5a4bd1abd244f9b2eec08b6f76224",
+            "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "d0027f97200149bcb05f7e8cf8a969a12e66cda6cc23ee5425fdaa175fdc7549",
+            "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "ffe8e8ab4b1aa7cb94c11e9d7a11f1f4a8a87762aa5f5b49ad0f7f47aa65eebb",
+            "equity_features-0.0.4a4-py3-none-any.whl": "0ff0745acf75f45ae7a2b38c7c106af200448f3026e4997fd0747101c79071f0"
+          },
+          "filesystem_types": [
+            "NTFS"
+          ],
+          "fresh_forms": 2,
+          "logical_physical_workloads": {
+            "2048": [
+              "a63a2d5a5e83078654f2e1e92ed1242fd5df5309a16cad46e774d751db1c7225",
+              793226,
+              1223137
+            ],
+            "64": [
+              "313ca3488c13611674238b813e945b5d2debabb578f1c5e35c012f1f6a5ab238",
+              25378,
+              38609
+            ]
+          },
+          "measured_workloads_per_form": 2,
+          "python": "3.12.10",
+          "real_process_tests_per_form": 9,
+          "system": "Windows",
+          "tests_per_form": 18
+        }
+      ],
+      "schema": "duckdb-sink-downloaded-readback1"
+    },
+    "extensions": {
+      "archives": 14,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "records": [
+        {
+          "all_source_hashes_equal": true,
+          "archives": {
+            "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "acaa84fc0340c4640ced2b7cdbef04d5ba7cfaec20cd0525b866b415147635cc",
+            "equity_feature_example_extensions-0.1.0a0-py3-none-any.whl": "6bed73224f033f4d67ad7d519bce76c5b8d3f6076766ccc0726b6a36a9bf3bde",
+            "equity_feature_example_extensions-0.1.0a0.tar.gz": "3e56f1c9ea5210fc3570416e196c47654e1add0a1c0b2f8fdae080af78d1dac9",
+            "equity_feature_factory_fixture-0.1.0a1-py3-none-any.whl": "948d7c787a1c2f5cb8fab35c26024902a6021ea24d4ad42991b07a424ff170d3",
+            "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "ef4deb9adc03b0e77075a36236fc20fe30d9373218386a60dc769d0145c09c99",
+            "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "71c2316ab93d3382b24701ce6f4990b1355f90b8f66e562c8b1d34e539d60783",
+            "equity_features-0.0.4a4-py3-none-any.whl": "cf8965e1600a3d8ef10dbefcfdea21f2d48ad8c8f80e0268abe12c365b1cd26e"
+          },
+          "forms": [
+            {
+              "backend_required": false,
+              "core_after_sha256": "9732521fe574145d11fe11fec2f302e8f9eb0bb7463ce8979ecc78f76466c65d",
+              "core_before_sha256": "9732521fe574145d11fe11fec2f302e8f9eb0bb7463ce8979ecc78f76466c65d",
+              "external_positive_typing": true,
+              "external_rejected_invalid_calls": 2,
+              "form": "wheel",
+              "installed_typing": true,
+              "numpy_required": false,
+              "pandas_required": false,
+              "pyarrow_required": false,
+              "report": {
+                "actual_conformance_cases": 21,
+                "backend_durability_certification": false,
+                "canonical": "0.0.4a4",
+                "complete_synthetic_results": 18,
+                "extensions": "0.1.0a0",
+                "features": "0.0.4a4",
+                "installed_public_execution": true,
+                "io_contracts": "0.1.0a2",
+                "io_sdk": "0.1.0a2",
+                "passed": true,
+                "private_execution": false,
+                "python": "3.12.14",
+                "schema": "example-extension-installed1",
+                "system": "Linux",
+                "test_suite_sha256": "85c2fe63d392999a47d4ee5077d233c09fa0e3db1cfa76ca65dcddf0a8c1936d",
+                "tests": 12
+              },
+              "runtime_fixture_required": false,
+              "standalone_without_calculation_library": true
+            },
+            {
+              "backend_required": false,
+              "core_after_sha256": "9732521fe574145d11fe11fec2f302e8f9eb0bb7463ce8979ecc78f76466c65d",
+              "core_before_sha256": "9732521fe574145d11fe11fec2f302e8f9eb0bb7463ce8979ecc78f76466c65d",
+              "external_positive_typing": true,
+              "external_rejected_invalid_calls": 2,
+              "form": "sdist",
+              "installed_typing": true,
+              "numpy_required": false,
+              "pandas_required": false,
+              "pyarrow_required": false,
+              "report": {
+                "actual_conformance_cases": 21,
+                "backend_durability_certification": false,
+                "canonical": "0.0.4a4",
+                "complete_synthetic_results": 18,
+                "extensions": "0.1.0a0",
+                "features": "0.0.4a4",
+                "installed_public_execution": true,
+                "io_contracts": "0.1.0a2",
+                "io_sdk": "0.1.0a2",
+                "passed": true,
+                "private_execution": false,
+                "python": "3.12.14",
+                "schema": "example-extension-installed1",
+                "system": "Linux",
+                "test_suite_sha256": "85c2fe63d392999a47d4ee5077d233c09fa0e3db1cfa76ca65dcddf0a8c1936d",
+                "tests": 12
+              },
+              "runtime_fixture_required": false,
+              "standalone_without_calculation_library": true
+            }
+          ],
+          "manifest_sha256": "ac5cf62a0afde5af20dfd6db81fc1be20f04c60a540e585ad4b25fb1a0aad64f",
+          "python": "3.12.14",
+          "system": "Linux"
+        },
+        {
+          "all_source_hashes_equal": true,
+          "archives": {
+            "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "3fb31963c1f51b64c4b82fc874c1c38cc9c73461b933fb06d52f84bb29b7c7b2",
+            "equity_feature_example_extensions-0.1.0a0-py3-none-any.whl": "5f18bbc83ba79485d199794b172a6ed7b7ab259625c87f2a49cb7a80a0889ab8",
+            "equity_feature_example_extensions-0.1.0a0.tar.gz": "5127b5b501b45e278de66761aa91e4c9fd718d0273d77e7b028ebbceed9fa602",
+            "equity_feature_factory_fixture-0.1.0a1-py3-none-any.whl": "fca745e4bfe4b039a391b0e195dda32a02d5a4bd1abd244f9b2eec08b6f76224",
+            "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "d0027f97200149bcb05f7e8cf8a969a12e66cda6cc23ee5425fdaa175fdc7549",
+            "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "ffe8e8ab4b1aa7cb94c11e9d7a11f1f4a8a87762aa5f5b49ad0f7f47aa65eebb",
+            "equity_features-0.0.4a4-py3-none-any.whl": "0ff0745acf75f45ae7a2b38c7c106af200448f3026e4997fd0747101c79071f0"
+          },
+          "forms": [
+            {
+              "backend_required": false,
+              "core_after_sha256": "b02f0b2a8d5a198b3779d5a829fd50a96f81b7f0cebf6ab47e29a9b0ee10bac8",
+              "core_before_sha256": "b02f0b2a8d5a198b3779d5a829fd50a96f81b7f0cebf6ab47e29a9b0ee10bac8",
+              "external_positive_typing": true,
+              "external_rejected_invalid_calls": 2,
+              "form": "wheel",
+              "installed_typing": true,
+              "numpy_required": false,
+              "pandas_required": false,
+              "pyarrow_required": false,
+              "report": {
+                "actual_conformance_cases": 21,
+                "backend_durability_certification": false,
+                "canonical": "0.0.4a4",
+                "complete_synthetic_results": 18,
+                "extensions": "0.1.0a0",
+                "features": "0.0.4a4",
+                "installed_public_execution": true,
+                "io_contracts": "0.1.0a2",
+                "io_sdk": "0.1.0a2",
+                "passed": true,
+                "private_execution": false,
+                "python": "3.12.10",
+                "schema": "example-extension-installed1",
+                "system": "Windows",
+                "test_suite_sha256": "85c2fe63d392999a47d4ee5077d233c09fa0e3db1cfa76ca65dcddf0a8c1936d",
+                "tests": 12
+              },
+              "runtime_fixture_required": false,
+              "standalone_without_calculation_library": true
+            },
+            {
+              "backend_required": false,
+              "core_after_sha256": "b02f0b2a8d5a198b3779d5a829fd50a96f81b7f0cebf6ab47e29a9b0ee10bac8",
+              "core_before_sha256": "b02f0b2a8d5a198b3779d5a829fd50a96f81b7f0cebf6ab47e29a9b0ee10bac8",
+              "external_positive_typing": true,
+              "external_rejected_invalid_calls": 2,
+              "form": "sdist",
+              "installed_typing": true,
+              "numpy_required": false,
+              "pandas_required": false,
+              "pyarrow_required": false,
+              "report": {
+                "actual_conformance_cases": 21,
+                "backend_durability_certification": false,
+                "canonical": "0.0.4a4",
+                "complete_synthetic_results": 18,
+                "extensions": "0.1.0a0",
+                "features": "0.0.4a4",
+                "installed_public_execution": true,
+                "io_contracts": "0.1.0a2",
+                "io_sdk": "0.1.0a2",
+                "passed": true,
+                "private_execution": false,
+                "python": "3.12.10",
+                "schema": "example-extension-installed1",
+                "system": "Windows",
+                "test_suite_sha256": "85c2fe63d392999a47d4ee5077d233c09fa0e3db1cfa76ca65dcddf0a8c1936d",
+                "tests": 12
+              },
+              "runtime_fixture_required": false,
+              "standalone_without_calculation_library": true
+            }
+          ],
+          "manifest_sha256": "df85b735b701b702a3678ccdb8815effc7f9147b8f8d968f618e55d9b2750281",
+          "python": "3.12.10",
+          "system": "Windows"
+        }
+      ],
+      "schema": "example-extension-readback1"
+    },
+    "foundation": {
+      "archives": 16,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "records": [
+        {
+          "artifacts": {
+            "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "acaa84fc0340c4640ced2b7cdbef04d5ba7cfaec20cd0525b866b415147635cc",
+            "equity_feature_factory_fixture-0.1.0a1-py3-none-any.whl": "948d7c787a1c2f5cb8fab35c26024902a6021ea24d4ad42991b07a424ff170d3",
+            "equity_feature_factory_fixture-0.1.0a1.tar.gz": "49b29fb9c8e1784d03752533004b90680ea0b5ad5ba4504e7270f1af21042134",
+            "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "ef4deb9adc03b0e77075a36236fc20fe30d9373218386a60dc769d0145c09c99",
+            "equity_feature_io_contracts-0.1.0a2.tar.gz": "a42833344c94b9cf2a08111987d5c60b324845a87ffb0a2c6e9214a144ff8250",
+            "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "71c2316ab93d3382b24701ce6f4990b1355f90b8f66e562c8b1d34e539d60783",
+            "equity_feature_io_sdk-0.1.0a2.tar.gz": "967cad53e482786bdb7331af86da004c6c8a7cf44f85ada392efa4e61f665605",
+            "equity_features-0.0.4a4-py3-none-any.whl": "cf8965e1600a3d8ef10dbefcfdea21f2d48ad8c8f80e0268abe12c365b1cd26e"
+          },
+          "canonical_dependency_bytes_equal_accepted_EQ123": true,
+          "current_native_fresh_forms": 2,
+          "external_invalid_calls_rejected_per_form": 2,
+          "installed_factory_tests_per_form": 21,
+          "installed_publication_tests_per_form": 25,
+          "python": "3.12.15",
+          "system": "Linux"
+        },
+        {
+          "artifacts": {
+            "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "3fb31963c1f51b64c4b82fc874c1c38cc9c73461b933fb06d52f84bb29b7c7b2",
+            "equity_feature_factory_fixture-0.1.0a1-py3-none-any.whl": "fca745e4bfe4b039a391b0e195dda32a02d5a4bd1abd244f9b2eec08b6f76224",
+            "equity_feature_factory_fixture-0.1.0a1.tar.gz": "a129ef918f364a127ecfce0184d862df44564033652d31399a48a409e1e75fb0",
+            "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "d0027f97200149bcb05f7e8cf8a969a12e66cda6cc23ee5425fdaa175fdc7549",
+            "equity_feature_io_contracts-0.1.0a2.tar.gz": "30e7211c710300da24b1765c1f5ddc6e3eaf3694b1d16dfcab138e712f317312",
+            "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "ffe8e8ab4b1aa7cb94c11e9d7a11f1f4a8a87762aa5f5b49ad0f7f47aa65eebb",
+            "equity_feature_io_sdk-0.1.0a2.tar.gz": "5ca8b028ecd26cc39663dade61b32271738248f7428958ab39431394e483c29a",
+            "equity_features-0.0.4a4-py3-none-any.whl": "0ff0745acf75f45ae7a2b38c7c106af200448f3026e4997fd0747101c79071f0"
+          },
+          "canonical_dependency_bytes_equal_accepted_EQ123": true,
+          "current_native_fresh_forms": 2,
+          "external_invalid_calls_rejected_per_form": 2,
+          "installed_factory_tests_per_form": 21,
+          "installed_publication_tests_per_form": 25,
+          "python": "3.12.10",
+          "system": "Windows"
+        }
+      ],
+      "schema": "publication-foundation-readback1"
+    },
+    "optional": {
+      "records": [
+        {
+          "canonical_core_and_old_adapter_bytes_equal": true,
+          "channel_digest": "sha256:42f2702789c19139987393834c3842330c91c842345bf3d0fe58b3c66d3d8437",
+          "channel_id": 11462434474,
+          "expires_at": "2026-11-06T05:46:44Z",
+          "forms": [
+            {
+              "artifacts": {
+                "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "acaa84fc0340c4640ced2b7cdbef04d5ba7cfaec20cd0525b866b415147635cc",
+                "equity_feature_duckdb-0.1.0a8-py3-none-any.whl": "2abcd7084371e82e7ec887353a1159ed900616d764df36baafe49a2b57c9c676",
+                "equity_features-0.0.4a4-py3-none-any.whl": "cf8965e1600a3d8ef10dbefcfdea21f2d48ad8c8f80e0268abe12c365b1cd26e"
+              },
+              "form": "whl",
+              "reports": {
+                "compatibility-Linux-whl.json": "ff976999b6f38a04b0ee4ae734098cd1608df44fc32d3dd357d78ce11d2a6c19",
+                "conformance-Linux-whl.json": "bd71ce91ffa4e3ec787bd91b7f5b80391d8385f736037df4dbf0b911b341e049",
+                "installed-Linux-whl.json": "253f09604d8e08739653c98c920665d72b54fffcbd7dff2517fe51e5a1643c53",
+                "read-Linux-whl.json": "5cfa926215efc5ed0eb818b1f89d4fcf00f3f5bcb2b452764b0573491b15276c"
+              }
+            },
+            {
+              "artifacts": {
+                "equity_feature_contracts-0.0.4a4.tar.gz": "f32a66f31759b10c9ac251f4dffb2388a3e2ce50d2e5e15c69ac7038828f97a9",
+                "equity_feature_duckdb-0.1.0a8.tar.gz": "7f3d015393f1d80ea8daa4bc79be3e9f8fcd57ec34a5dfc0978c8005c90bd7ce",
+                "equity_features-0.0.4a4.tar.gz": "14e7b8b0ec1b245747d53081a73c9ef060c0f637d205ae97b5e14304b4d95c8f"
+              },
+              "form": "gz",
+              "reports": {
+                "compatibility-Linux-gz.json": "9f2df588bd67bf12d5d77986b54ff77b2ff0ec909bc25b1e0e03f511693ad7f2",
+                "conformance-Linux-gz.json": "005be5093307f562c869718e822889e5f860e8e1819ad1ca75d72c7bf19e739f",
+                "installed-Linux-gz.json": "48f4e802e297ad3f74512a15e89ef9a6df1fdc3450c6b52971b320e524a70808",
+                "read-Linux-gz.json": "8526fec4cdac770cde0bd9c94a1124874d6189da073f4e0492ba4f4ab89594b3"
+              }
+            }
+          ],
+          "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+          "python": "3.12.15",
+          "system": "Linux"
+        },
+        {
+          "canonical_core_and_old_adapter_bytes_equal": true,
+          "channel_digest": "sha256:3f004fb0fe1a81c37e0890101685f99a7a53b6a0644ef255eb14efc8ae51f58b",
+          "channel_id": 11463437225,
+          "expires_at": "2026-11-06T05:48:28Z",
+          "forms": [
+            {
+              "artifacts": {
+                "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "3fb31963c1f51b64c4b82fc874c1c38cc9c73461b933fb06d52f84bb29b7c7b2",
+                "equity_feature_duckdb-0.1.0a8-py3-none-any.whl": "05bc3655de76ad87a969ee7d4b1fd6def623c9cdf31cb0b3dc4753d9629127dc",
+                "equity_features-0.0.4a4-py3-none-any.whl": "0ff0745acf75f45ae7a2b38c7c106af200448f3026e4997fd0747101c79071f0"
+              },
+              "form": "whl",
+              "reports": {
+                "compatibility-Windows-whl.json": "6fd954e22fffaed9fa8ebc6232d82e8febb5554dcd7f14281543b250e67bd4fd",
+                "conformance-Windows-whl.json": "2042bca96ccebf1b465c2a58b9c73db7293f9d9270c8615a6c7ee048cdc8b9ec",
+                "installed-Windows-whl.json": "6cb652ac01dc7cb8e61750cdb27e00b752aaa6f3a48df96f235bfff6a74c1f1a",
+                "read-Windows-whl.json": "c68990b8a9830b3c2cf6d7829c958f610598e949f9b9db4c6c905ab2c6532dc9"
+              }
+            },
+            {
+              "artifacts": {
+                "equity_feature_contracts-0.0.4a4.tar.gz": "c0f35f1fd775b83ab9fdd48177c6332f38b1c83cc2f9986467e0852ca758ae57",
+                "equity_feature_duckdb-0.1.0a8.tar.gz": "177b69cc4c08fb3cbe6a5c6b89da35e1d72c7bba99f6e0ecd93d4886666788bf",
+                "equity_features-0.0.4a4.tar.gz": "c25ab736eb267cd11a11d52cbeda6931d23796c94bb264164014f0dd542f1d06"
+              },
+              "form": "gz",
+              "reports": {
+                "compatibility-Windows-gz.json": "9eba5d04f23615dd25ff306702bfd3210e7a8bb06d145a224e5b79ef2c874913",
+                "conformance-Windows-gz.json": "2f22c496596f32cf92d92870e74159935494a6ce5d682a4305b73b31ec782231",
+                "installed-Windows-gz.json": "bfc0c53a6cf13df5e400636c0c631a8440a878f6212ff117750fa9182ca885ac",
+                "read-Windows-gz.json": "261f8025fd2410f83f228f5652c64eb4991a300970af505dc337ea8d4892494f"
+              }
+            }
+          ],
+          "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+          "python": "3.12.10",
+          "system": "Windows"
+        }
+      ],
+      "run": 37577826233,
+      "schema": "extraction-downloaded-readback1",
+      "source_head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6"
+    },
+    "parquet": {
+      "archives": 14,
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "records": [
+        {
+          "archives": {
+            "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "acaa84fc0340c4640ced2b7cdbef04d5ba7cfaec20cd0525b866b415147635cc",
+            "equity_feature_factory_fixture-0.1.0a1-py3-none-any.whl": "948d7c787a1c2f5cb8fab35c26024902a6021ea24d4ad42991b07a424ff170d3",
+            "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "ef4deb9adc03b0e77075a36236fc20fe30d9373218386a60dc769d0145c09c99",
+            "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "71c2316ab93d3382b24701ce6f4990b1355f90b8f66e562c8b1d34e539d60783",
+            "equity_feature_parquet-0.1.0a0-py3-none-any.whl": "dec441baa3bba0c048bb0c58c007061903756afa11df9c92179c4800dc46df12",
+            "equity_feature_parquet-0.1.0a0.tar.gz": "a1572b34841150666885dc2aa0d3631a0d632da94145a2031dbb1f780cda803b",
+            "equity_features-0.0.4a4-py3-none-any.whl": "cf8965e1600a3d8ef10dbefcfdea21f2d48ad8c8f80e0268abe12c365b1cd26e"
+          },
+          "filesystem_types": [
+            "ext4"
+          ],
+          "fresh_forms": 2,
+          "logical_physical_workloads": {
+            "2048": [
+              "a63a2d5a5e83078654f2e1e92ed1242fd5df5309a16cad46e774d751db1c7225",
+              793226,
+              1081970
+            ],
+            "64": [
+              "313ca3488c13611674238b813e945b5d2debabb578f1c5e35c012f1f6a5ab238",
+              25378,
+              40966
+            ]
+          },
+          "measured_workloads_per_form": 2,
+          "python": "3.12.14",
+          "real_process_tests_per_form": 8,
+          "system": "Linux",
+          "tests_per_form": 17
+        },
+        {
+          "archives": {
+            "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "3fb31963c1f51b64c4b82fc874c1c38cc9c73461b933fb06d52f84bb29b7c7b2",
+            "equity_feature_factory_fixture-0.1.0a1-py3-none-any.whl": "fca745e4bfe4b039a391b0e195dda32a02d5a4bd1abd244f9b2eec08b6f76224",
+            "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "d0027f97200149bcb05f7e8cf8a969a12e66cda6cc23ee5425fdaa175fdc7549",
+            "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "ffe8e8ab4b1aa7cb94c11e9d7a11f1f4a8a87762aa5f5b49ad0f7f47aa65eebb",
+            "equity_feature_parquet-0.1.0a0-py3-none-any.whl": "378734cccf78ac63d295be6b15ece4e5997b5d5798d2fc25198c6469087b8d65",
+            "equity_feature_parquet-0.1.0a0.tar.gz": "667661cfd2ef3ad082e360d024cd63c6f7b2699752156bdc9f7fe1a1ac05e905",
+            "equity_features-0.0.4a4-py3-none-any.whl": "0ff0745acf75f45ae7a2b38c7c106af200448f3026e4997fd0747101c79071f0"
+          },
+          "filesystem_types": [
+            "NTFS"
+          ],
+          "fresh_forms": 2,
+          "logical_physical_workloads": {
+            "2048": [
+              "a63a2d5a5e83078654f2e1e92ed1242fd5df5309a16cad46e774d751db1c7225",
+              793226,
+              1081970
+            ],
+            "64": [
+              "313ca3488c13611674238b813e945b5d2debabb578f1c5e35c012f1f6a5ab238",
+              25378,
+              40966
+            ]
+          },
+          "measured_workloads_per_form": 2,
+          "python": "3.12.10",
+          "real_process_tests_per_form": 8,
+          "system": "Windows",
+          "tests_per_form": 17
+        }
+      ],
+      "schema": "parquet-downloaded-readback1"
+    }
+  },
+  "schema": "extension-current-evidence1",
+  "source": {
+    "equity-feature-io": {
+      "all_public_blobs_equal": 155,
+      "author": "Atul Srivastava",
+      "github_author": "atulsrivas1",
+      "head": "395beba80b3bcb2e9db344c6a9d2bcab085be1a6",
+      "tree": "afaf10f714e09721e3bd5a813bbfdbd0b767a15b"
+    },
+    "equity-features": {
+      "all_public_blobs_equal": 385,
+      "author": "Atul Srivastava",
+      "github_author": "atulsrivas1",
+      "head": "45d0fb292234060f8196ba6569ce7805dd921846",
+      "tree": "057314ae40b9d975241cc4886cb9214e1bcb02ac"
+    }
+  },
+  "source_receipt_sha256": "a2a4f03027600754f3b4a7e3a3e889c5d71145172796955d9130c72071d50bf0"
+}
