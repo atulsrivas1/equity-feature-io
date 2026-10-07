@@ -13,7 +13,7 @@ from equity_feature_contracts.inputs import (
 )
 from equity_feature_io_contracts import CredentialProvider, PublicConfig, SinkCapabilitiesView
 
-__version__ = "0.1.0a0"
+__version__ = "0.1.0a1"
 
 
 class SyntheticSource:

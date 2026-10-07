@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "equity-feature-io-contracts"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "Typed explicit equity I/O factory composition"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"

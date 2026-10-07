@@ -11,3 +11,5 @@ CPython3.12 x64 Windows/Linux only. Experimental io-contracts/SDK0.1.0a1 provide
 EQ122 extracts the compatible [DuckDB source adapter](docs/DUCKDB_MIGRATION.md), independently packaged without I/O SDK/workers; its current API/docs live here and canonical279 records actual delivery acceptance.
 
 [Experimental I/O v1 specification](docs/contracts/IO_V1.md) and [independent expected vectors](docs/contracts/IO_V1_VECTORS.md) freeze EQ123 design. Runtime publication types/conformance remain EQ125; no installed sink operation is claimed by the specification.
+
+EQ125 publication implementation: [typed API/extension kit](docs/api/PUBLICATION.md), [current validation](docs/EQ125_DELIVERY.md). Matchingcontracts/SDK.a2; logicalcodec/lifecycle/conformance implemented, storage/process backends and actualrelease qualification remain pending.

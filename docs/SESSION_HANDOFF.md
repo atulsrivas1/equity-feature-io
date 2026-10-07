@@ -1,3 +1,9 @@
+## EQ125 implementation / In progress
+
+Pre-codecore38c203b/PR295 and companionee40760/PR5 published before code. Typed immutable v1 publication contracts/staticcodec/identity and lifecycle/reusableconformance implemented; matchingI/Opair.a2/fixture.a1. Local44development (21factory+21publication+2provenance), strict11publicfiles, fourmanual nonemptygoldens plus607-byte empty/zero framing/all29records4enums/complete18syntheticresults/response-loss/cancel/retry/conflict/tamper/defectivefixture detection/publicbar50051200102.6 pass. ActualMemorySink readback onlysinglePythoninstance; restartfaults simulated, no process/backend/private certificate.
+
+Foundation3 updated for both fresh installed21factory+21publication reports/handgolden SHA/currentcommittedsource/coreinvariance; not yet built. Next commit current implementation/docs, preserve olddist under verifiedworkspace.git path, run actual localrepeat/freshforms/nativeCI, separately reviewactualheads, source/currentartifactqualification then Readyrelease/publication/main40archives/currentreports/6serverZIP hash/sourceowner/retention/readback. Purecanonical/DuckDB/worker unchanged; worker alignmentEQ129, STOPbeforeR5. API docs/api/PUBLICATION.md and EQ125_DELIVERY.md record currentlimits.
+
 ## EQ124 accepted / EQ125 pre-code
 
 Canonical281 Closed/ProjectDone after actualmain7c9e082/core3c8ecda/currentCI/all40archives/currentreports/sixZIP hashes/sourceowner/retention; acceptedfactorypair.a1/consumer.a0. See canonical Released6029783916/Done6029784487 and stories/EQ-124_RELEASE_RECEIPT.json. No operational sink/private/backend certification.
