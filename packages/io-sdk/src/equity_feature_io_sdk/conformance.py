@@ -4,6 +4,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 import functools
+from typing import Literal
 
 from equity_feature_contracts.results import FeatureResult
 from equity_feature_io_contracts import FactoryError, SinkRequirements
@@ -37,7 +38,7 @@ class SinkConformanceReport:
 
 
 def qualify_sink(factory: Callable[[], ResultSink], results: tuple[FeatureResult, ...],
-                 limits: SinkRequirements) -> SinkConformanceReport:
+                 limits: SinkRequirements, *, staging_recovery: Literal["busy", "restart"] = "busy") -> SinkConformanceReport:
     """Factory must create a NEW isolated destination each call. Uses synthetic supplied facts.
 
     This suite makes real begin/write/commit/read calls. The caller owns cleanup and
@@ -45,6 +46,8 @@ def qualify_sink(factory: Callable[[], ResultSink], results: tuple[FeatureResult
     At least one complete result is required, including an observed-empty result if needed.
     """
     if not results:
+        raise SinkError(SinkErrorCode.INVALID_CONFIG)
+    if staging_recovery not in ("busy", "restart"):
         raise SinkError(SinkErrorCode.INVALID_CONFIG)
     envelope = prepare_publication(results, destination_scope="synthetic-conformance", generation_id="generation1",
                                    job_id="job1", partition_id="partition1", limits=limits)
@@ -105,8 +108,14 @@ def qualify_sink(factory: Callable[[], ResultSink], results: tuple[FeatureResult
 
     def busy() -> str:
         sink = factory()
-        begin(sink)
-        sink.begin(envelope)
+        original = begin(sink)
+        restarted = sink.begin(envelope)
+        if staging_recovery == "restart" and not isinstance(restarted, CompletionReceipt) and restarted is not original:
+            try:
+                sink.write(original, 0, results[0])
+            except SinkError as error:
+                status = sink.lookup(key)
+                return "exclusive_restart" if error.code is SinkErrorCode.INVALID_SESSION and status.state is PublicationState.STAGING and status.receipt is None else "incorrect_restart"
         return "multiple_owners"
 
     def aborted_retry() -> str:
@@ -198,7 +207,7 @@ def qualify_sink(factory: Callable[[], ResultSink], results: tuple[FeatureResult
     for state in ("committed", "staging", "aborted"):
         check(state + "_different_content_conflict", "CONFLICT", functools.partial(conflict, state))
     check("staging_nonvisible", "STAGING", staging)
-    check("exclusive_staging_busy", "BUSY", busy)
+    check("exclusive_staging_policy", "BUSY" if staging_recovery == "busy" else "exclusive_restart", busy)
     check("abort_idempotence_same_content_retry", "new_attempt", aborted_retry)
     check("abort_after_commit", "preserved", abort_commit)
     check("zero_results", "zero", zero)

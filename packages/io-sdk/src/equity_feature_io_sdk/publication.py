@@ -62,6 +62,10 @@ def prepare_publication(results: tuple[FeatureResult, ...], *, destination_scope
                         limits: SinkRequirements, supersedes_key: str | None = None,
                         caller_created_at_ns: int | None = None) -> PublicationEnvelope:
     """One complete FeatureResult per write; no fragmented rows or lazy content."""
+    # Frozen wire envelopes carry limits, not requested storage guarantees.
+    # Such requirements must be supplied explicitly to publish, never silently lost.
+    if limits.visibility is not None or limits.writer_mode is not None or limits.reservation_retention_ns != 1:
+        raise SinkError(SinkErrorCode.UNSUPPORTED_CAPABILITY)
     cells, evidence, size = _inventory(results, limits)
     identity = PublicationIdentity(**{f: getattr(limits, f) for f in _VERSION_FIELDS},
                                    destination_scope=destination_scope, generation_id=generation_id,
@@ -157,11 +161,20 @@ def _abort(sink: ResultSink, session: WriteSession, envelope: PublicationEnvelop
 
 
 def publish(sink: ResultSink, envelope: PublicationEnvelope, results: tuple[FeatureResult, ...],
-            *, cancellation: Cancellation | None = None) -> CompletionReceipt:
+            *, requirements: SinkRequirements | None = None,
+            cancellation: Cancellation | None = None) -> CompletionReceipt:
     """Publication only; no worker claims, schedules, catalogs or assumed exactly-once."""
     verify_content(envelope, results)
+    if requirements is not None:
+        if type(requirements) is not SinkRequirements:
+            raise SinkError(SinkErrorCode.INVALID_CONFIG)
+        if tuple(getattr(requirements, field) for field in _VERSION_FIELDS) != _VERSIONS:
+            raise SinkError(SinkErrorCode.INCOMPATIBLE_VERSION)
+        _inventory(results, requirements)
     try:
         admit_sink(sink, envelope_requirements(envelope))
+        if requirements is not None:
+            admit_sink(sink, requirements)
     except FactoryError:
         raise SinkError(SinkErrorCode.UNSUPPORTED_CAPABILITY) from None
     try:

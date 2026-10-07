@@ -154,6 +154,49 @@ class PublicationTests(unittest.TestCase):
         self.reject(SinkErrorCode.INVALID_CONTENT, lambda: decode_envelope(encode_envelope(e)+b'\n'))
         self.reject(SinkErrorCode.INVALID_CONTENT, lambda: decode_receipt(encode_receipt(dataclasses.replace(receipt, idempotency_key='0'*64))))
 
+    def test_wire_versions_rejected_before_current_schema_decoding_even_valid_key(self):
+        results=(golden_result('count'),);e=envelope(results);receipt=publish(MemorySink(),e,results)
+        for field in ('protocol_version','codec_version','identity_version','digest_version','canonical_package_version','canonical_schema_version','math_policy_version'):
+            wire=json.loads(encode_envelope(e));wire[field]='future2'
+            data=json.dumps(wire,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode('ascii')
+            self.reject(SinkErrorCode.INCOMPATIBLE_VERSION,lambda:decode_envelope(data))
+            wire=json.loads(encode_receipt(receipt));wire['identity'][field]='future2'
+            keybytes=json.dumps(wire['identity'],sort_keys=True,separators=(',',':'),ensure_ascii=True).encode('ascii')
+            wire['idempotency_key']=hashlib.sha256(b'efio-key1\0'+keybytes).hexdigest()
+            data=json.dumps(wire,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode('ascii')
+            self.reject(SinkErrorCode.INCOMPATIBLE_VERSION,lambda:decode_receipt(data))
+            self.reject(SinkErrorCode.INCOMPATIBLE_VERSION,lambda:encode_envelope(dataclasses.replace(e,**{field:'future2'})))
+        wire=json.loads(encode_envelope(e));wire['result_descriptors'][0]['metadata']['fields']['schema_version']='2'
+        self.reject(SinkErrorCode.INCOMPATIBLE_VERSION,lambda:decode_envelope(json.dumps(wire,sort_keys=True,separators=(',',':')).encode('ascii')))
+
+    def test_non_limit_guarantees_are_never_dropped_before_begin(self):
+        results=(golden_result('count'),);e=envelope(results);sink=MemorySink()
+        for changes in (dict(visibility='manifest_last'),dict(writer_mode='serialized_writer'),dict(reservation_retention_ns=1000),dict(visibility='manifest_last',writer_mode='serialized_writer',reservation_retention_ns=1000)):
+            requested=dataclasses.replace(LIMITS,**changes)
+            self.reject(SinkErrorCode.UNSUPPORTED_CAPABILITY,lambda:prepare_publication(results,destination_scope='dest',generation_id='gen',job_id='job',partition_id='partition',limits=requested))
+            self.reject(SinkErrorCode.UNSUPPORTED_CAPABILITY,lambda:publish(sink,e,results,requirements=requested))
+            self.assertEqual(sink.lookup(idempotency_key(e.identity)).state,PublicationState.ABSENT)
+        requested=dataclasses.replace(LIMITS,visibility='transactional',writer_mode='single_writer')
+        self.assertEqual(publish(sink,e,results,requirements=requested),sink.lookup(idempotency_key(e.identity)).receipt)
+        fresh=MemorySink()
+        self.reject(SinkErrorCode.INCOMPATIBLE_VERSION,lambda:publish(fresh,e,results,requirements=dataclasses.replace(LIMITS,codec_version='future2')))
+        self.reject(SinkErrorCode.RESOURCE_LIMIT,lambda:publish(fresh,e,results,requirements=dataclasses.replace(LIMITS,max_chunk_bytes=1)))
+        self.assertEqual(fresh.lookup(idempotency_key(e.identity)).state,PublicationState.ABSENT)
+
+    def test_declared_staging_restart_policy_requires_exclusive_new_handle(self):
+        class Restarting(MemorySink):
+            def begin(self,envelope):
+                try:
+                    return super().begin(envelope)
+                except SinkError as error:
+                    if error.code is not SinkErrorCode.BUSY: raise
+                    self.simulate_restart()
+                    return super().begin(envelope)
+        results=synthetic_results()
+        self.assertTrue(qualify_sink(Restarting,results,LIMITS,staging_recovery='restart').passed)
+        self.assertFalse(qualify_sink(Restarting,results,LIMITS,staging_recovery='busy').passed)
+        self.assertFalse(qualify_sink(MemorySink,results,LIMITS,staging_recovery='restart').passed)
+
     def test_key_operational_fields_excluded_content_change_conflicts(self):
         original = golden_result('count'); changed = dataclasses.replace(original, values=(dataclasses.replace(original.values[0], values=(1,)),))
         e, new = envelope((original,)), envelope((changed,))

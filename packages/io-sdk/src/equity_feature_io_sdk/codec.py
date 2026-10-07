@@ -221,24 +221,84 @@ def _publication_decode(value: Wire, cls: type[Any]) -> Any:
 def encode_envelope(value: PublicationEnvelope) -> bytes:
     if type(value) is not PublicationEnvelope:
         raise SinkError(SinkErrorCode.INVALID_CONFIG)
-    return canonical_json(_publication_wire(value))
+    wire = _publication_wire(value)
+    _wire_versions(wire)
+    return canonical_json(wire)
 
 
 def encode_receipt(value: CompletionReceipt) -> bytes:
     if type(value) is not CompletionReceipt:
         raise SinkError(SinkErrorCode.INVALID_CONFIG)
-    return canonical_json(_publication_wire(value))
+    wire = _publication_wire(value)
+    _wire_versions(wire, receipt=True)
+    return canonical_json(wire)
+
+
+def _wire_versions(value: Wire, *, receipt: bool = False) -> None:
+    """Reject unsupported schema declarations BEFORE constructing current records."""
+    if type(value) is not dict:
+        raise SinkError(SinkErrorCode.INVALID_CONTENT)
+    assert isinstance(value, dict)
+    identity = value.get("identity") if receipt else value
+    if type(identity) is not dict:
+        raise SinkError(SinkErrorCode.INVALID_CONTENT)
+    assert isinstance(identity, dict)
+    versions = {"protocol_version": "1", "codec_version": "efio-json1", "identity_version": "efio-key1",
+                "digest_version": "efio-content1", "canonical_package_version": "0.0.4a4",
+                "canonical_schema_version": "1", "math_policy_version": "v1"}
+    for field, expected in versions.items():
+        if field not in identity or type(identity[field]) is not str:
+            raise SinkError(SinkErrorCode.INVALID_CONTENT)
+        if identity[field] != expected:
+            raise SinkError(SinkErrorCode.INCOMPATIBLE_VERSION)
+    descriptors = identity.get("result_descriptors")
+    if type(descriptors) is not list:
+        raise SinkError(SinkErrorCode.INVALID_CONTENT)
+    assert isinstance(descriptors, list)
+    for descriptor_value in descriptors:
+        if type(descriptor_value) is not dict:
+            raise SinkError(SinkErrorCode.INVALID_CONTENT)
+        assert isinstance(descriptor_value, dict)
+        metadata = descriptor_value.get("metadata")
+        if type(metadata) is not dict:
+            raise SinkError(SinkErrorCode.INVALID_CONTENT)
+        assert isinstance(metadata, dict)
+        data = metadata.get("fields")
+        if type(data) is not dict:
+            raise SinkError(SinkErrorCode.INVALID_CONTENT)
+        assert isinstance(data, dict)
+        for field, expected in (("schema_version", "1"), ("math_policy_version", "v1")):
+            if field not in data or type(data[field]) is not str:
+                raise SinkError(SinkErrorCode.INVALID_CONTENT)
+            if data[field] != expected:
+                raise SinkError(SinkErrorCode.INCOMPATIBLE_VERSION)
+        headers = descriptor_value.get("features")
+        if type(headers) is not list:
+            raise SinkError(SinkErrorCode.INVALID_CONTENT)
+        assert isinstance(headers, list)
+        for header in headers:
+            if type(header) is not dict:
+                raise SinkError(SinkErrorCode.INVALID_CONTENT)
+            assert isinstance(header, dict)
+            if "schema_version" not in header or type(header["schema_version"]) is not str:
+                raise SinkError(SinkErrorCode.INVALID_CONTENT)
+            if header["schema_version"] != "1":
+                raise SinkError(SinkErrorCode.INCOMPATIBLE_VERSION)
 
 
 def decode_envelope(data: bytes) -> PublicationEnvelope:
     try:
         if type(data) is not bytes:
             raise SinkError(SinkErrorCode.INVALID_CONTENT)
-        value = _publication_decode(json.loads(data.decode("ascii"), object_pairs_hook=_pairs), PublicationEnvelope)
+        wire = json.loads(data.decode("ascii"), object_pairs_hook=_pairs)
+        _wire_versions(wire)
+        value = _publication_decode(wire, PublicationEnvelope)
         if type(value) is not PublicationEnvelope or encode_envelope(value) != data:
             raise SinkError(SinkErrorCode.INVALID_CONTENT)
         assert isinstance(value, PublicationEnvelope)
         return value
+    except SinkError as error:
+        raise SinkError(SinkErrorCode.INCOMPATIBLE_VERSION if error.code is SinkErrorCode.INCOMPATIBLE_VERSION else SinkErrorCode.INVALID_CONTENT) from None
     except Exception:
         raise SinkError(SinkErrorCode.INVALID_CONTENT) from None
 
@@ -247,12 +307,16 @@ def decode_receipt(data: bytes) -> CompletionReceipt:
     try:
         if type(data) is not bytes:
             raise SinkError(SinkErrorCode.INVALID_CONTENT)
-        value = _publication_decode(json.loads(data.decode("ascii"), object_pairs_hook=_pairs), CompletionReceipt)
+        wire = json.loads(data.decode("ascii"), object_pairs_hook=_pairs)
+        _wire_versions(wire, receipt=True)
+        value = _publication_decode(wire, CompletionReceipt)
         if type(value) is not CompletionReceipt or encode_receipt(value) != data:
             raise SinkError(SinkErrorCode.INVALID_CONTENT)
         assert isinstance(value, CompletionReceipt)
         if value.idempotency_key != idempotency_key(value.identity):
             raise SinkError(SinkErrorCode.INVALID_CONTENT)
         return value
+    except SinkError as error:
+        raise SinkError(SinkErrorCode.INCOMPATIBLE_VERSION if error.code is SinkErrorCode.INCOMPATIBLE_VERSION else SinkErrorCode.INVALID_CONTENT) from None
     except Exception:
         raise SinkError(SinkErrorCode.INVALID_CONTENT) from None
