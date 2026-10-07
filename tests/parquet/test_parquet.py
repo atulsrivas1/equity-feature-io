@@ -149,6 +149,74 @@ class ParquetTests(unittest.TestCase):
         self.reject(SinkErrorCode.UNSUPPORTED_CAPABILITY, lambda: self.sink(limits=dataclasses.replace(LIMITS, writer_mode='single_writer')))
         self.assertFalse(self.root.exists())
 
+    def test_publication_between_reservation_and_completion_observations(self):
+        facts = (FACTS[1],);e = envelope(facts);key = idempotency_key(e.identity)
+        for predecessor in (PublicationState.ABSENT, PublicationState.ABORTED, PublicationState.STAGING):
+            with self.subTest(predecessor=predecessor):
+                root = self.root / predecessor.value
+                with ParquetSink(root, 'synthetic-conformance') as writer, ParquetSink(root, 'synthetic-conformance') as reader:
+                    if predecessor is not PublicationState.ABSENT:
+                        old = writer.begin(e)
+                        if predecessor is PublicationState.ABORTED:
+                            writer.abort(old)
+                        else:
+                            # Simulate lost process ownership without changing persistent STAGING.
+                            writer._finish(old, PublicationState.ABORTED)
+                    original = reader._reservation
+                    receipts = []
+                    def interleave(pub_key):
+                        snapshot = original(pub_key)
+                        reader._reservation = original
+                        receipts.append(publish(writer, e, facts))
+                        return snapshot
+                    with mock.patch.object(reader, '_reservation', side_effect=interleave):
+                        observed = reader.lookup(key)
+                    self.assertIn(observed.state, (predecessor, PublicationState.COMMITTED))
+                    if observed.state is not PublicationState.COMMITTED:
+                        self.assertIsNone(observed.receipt)
+                    self.assertEqual(reader.lookup(key).receipt, receipts[0])
+                    self.assertEqual(reader.read(receipts[0]), facts)
+                    self.assertEqual(publish(writer, e, facts), receipts[0])
+
+    def test_first_publication_after_absent_reservation_existence_observation(self):
+        facts = (FACTS[1],);e = envelope(facts);key = idempotency_key(e.identity)
+        writer = self.sink();reader = self.sink();original = Path.exists
+        path = self.root / '.efio-parquet1' / key / 'reservation.json'
+        receipts = [];triggered = False
+        def interleave(candidate):
+            nonlocal triggered
+            exists = original(candidate)
+            if candidate == path and not triggered and not exists:
+                triggered = True
+                receipts.append(publish(writer, e, facts))
+            return exists
+        with mock.patch.object(Path, 'exists', interleave):
+            observed = reader.lookup(key)
+        self.assertTrue(triggered)
+        self.assertIn(observed.state, (PublicationState.ABSENT, PublicationState.COMMITTED))
+        self.assertEqual(reader.lookup(key).receipt, receipts[0])
+        self.assertEqual(reader.read(receipts[0]), facts)
+
+    def test_stable_completion_requires_matching_reservation(self):
+        for corruption in ('missing', 'attempt', 'envelope'):
+            with self.subTest(corruption=corruption):
+                root = self.root / corruption
+                with ParquetSink(root, 'synthetic-conformance') as sink:
+                    facts = (FACTS[1],);e = envelope(facts)
+                    receipt = publish(sink, e, facts)
+                    path = root / '.efio-parquet1' / receipt.idempotency_key / 'reservation.json'
+                    if corruption == 'missing':
+                        path.unlink()
+                    else:
+                        value = json.loads(path.read_bytes())
+                        if corruption == 'attempt':
+                            value['attempt_id'] = 'f'*32
+                        else:
+                            from equity_feature_io_sdk.codec import encode_envelope
+                            value['envelope'] = encode_envelope(dataclasses.replace(e, expected_content_sha256='f'*64)).decode('ascii')
+                        sink._control_write(path, value)
+                    self.reject(SinkErrorCode.CORRUPTION, lambda: sink.lookup(receipt.idempotency_key))
+                    self.reject(SinkErrorCode.CORRUPTION, lambda: sink.read(receipt))
     def test_all_three_corrupt_components_withhold_all_receipts(self):
         sink = self.sink();e = envelope((FACTS[1],));session = sink.begin(e)
         sink.write(session,0,FACTS[1]);receipt = sink.commit(session)

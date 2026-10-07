@@ -34,7 +34,7 @@ def qualify(stage, dependencies, artifact, form):
             report=location/(key+'.json')
             foundation.run(py,'-I',stage/'tests/parquet'/script,'--installed','--report-json',report,cwd=location)
             reports[key]=json.loads(report.read_text(encoding='utf-8'))
-        assert reports['roundtrip']['tests']==17 and reports['roundtrip']['passed']
+        assert reports['roundtrip']['tests']==20 and reports['roundtrip']['passed']
         assert reports['process']['tests']==8 and reports['process']['passed'] and reports['process']['actual_owned_child_processes']
         assert reports['roundtrip']['test_suite_sha256']==foundation.sha(stage/'tests/parquet/test_parquet.py')
         assert reports['process']['test_suite_sha256']==foundation.sha(stage/'tests/parquet/test_process.py')

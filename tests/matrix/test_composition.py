@@ -30,7 +30,7 @@ from duckdb_conformance import Fixture
 
 VERSIONS={'equity-feature-contracts':'0.0.4a4','equity-features':'0.0.4a4',
  'equity-feature-io-contracts':'0.1.0a2','equity-feature-io-sdk':'0.1.0a2',
- 'equity-feature-duckdb':'0.1.0a8','equity-feature-parquet':'0.1.0a0',
+ 'equity-feature-duckdb':'0.1.0a8','equity-feature-parquet':'0.1.0a1',
  'equity-feature-duckdb-sink':'0.1.0a0','equity-feature-example-extensions':'0.1.0a0',
  'equity-feature-workers':'0.1.0a1','duckdb':'1.5.6','numpy':'2.2.6','pyarrow':'20.0.0'}
 INSTALLED=False

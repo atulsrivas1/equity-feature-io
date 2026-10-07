@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "equity-feature-parquet"
-version = "0.1.0a0"
+version = "0.1.0a1"
 description = "Bounded manifest-last canonical equity result generations"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"

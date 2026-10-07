@@ -1,3 +1,7 @@
+## BUG005 coherent observation correction
+
+Owner-authorized output-only repair of canonical301 uses completion-first immutable binding. Per-file atomic replace did not guarantee coherent multi-file observation. Deterministic regression interleavings fail old source; genuine stable mismatch validation remains. Parquet.a1 requires new archive identity/native/fresh/current-main qualification; historical.a0 qualification cannot be relabeled. Other package versions/math/private inputs unchanged. See BUG005_PLAN and current canonical issue for actual lifecycle. Stop after repair before R5 implementation/discussion.
+
 ## EQ130 release audit under qualification
 
 EQ121–129 are accepted; EQ130 is the sole active docs/audit story. [canonical R4.1 audit](https://github.com/atulsrivas1/equity-features/blob/main/docs/R4_1_ACCEPTANCE.md) and [canonical R5 resume](https://github.com/atulsrivas1/equity-features/blob/main/docs/R5_AUTONOMOUS_HANDOFF.md) bind actual accepted versions/heads/receipts, separate automated reviews, source/backend/composed evidence and preserved rights/limits. Final current head review/CI/artifact/publication/readback and canonical287Done precede epic/milestone closure and EQ057#65 Ready. R5 is prepared only; this chat stops before its implementation. No runtime/test/workflow/package/math/private execution change. Live Project/issue evidence is authority; earlier snapshots below preserve history.
