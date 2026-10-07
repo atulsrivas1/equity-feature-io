@@ -1,0 +1,5 @@
+# Experimental Parquet result sink
+
+EQ126 implementation under qualification. `equity_feature_parquet` receives complete canonical results through the accepted I/O contracts/SDK0.1.0a2. PyArrow20.0.0 is an optional backend dependency; calculations remain pure. See [pre-code plan](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/EQ126_PLAN.md) and canonical [EQ126](https://github.com/atulsrivas1/equity-features/issues/283) for current delivery evidence. No backend/process/storage acceptance is claimed before actual native qualification and publication.
+
+[Public API/layout/recovery/bounds](https://github.com/atulsrivas1/equity-feature-io/blob/codex/eq-126-parquet-sink/docs/api/PARQUET_SINK.md) describes direct ParquetSink context management and explicit ParquetSinkFactory registry configuration. Store complete canonical records plus verified typed cell/evidence projections; receipts bind all3components. Physical/process/native installed qualification remains pending. No auto cleanup/global registration or universal durability guarantee.
