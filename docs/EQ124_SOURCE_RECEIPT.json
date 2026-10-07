@@ -1,0 +1,44 @@
+{
+  "archives": 16,
+  "head": "8f3208d53da095bcf730cdf95f65a749028af2d6",
+  "native_run": 37561963008,
+  "records": [
+    {
+      "artifacts": {
+        "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "acaa84fc0340c4640ced2b7cdbef04d5ba7cfaec20cd0525b866b415147635cc",
+        "equity_feature_factory_fixture-0.1.0a0-py3-none-any.whl": "6e1cce6b3f5f6e2b19b0b46edb250c69f547fab4ace791f0b5dfb4d7b7383410",
+        "equity_feature_factory_fixture-0.1.0a0.tar.gz": "21f27558ca5ca8ef98cf325bcbd71d5651fc82d9a053a4a9e9e426107176bfb9",
+        "equity_feature_io_contracts-0.1.0a1-py3-none-any.whl": "8ae4c958c0a6a9249d8f285af3efcb7f45c0e2112e44ee7208c7534ed04f1e45",
+        "equity_feature_io_contracts-0.1.0a1.tar.gz": "0d60a26313ed8bbf4f63d8adc6db06e661686dee405694bd9f05de46f747f83b",
+        "equity_feature_io_sdk-0.1.0a1-py3-none-any.whl": "fd6eedaa28453b51f304c2939b272da268587d324cbed9ed97ed5e2264138907",
+        "equity_feature_io_sdk-0.1.0a1.tar.gz": "b0f71ba4806627c53935cf5f41526b7e958a5b16d420f4e47fc1edc3ec2cd533",
+        "equity_features-0.0.4a4-py3-none-any.whl": "cf8965e1600a3d8ef10dbefcfdea21f2d48ad8c8f80e0268abe12c365b1cd26e"
+      },
+      "canonical_dependency_bytes_equal_accepted_EQ123": true,
+      "current_native_fresh_forms": 2,
+      "external_invalid_calls_rejected_per_form": 2,
+      "installed_factory_tests_per_form": 21,
+      "python": "3.12.15",
+      "system": "Linux"
+    },
+    {
+      "artifacts": {
+        "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "3fb31963c1f51b64c4b82fc874c1c38cc9c73461b933fb06d52f84bb29b7c7b2",
+        "equity_feature_factory_fixture-0.1.0a0-py3-none-any.whl": "db975c9bc7de5d4b2886a44e86e55af43999099aa555bdb57f6e53a2a63a6398",
+        "equity_feature_factory_fixture-0.1.0a0.tar.gz": "43ea0625d959f6c1f4263c16b7fd4d9f7ec52c1e44f40db30b9efbd37b1b592d",
+        "equity_feature_io_contracts-0.1.0a1-py3-none-any.whl": "8a7a511666a0d75670a5a0b929d46165d87b0a3c015053ae4604d20a457a5d0a",
+        "equity_feature_io_contracts-0.1.0a1.tar.gz": "b3676bf5b4f066e93f7e09dd7263671c68575061cf72eedc06540b3a252d6c09",
+        "equity_feature_io_sdk-0.1.0a1-py3-none-any.whl": "6982fc8692f6518f88f5655393718166b44ca3406a9567143d1c8d0ca08b1134",
+        "equity_feature_io_sdk-0.1.0a1.tar.gz": "e34221dafba73dbc5d24ef9678b66b567c7371c096a4f99232fbf0d5f5e600c3",
+        "equity_features-0.0.4a4-py3-none-any.whl": "0ff0745acf75f45ae7a2b38c7c106af200448f3026e4997fd0747101c79071f0"
+      },
+      "canonical_dependency_bytes_equal_accepted_EQ123": true,
+      "current_native_fresh_forms": 2,
+      "external_invalid_calls_rejected_per_form": 2,
+      "installed_factory_tests_per_form": 21,
+      "python": "3.12.10",
+      "system": "Windows"
+    }
+  ],
+  "schema": "factory-foundation-readback1"
+}

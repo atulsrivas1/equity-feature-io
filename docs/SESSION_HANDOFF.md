@@ -1,3 +1,7 @@
+## EQ124 source qualification / Test
+
+Source8f3208d and core8542a24 current native push/PR checks all successful. Downloaded foundation16archives/fourfreshforms/21factory tests each/positive typing/two invalid calls/core invariance and optional12archives/currentreports/old-new parity passed; core12archives/12currentreports preserve acceptedbytes. Localrepeat/freshforms match Windows; separate reviewer no unresolved findings. See EQ124_DELIVERY.md and EQ124_SOURCE_RECEIPT.json. Next final documentation-head review/currentCI, exact-head publication, successful-main download/serverZIP hashes/allfiles/sourceowner/retention and Released/postreadDone. No private/backend certification, runtime lifecycle remainsEQ125, workers alignmentEQ129, STOPbeforeR5.
+
 # EQ124 explicit factories implementation
 
 Canonical281 In progress under core pre-code61b08d9/PR294 after accepted EQ123 (Released6029468862/postread6029469345). Contracts/SDK.a1 implement typed factory/config/credential/error/capability views and explicit per-run registries/direct admission; existing canonical inputs/results/mathematics and DuckDB.a8 unchanged. Synthetic installed consumer fixture is factory qualification, not a production sink. Localdev23tests (21factory+2provenance), strict5files and accepted design29/4closure/manualgolden checks pass. No release/artifact/backend/private acceptance yet.
