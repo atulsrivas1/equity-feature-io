@@ -1,0 +1,2 @@
+-r requirements-dev.txt
+duckdb==1.5.6
