@@ -50,7 +50,7 @@ def inspect_adapter(path):
         assert not any(x in content for x in (b'C:\\Users\\',b'N:/',b'/home/runner/',b'Monikasrivas1'))
 
 
-def qualify(output, form):
+def qualify(output, form, source_commit):
     work = ROOT/'work/duckdb-installs'
     work.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=work) as tmp:
@@ -116,7 +116,7 @@ print('Pure core registry executes with DuckDB forbidden')
         after = core_fingerprint(py)
         assert before==after,'adapter execution changed installed core'
         fingerprint = lambda x: hashlib.sha256(json.dumps(x,sort_keys=True).encode()).hexdigest()
-        report = dict(schema='duckdb-install1',source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        report = dict(schema='duckdb-install1',source_commit=source_commit,
                       form=form,system=platform.system(),python=platform.python_version(),duckdb='1.5.6',numpy='2.2.6',adapter='0.1.0a8',
                       artifacts={p.name:digest(p) for p in [*paths,adapter]},synthetic_tests=count,
                       test_suite_sha256=hashlib.sha256(b''.join(p.read_bytes() for p in sorted((ROOT/'tests/duckdb').glob('test_*.py')))).hexdigest(),
@@ -161,8 +161,10 @@ def main():
     for path in paths:
         assert digest(path)==digest(repeat/path.name),'repeat artifact mismatch'
         (inspect_adapter if path.name.startswith('equity_feature_duckdb-') else inspect)(path)
-    qualify(output,'whl');qualify(output,'gz')
-    manifest=dict(schema='duckdb-build1',commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+    qualify(output,'whl',component_commit);qualify(output,'gz',component_commit)
+    assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==component_commit, 'Source head changed during qualification'
+    assert not subprocess.check_output(['git','status','--porcelain','--','packages','tools','tests','examples','benchmarks','requirements-duckdb.txt'],cwd=ROOT,text=True).strip(), 'Sources changed during qualification'
+    manifest=dict(schema='duckdb-build1',commit=component_commit,
                   source_dirty=bool(subprocess.check_output(['git','status','--porcelain','--','packages','tools/build_duckdb.py','tests/duckdb','benchmarks/duckdb_read.py','examples/duckdb_conformance.py'],cwd=ROOT,text=True).strip()),
                   system=platform.system(),python=platform.python_version(),epoch=EPOCH,
                   core_source_commit=CORE_COMMIT,
