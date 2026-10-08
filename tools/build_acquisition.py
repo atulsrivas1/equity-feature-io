@@ -62,7 +62,7 @@ def main():
                 report=cwd/'report.json'
                 run(py,'-I',component/'tests/acquisition_probe.py',cwd,report,cwd=cwd)
                 after=fingerprint(py,cwd);assert before==after and len(before)==61
-                public=json.loads(report.read_text());assert public['tests_run']==29
+                public=json.loads(report.read_text());assert public['tests_run']==32
                 fp=hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest()
                 public.update({'form':form,'source_commit':head,'core_before_sha256':fp,'core_after_sha256':fp})
                 forms.append(public)
@@ -78,7 +78,7 @@ def main():
             'python':platform.python_version(),'system':platform.system(),
             'archives':{p.name:sha(p) for p in archives+deps},'source_sha256':source_bytes,'forms':forms}
         (output/'manifest.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print('Repeat acquisition archives, fresh wheel/sdist,29 independent tests per form,61 core files invariant PASS')
+    print('Repeat acquisition archives, fresh wheel/sdist,32 independent tests per form,61 core files invariant PASS')
 
 
 if __name__=='__main__':

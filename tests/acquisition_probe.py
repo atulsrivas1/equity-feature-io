@@ -21,7 +21,7 @@ for name, version in (("equity-feature-acquisition","0.1.0a0"),
         assert 'site-packages' in path.parts and '__editable__' not in str(relative)
 suite = unittest.defaultTestLoader.discover(str(root/'tests/acquisition'))
 count = suite.countTestCases()
-assert count == 29
+assert count == 32
 result = unittest.TextTestRunner(verbosity=1).run(suite)
 assert result.wasSuccessful() and not result.skipped and result.testsRun == count
 subprocess.run([sys.executable,'-I',str(root/'examples/acquisition_consumer.py')],check=True)

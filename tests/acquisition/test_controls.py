@@ -201,6 +201,22 @@ class ControlsTests(unittest.TestCase):
             self.error(C.SCHEMA,lambda:AcquisitionLimits(bad,1,1,1))
         for bad in (True,-1,2**63,1.0):
             self.error(C.SCHEMA,lambda:Page(b'a',bad))
+    def test_clock_crosses_retry_target_without_negative_sleep(self):
+        class AdvancingClock(Clock):
+            def read(self):
+                value=self.now;self.now+=1;return value
+        self.clock=AdvancingClock()
+        c=self.controller(retry=RetryPolicy(2,2,2,100))
+        def transport(secret,budget):
+            if budget.ordinal==1:raise AttemptFailure(C.RATE_LIMIT)
+            return Page(b'ok',1)
+        self.assertEqual(self.execute(c,transport,idempotent=True),Page(b'ok',1))
+        self.assertEqual(c.ledger.calls,2)
+        self.assertTrue(all(ns>0 for ns in self.clock.waits))
+    def test_oversized_rows_counted_but_not_returned(self):
+        c=self.controller(replace(self.approval,limits=replace(self.approval.limits,max_rows=1)))
+        self.error(C.LIMIT,lambda:self.execute(c,lambda s,b:Page(b'a',2)))
+        self.assertEqual(c.ledger.rows,2)
 
 
 class CacheTests(unittest.TestCase):
@@ -244,6 +260,13 @@ class CacheTests(unittest.TestCase):
         self.assertEqual(self.cache.entry_count,0)
     def test_no_raw_payloads_in_reprs(self):
         self.assertNotIn(SECRET,repr(Page(SECRET.encode(),0))+repr(self.cache)+repr(self.a))
+    def test_permission_expiry_purges_before_rejection(self):
+        a=replace(self.a,expires_ns=110)
+        self.cache.put(a,Page(b'abc',1),page_key='p')
+        self.clock.now=110
+        with self.assertRaises(SourceError) as e:self.cache.get(a,page_key='p')
+        self.assertEqual(e.exception.code,C.ENTITLEMENT)
+        self.assertEqual((self.cache.entry_count,self.cache.stored_bytes),(0,0))
 
 
 if __name__ == '__main__':unittest.main()

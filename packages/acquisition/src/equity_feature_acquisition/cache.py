@@ -68,13 +68,13 @@ class ImmutableCache:
         if now < self._last:
             fail()
         self._last = now
-        if not approval.immutable_revision or approval.scope.mode == "live" or now >= approval.expires_ns:
-            fail(SourceErrorCode.ENTITLEMENT)
         # Purge expired data on every enabled operation; TTL never slides on access.
         for key, (expiry, page) in tuple(self._entries.items()):
             if now >= expiry:
                 del self._entries[key]
                 self._bytes -= len(page.data)
+        if not approval.immutable_revision or approval.scope.mode == "live" or now >= approval.expires_ns:
+            fail(SourceErrorCode.ENTITLEMENT)
         return now, (approval.scope, approval.authorization_scope, page_key)
 
     def get(self, approval: RetentionApproval, *, page_key: str) -> Page | None:

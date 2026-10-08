@@ -266,9 +266,13 @@ class AcquisitionController:
             target = self._now() + delay
             if target >= deadline:
                 fail(SourceErrorCode.LIMIT)
-            while self._now() < target:
+            while True:
                 self._admit(scope)
                 before = self._now()
+                if before >= deadline:
+                    fail(SourceErrorCode.LIMIT)
+                if before >= target:
+                    break
                 duration = min(self._retry.cancellation_poll_ns, target - before)
                 sleep_failed = False
                 try:
