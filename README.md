@@ -1,6 +1,6 @@
 # equity-feature-io
 
-I/O contracts/SDK.a2 provide explicit per-run factories/direct admission and complete logical publication. Source extraction and Parquet sink are accepted through canonical EQ121–126; [EQ127 delivery](docs/EQ127_DELIVERY.md) records the transactional DuckDB sink's review, qualification and publication evidence. Live Project is the status authority for R4.1 acceptance.
+I/O contracts/SDK.a2 provide explicit per-run factories/direct admission and complete logical publication. Source extraction and Parquet sink are accepted through canonical EQ121â€“126; [EQ127 delivery](docs/EQ127_DELIVERY.md) records the transactional DuckDB sink's review, qualification and publication evidence. Live Project is the status authority for R4.1 acceptance.
 
 Canonical scope: [EQ-121](https://github.com/atulsrivas1/equity-features/issues/278), [R4.1 handoff](https://github.com/atulsrivas1/equity-features/blob/main/docs/R4_1_AUTONOMOUS_HANDOFF.md) and [architecture](https://github.com/atulsrivas1/equity-features/blob/main/docs/IO_WORKER_ARCHITECTURE.md). This companion owns component implementation/evidence. Planning, lifecycle, epics and milestones stay in equity-features. Pure calculations and existing acquisition protocols retain their original repository/imports.
 
@@ -19,3 +19,7 @@ EQ125 accepted logical publication: [typed API/extension kit](docs/api/PUBLICATI
 ## R6 acquisition controls under qualification
 
 [Shared acquisition](packages/acquisition/README.md) adds optional explicit request-scoped consent, safe credentials/errors, finite retry/cancellation/cost/byte ledgers and disabled-by-default authorized immutable cache. [EQ068 plan](docs/EQ068_PLAN.md), [canonical story77](https://github.com/atulsrivas1/equity-features/issues/77), componentPR12/canonicalPR343. Source implemented; separate final review/native fresh forms/publication readback still required before release. No provider access/data rights/integration qualified. Existing SDK/contracts.a2 and workers.a12 remain unchanged.
+
+## EQ071 optional local-file source under qualification
+
+`equity-feature-files0.1.0a0` adds explicitly authorized local normalized CSV/uncompressed Parquet/DBN3 ordinary raw trades through existing source/factory protocols. [API](docs/api/LOCAL_FILES.md), [owned pure consumer](examples/files_consumer.py), [plan](docs/EQ071_PLAN.md).43 local methods/strict5 pass; native/install/review/main delivery remains pending. No provider access, automatic downloads, numerical changes or accepted release is claimed.

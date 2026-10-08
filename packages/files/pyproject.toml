@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "equity-feature-files"
+version = "0.1.0a0"
+description = "Explicit bounded local CSV, Parquet and DBN trade adapters"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{name = "Equity Features contributors"}]
+dependencies = ["equity-feature-acquisition==0.1.0a0", "equity-feature-io-sdk==0.1.0a2"]
+
+[project.optional-dependencies]
+parquet = ["pyarrow==20.0.0"]
+dbn = ["databento-dbn==0.70.0"]
+full = ["pyarrow==20.0.0", "databento-dbn==0.70.0"]
+
+[project.urls]
+Repository = "https://github.com/atulsrivas1/equity-feature-io"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+equity_feature_files = ["py.typed"]
