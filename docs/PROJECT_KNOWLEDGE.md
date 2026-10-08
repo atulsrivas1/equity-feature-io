@@ -1,3 +1,7 @@
+## EQ071 Project-item admission correction — October 8, 2026
+
+[Correction](https://github.com/atulsrivas1/equity-features/issues/80#issuecomment-6063783896): initial command accidentally selected adjacent81/e4do, marking unimplementedEQ072 Ready/In progress and13points. Live issue number/item-ID inventory caught this before runtime;81restoredBacklog/mistakenpoints cleared, correct80/e4dk now13points/Ready->Inprogress. Accidental metadata transitions are not readiness or implementation evidence. Source71 scope/PR13/345 unchanged; no provider/charge. Future status mutations resolve and assert current issue URL/number/itemID, preserve actual lifecycle and read back final state.
+
 ## EQ068 accepted; independent local-file preparation — October 8, 2026
 
 EQ067/068 accepted Closed/Project Done under [6768 acceptance](https://github.com/atulsrivas1/equity-features/issues/77#issuecomment-6063497519). Canonical final9a180da/component9473f88/fulltrees/3receiptbytes/Atul ownership/current allsource+main CI/actual source/native archive/version/expiry/readback independently verified. Acquisition.a0 four32caseforms and retained purecore four43caseforms/61files invariant; source inventory22exact inputs. Two P2 runtime findings and generated-inventory audit failure fixed; excluded candidates/cancellations retained. No provider/rights/charge acceptance; free qualification downloads only approved.
