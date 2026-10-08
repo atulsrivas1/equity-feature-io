@@ -19,3 +19,7 @@ EQ125 accepted logical publication: [typed API/extension kit](docs/api/PUBLICATI
 ## R6 acquisition controls under qualification
 
 [Shared acquisition](packages/acquisition/README.md) adds optional explicit request-scoped consent, safe credentials/errors, finite retry/cancellation/cost/byte ledgers and disabled-by-default authorized immutable cache. [EQ068 plan](docs/EQ068_PLAN.md), [canonical story77](https://github.com/atulsrivas1/equity-features/issues/77), componentPR12/canonicalPR343. Source implemented; separate final review/native fresh forms/publication readback still required before release. No provider access/data rights/integration qualified. Existing SDK/contracts.a2 and workers.a12 remain unchanged.
+
+## Optional local ordinary trade files
+
+`equity-feature-files0.1.0a0` supports explicitly authorized normalized CSV/uncompressed Parquet/DBN3 through existing source/factory protocols. [API](docs/api/LOCAL_FILES.md), [owned pure consumer](examples/files_consumer.py), [source and delivery evidence](docs/EQ071_DELIVERY.md), [canonical80 current acceptance](https://github.com/atulsrivas1/equity-features/issues/80). No provider access, automatic downloads or numerical changes. Data/charges require explicit scoped user approval; free qualification downloads only are approved for this development session.

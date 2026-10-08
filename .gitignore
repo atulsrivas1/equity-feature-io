@@ -14,3 +14,5 @@ dist-duckdb-sink/
 dist-extensions/
 dist-matrix/
 dist-acquisition/
+
+dist-files/

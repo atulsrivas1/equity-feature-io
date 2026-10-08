@@ -1,0 +1,9 @@
+# equity-feature-files
+
+Experimental0.1.0a0, EQ071. Explicit approved staged local ordinary raw trades in normalized CSV, uncompressed Parquet (optional PyArrow20) and uncompressed DBN3 TRADES (optional databento-dbn0.70). No provider requests, automatic installs or numerical changes. Current qualification, delivery and acceptance status is recorded in the linked canonical story and its evidence; this README describes the experimental API.
+
+Install the supplied wheel with accepted acquisition.a0, SDK/contracts.a2 and core/contracts0.0.4a4 wheels. CSV requires no optional codec. Explicit `parquet`, `dbn` or `full` extras require pinned free software dependencies; applications must obtain approval before downloading them. Data downloads and all charges require separate explicit user approval. No automatic install occurs at runtime.
+
+Public types: FileProfile, ReadPolicy, DBNIdentity, DBNAnnotation, LocalFileTradeAdapter, LocalFileFactory. Construction/capability planning performs no file/credential access; actual reads require an injected matching local-use DownloadApproval. Optional immutable cache requires separate retention authorization. Preserve explicit units, source coverage, certified range, identities and unknown/future knowledge. URI/UNC, live, adjusted/auction/unknown schemas and compressed input are unsupported. Resource/deadline checks are cooperative, not a sandbox or hard RSS guarantee.
+
+Read [API and limitations](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/LOCAL_FILES.md), [owned synthetic example](https://github.com/atulsrivas1/equity-feature-io/blob/main/examples/files_consumer.py), [pre-code plan](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/EQ071_PLAN.md) and [canonical story80](https://github.com/atulsrivas1/equity-features/issues/80).
