@@ -1,3 +1,7 @@
+## Owner-authorized bounded R6 review and execution
+
+Canonical equity-features AGENTS and published R6 handoff authorize separate local automated review for EQ067–074 source/contracts/docs/delivery evidence. Current owner resumes remaining R6 underbudget0; implementation/synthetic qualification proceeds but realaccount/dataset/rights/zero-costentitlement/securecredentials remain mandatoryactualproofgate. No human/reinstall/provider/releaseclaim from localreview. Earlierhistory preservedbelow.
+
 # Work agreements
 
 ## BUG-005 bounded local review authorization — October 7, 2026

@@ -1,0 +1,11 @@
+{
+  "wire": {"ticker":"AAPL","adjusted":false,"queryCount":1,"resultsCount":1,"status":"OK","results":[{"t":1700000040000,"o":100.000000001,"h":102.000000003,"l":99.000000002,"c":101.000000004,"v":10,"n":3,"vw":101.1}]},
+  "start_ns":1700000040000000000,
+  "end_ns":1700000100000000000,
+  "coefficients":{"open":100000000001,"high":102000000003,"low":99000000002,"close":101000000004},
+  "volume":10,
+  "trade_count":3,
+  "actual_notional":null,
+  "fractional_volume":"10.25",
+  "inexact_price":"100.0000000001"
+}
