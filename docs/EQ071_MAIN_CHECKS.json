@@ -1,0 +1,126 @@
+{
+  "atulsrivas1/equity-feature-io": {
+    "main": "e34a42bce6d86c53b4e412e680ea3a27e067b78f",
+    "checks": [
+      {
+        "name": "duckdb (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601157/job/113429576097"
+      },
+      {
+        "name": "foundation (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601179/job/113429575959"
+      },
+      {
+        "name": "duckdb-sink (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601296/job/113429575926"
+      },
+      {
+        "name": "duckdb-sink (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601296/job/113429575739"
+      },
+      {
+        "name": "parquet (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601161/job/113429575643"
+      },
+      {
+        "name": "duckdb (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601157/job/113429575552"
+      },
+      {
+        "name": "acquisition (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601083/job/113429575522"
+      },
+      {
+        "name": "foundation (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601179/job/113429575492"
+      },
+      {
+        "name": "matrix (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601102/job/113429575345"
+      },
+      {
+        "name": "matrix (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601102/job/113429575252"
+      },
+      {
+        "name": "extensions (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601074/job/113429575171"
+      },
+      {
+        "name": "acquisition (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601083/job/113429575166"
+      },
+      {
+        "name": "parquet (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601161/job/113429575132"
+      },
+      {
+        "name": "files (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601093/job/113429575100"
+      },
+      {
+        "name": "extensions (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601074/job/113429574753"
+      },
+      {
+        "name": "files (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-feature-io/actions/runs/37811601093/job/113429574749"
+      }
+    ]
+  },
+  "atulsrivas1/equity-features": {
+    "main": "7abc94df6bf1bae6115fd71515b6c157c395265f",
+    "checks": [
+      {
+        "name": "compatibility (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-features/actions/runs/37811609639/job/113429605965"
+      },
+      {
+        "name": "compatibility (windows-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-features/actions/runs/37811609639/job/113429605551"
+      },
+      {
+        "name": "check",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/atulsrivas1/equity-features/actions/runs/37811609613/job/113429603141"
+      }
+    ]
+  }
+}
