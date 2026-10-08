@@ -1,0 +1,10 @@
+{
+  "schema": "owned-synthetic-acquisition-1",
+  "retry_exponential_waits_ns": [100, 200, 400],
+  "retry_after_waits_ns": [250, 200],
+  "deadline_equal_wait": {"expiry_ns": 300, "retry_after_ns": 300, "calls": 1, "waits": []},
+  "cost_limit": {"max_micro_usd": 5, "upper_per_call": 3, "calls": 1, "reserved_micro_usd": 3},
+  "bytes_limit": {"max_bytes": 5, "failed_bytes": 3, "success_bytes": 3, "observed_bytes": 6},
+  "ttl": {"insert_ns": 100, "ttl_ns": 10, "hit_ns": 109, "miss_ns": 110},
+  "capacity": {"max_entries": 2, "max_bytes": 5, "first_bytes": 3, "second_bytes": 3, "too_large_bytes": 6}
+}
