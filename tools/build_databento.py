@@ -68,7 +68,7 @@ def main():
                 report=cwd/'report.json'
                 run(py,'-I',component/'tests/databento_probe.py',cwd,report,cwd=cwd)
                 after=fingerprint(py,cwd); assert before==after and len(after)==61
-                public=json.loads(report.read_text(encoding='utf-8')); assert public['tests_run']==23
+                public=json.loads(report.read_text(encoding='utf-8')); assert public['tests_run']==24
                 fp=hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest()
                 public.update({'light_isolation':True,'form':form,'source_commit':head,
                     'core_before_sha256':fp,'core_after_sha256':fp})

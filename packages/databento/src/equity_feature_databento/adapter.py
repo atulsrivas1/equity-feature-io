@@ -108,6 +108,8 @@ class DatabentoHistoricalAdapter:
             if type(approval) is not DownloadApproval or approval.scope != scope:
                 fail(SourceErrorCode.ENTITLEMENT)
             deadline = min(deadline, approval.expires_ns, started + approval.limits.max_elapsed_ns)
+            approval = replace(approval, expires_ns=deadline)
+        check()
         controller = AcquisitionController(approval, clock_ns=self._clock,
             sleep_ns=lambda _: None, cancelled=cancellation.is_cancelled)
         record_limit = min(policy.max_rows, request.max_rows,

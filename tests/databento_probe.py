@@ -21,7 +21,7 @@ assert importlib.util.find_spec('databento') is None
 assert importlib.util.find_spec('pyarrow') is None
 subprocess.run([sys.executable,'-I',str(root/'examples/databento_consumer.py')],check=True)
 suite=unittest.defaultTestLoader.discover(str(root/'tests/databento'))
-count=suite.countTestCases(); assert count==23
+count=suite.countTestCases(); assert count==24
 result=unittest.TextTestRunner(verbosity=1).run(suite)
 assert result.wasSuccessful() and not result.skipped and result.testsRun==count
 subprocess.run([sys.executable,'-I','-m','mypy','--strict','-p','equity_feature_databento'],check=True)

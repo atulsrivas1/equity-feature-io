@@ -150,6 +150,22 @@ class Databento(unittest.TestCase):
         self.error(SourceErrorCode.LIMIT,lambda:self.deliver(self.adapter(approve=lambda s:replace(self.approve(s),expires_ns=10))))
         self.assertEqual(self.credentials.names,[])
 
+    def test_policy_expiry_during_approval_precedes_credentials(self):
+        def delayed(scope):
+            self.clock=31
+            return self.approve(scope)
+        self.error(SourceErrorCode.LIMIT,lambda:self.deliver(self.adapter(
+            approve=delayed,policy=DownloadPolicy(max_elapsed_ns=20))))
+        self.assertEqual(self.credentials.names,[]); self.assertEqual(self.calls,[])
+        self.clock=10
+        def slow_get(name):
+            self.clock=31
+            self.credentials.names.append(name)
+            return 'private-sentinel'
+        with patch.object(self.credentials,'get',side_effect=slow_get):
+            self.error(SourceErrorCode.LIMIT,lambda:self.deliver(self.adapter(policy=DownloadPolicy(max_elapsed_ns=20))))
+        self.assertEqual(self.calls,[])
+
     def test_cancel_and_invalid_request_precede_credentials(self):
         self.cancel.value=True
         self.error(SourceErrorCode.CANCELLED,lambda:self.deliver(self.adapter()))
