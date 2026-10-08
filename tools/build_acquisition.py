@@ -30,6 +30,14 @@ def main():
     with tempfile.TemporaryDirectory(prefix='acquisition-build-',dir=ROOT/'work') as temporary:
         stage=Path(temporary)
         component=snapshot(ROOT,head,stage/'component',PATHS)
+        # Freeze committed inputs before setuptools creates build/egg-info files.
+        source_bytes={}
+        for relative in PATHS:
+            path=component/relative
+            for entry in sorted(path.rglob('*')) if path.is_dir() else [path]:
+                if entry.is_file():source_bytes[str(entry.relative_to(component)).replace('\\','/')]=sha(entry)
+        committed=set(git(ROOT,'ls-tree','-r','--name-only',head,'--',*PATHS).splitlines())
+        assert set(source_bytes)==committed
         canonical=snapshot(core,CORE,stage/'core',('packages/contracts','packages/features'))
         dependencies=stage/'deps'
         for folder in ('contracts','features'):build(canonical/'packages'/folder,dependencies)
@@ -68,11 +76,6 @@ def main():
                 forms.append(public)
         assert git(ROOT,'rev-parse','HEAD')==head
         assert not git(ROOT,'status','--porcelain','--',*PATHS)
-        source_bytes={}
-        for relative in PATHS:
-            path=component/relative
-            for entry in sorted(path.rglob('*')) if path.is_dir() else [path]:
-                if entry.is_file():source_bytes[str(entry.relative_to(component)).replace('\\','/')]=sha(entry)
         for archive in archives+deps:shutil.copy2(archive,output/archive.name)
         record={'schema':'acquisition1','commit':head,'core_commit':CORE,'source_dirty':False,
             'python':platform.python_version(),'system':platform.system(),
