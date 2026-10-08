@@ -1,6 +1,6 @@
 # equity-feature-files
 
-Experimental0.1.0a0, EQ071. Explicit approved staged local ordinary raw trades in normalized CSV, uncompressed Parquet (optional PyArrow20) and uncompressed DBN3 TRADES (optional databento-dbn0.70). No provider requests, automatic installs or numerical changes. Source is under qualification; no accepted release is claimed.
+Experimental0.1.0a0, EQ071. Explicit approved staged local ordinary raw trades in normalized CSV, uncompressed Parquet (optional PyArrow20) and uncompressed DBN3 TRADES (optional databento-dbn0.70). No provider requests, automatic installs or numerical changes. Current qualification, delivery and acceptance status is recorded in the linked canonical story and its evidence; this README describes the experimental API.
 
 Install the supplied wheel with accepted acquisition.a0, SDK/contracts.a2 and core/contracts0.0.4a4 wheels. CSV requires no optional codec. Explicit `parquet`, `dbn` or `full` extras require pinned free software dependencies; applications must obtain approval before downloading them. Data downloads and all charges require separate explicit user approval. No automatic install occurs at runtime.
 

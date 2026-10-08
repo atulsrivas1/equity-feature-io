@@ -1,3 +1,7 @@
+## EQ071 experimental README status refinement — October 8, 2026
+
+Package README now describes the experimental API and points to canonical80 for live qualification/delivery acceptance, rather than embedding a permanently pending implementation status inside installed archives. Runtime/tests/example/builder/protocol/math bytes unchanged. The README/package source hash and Files wheel/sdist bytes change, so prior d168/081 archive receipts remain historical and final candidate requires genuine rebuilt native/fresh artifacts; do not assert archive equality for this explicit README change. Other unchanged dependency archives/core invariance must still match. Final current-head semantic review/allCI/native/source/main/expiry/owner/readback remains required;80 Test, no release or provider/charge.
+
 ## EQ071 reviewed runtime and source artifacts; corrected metadata pending — October 8, 2026
 
 Separate automated reviewer /root/r6_review independently43methods/strict5files and own path-invariant/unselected-invalid/denied-before-open/DBNannotation-identity adversaries pass; no runtime findings atd168f0f. Original metadata encoding defect acknowledged by author prevents final metadata acceptance; restored exact prior Git UTF-8 histories, package inputs unchanged. Canonical80 remains Code review pending renewed corrected-head coverage/current checks. No human/hosted review claim.
