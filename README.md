@@ -15,3 +15,7 @@ EQ122 extracts the compatible [DuckDB source adapter](docs/DUCKDB_MIGRATION.md),
 EQ125 accepted logical publication: [typed API/extension kit](docs/api/PUBLICATION.md), [evidence](docs/EQ125_DELIVERY.md). EQ126 accepted [Parquet API](docs/api/PARQUET_SINK.md)/[delivery](docs/EQ126_DELIVERY.md). EQ127 [DuckDB sink API](docs/api/DUCKDB_SINK.md)/[delivery](docs/EQ127_DELIVERY.md) records implementation, resolved recovery findings and exact qualification/publication evidence; these backend guarantees do not certify worker execution or provider/private data.
 
 [Independent public extension tutorial](examples/third_party/README.md) demonstrates synthetic source->pure calculation->in-memory sink/directfactory composition; [EQ128 delivery](docs/EQ128_DELIVERY.md) and canonical285 record actual qualification gates.
+
+## R6 acquisition controls under qualification
+
+[Shared acquisition](packages/acquisition/README.md) adds optional explicit request-scoped consent, safe credentials/errors, finite retry/cancellation/cost/byte ledgers and disabled-by-default authorized immutable cache. [EQ068 plan](docs/EQ068_PLAN.md), [canonical story77](https://github.com/atulsrivas1/equity-features/issues/77), componentPR12/canonicalPR343. Source implemented; separate final review/native fresh forms/publication readback still required before release. No provider access/data rights/integration qualified. Existing SDK/contracts.a2 and workers.a12 remain unchanged.

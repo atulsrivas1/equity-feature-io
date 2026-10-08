@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "equity-feature-acquisition"
+version = "0.1.0a0"
+description = "Explicit consent, finite acquisition controls and authorized immutable cache"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{name = "Equity Features contributors"}]
+dependencies = ["equity-feature-io-contracts==0.1.0a2"]
+
+[project.urls]
+Repository = "https://github.com/atulsrivas1/equity-feature-io"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+equity_feature_acquisition = ["py.typed"]
