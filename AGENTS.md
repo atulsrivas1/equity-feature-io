@@ -1,3 +1,7 @@
+## Owner-authorized bounded R6 review and execution
+
+Canonical equity-features AGENTS.md and GOV017/R6 handoff authorize separate local automated review for EQ067–074 source/contracts/docs and delivery evidence. Concrete provider/file adapters belong here. Current owner resumes remaining R6 implementation under $0 budget; actual provider proof is separately gated on scoped entitled access/rights/secure credentials and zero-cost permission. No human/hosted/reinstall/provider proof follows from local review; required native/numerical/publication gates remain. Preserve earlier agreement/history below.
+
 # Work agreements
 
 ## BUG-005 bounded local review authorization — October 7, 2026
