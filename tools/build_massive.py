@@ -58,7 +58,6 @@ def main():
                 install(py,[p for p in deps if p not in pure])
                 run(py,'-I','-c',"import importlib.util; assert all(importlib.util.find_spec(n) is None for n in ('databento_dbn','databento','massive','pyarrow','equity_feature_massive'))",cwd=cwd)
                 light=fingerprint(py,cwd); assert before==light and len(before)==61
-                run(py,'-m','pip','install','--no-deps')
                 selected=[p for p in archives if (p.suffix=='.whl')==(form=='wheel')]
                 install(py,selected); run(py,'-m','pip','check',cwd=cwd)
                 for relative in ('tests/massive','tests/massive_oracle.json','examples/massive_consumer.py'):
