@@ -1,0 +1,45 @@
+[
+  {
+    "repo": "atulsrivas1/equity-feature-io",
+    "main": "e34a42bce6d86c53b4e412e680ea3a27e067b78f",
+    "reviewed_source": "ec3258db4dc53d5bf1ec714c0134fb5746741287",
+    "tree": "01fd3bf73830a4a6d99f0ec756580b22572642ce",
+    "author": {
+      "name": "Atul Srivastava",
+      "email": "102820540+atulsrivas1@users.noreply.github.com",
+      "date": "2026-10-08T16:47:55Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-10-08T16:47:55Z"
+    },
+    "public_blob_sha256": {
+      "docs/EQ071_SOURCE_RECEIPT.json": "376dbcc9504f4390340ccc32cd5af17d60d2db3be6a305b09595ef5d4368763f",
+      "docs/EQ071_DELIVERY.md": "c6f9effdafb4bd745c6c366e115ed9507e2abf8993751feb0595a00f44b9dd09",
+      "docs/api/LOCAL_FILES.md": "eaa8bec93eaac30213a729d2a9cd7e853aa68900ff5ef63dd7324397b1aac1d1",
+      "packages/files/pyproject.toml": "a2e98abaa5ec01a1a3ce4f939c263fa176231ce8a46e7512eb190b2f814131e9"
+    }
+  },
+  {
+    "repo": "atulsrivas1/equity-features",
+    "main": "7abc94df6bf1bae6115fd71515b6c157c395265f",
+    "reviewed_source": "00e1f439b012483eca69684cebae8ad86bb445cc",
+    "tree": "f7b66e2a5f0921b87781fde7561ebe062022374b",
+    "author": {
+      "name": "Atul Srivastava",
+      "email": "102820540+atulsrivas1@users.noreply.github.com",
+      "date": "2026-10-08T16:47:59Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-10-08T16:47:59Z"
+    },
+    "public_blob_sha256": {
+      "docs/stories/EQ-071_SOURCE_RECEIPT.json": "376dbcc9504f4390340ccc32cd5af17d60d2db3be6a305b09595ef5d4368763f",
+      "docs/stories/EQ-071_CORE_SOURCE_RECEIPT.json": "59465fd0a99b79e47bbeababaee56d09c0f27a7e6cc1bd7c1ebaa0f7de2bd4ba",
+      "docs/stories/EQ-071_DELIVERY.md": "abbceaa31ba9590dc6f3c9b0e80c5291d0b2d2bb945df55b3e55c48127e4387e"
+    }
+  }
+]
