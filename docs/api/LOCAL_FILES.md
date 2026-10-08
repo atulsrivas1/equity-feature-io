@@ -1,6 +1,6 @@
 # Local ordinary trade files (EQ071)
 
-Optional experimental `equity-feature-files==0.1.0a0`. Source is implemented under qualification; this document does not claim accepted release. Dependencies are acquisition.a0 and SDK/contracts.a2. Core/contracts0.0.4a4 remain byte and algorithm invariant. See [pre-runtime plan](../EQ071_PLAN.md), [canonical80](https://github.com/atulsrivas1/equity-features/issues/80) and [owned example](../../examples/files_consumer.py).
+Optional experimental `equity-feature-files==0.1.0a0`. [Source/delivery evidence](../EQ071_DELIVERY.md) and canonical80 record live acceptance; this document describes the experimental API. Dependencies are acquisition.a0 and SDK/contracts.a2. Core/contracts0.0.4a4 remain byte and algorithm invariant. See [pre-runtime plan](../EQ071_PLAN.md), [canonical80](https://github.com/atulsrivas1/equity-features/issues/80) and [owned example](../../examples/files_consumer.py).
 
 ## Explicit public construction
 
