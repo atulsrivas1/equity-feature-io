@@ -1,0 +1,273 @@
+{
+  "schema": "eq070-massive-native-audit1",
+  "source_head": "107d433c739977a2de9a8cb0bedbe9d3fecdae2b",
+  "run_id": "37836430995",
+  "actual_provider_proof": false,
+  "bundles": [
+    {
+      "id": 11575917820,
+      "name": "massive-107d433c739977a2de9a8cb0bedbe9d3fecdae2b-windows-latest",
+      "zip_sha256": "8a86656b952dea239f39be7dae30f4cdd8c46979a80934ad9e05d8b2b72fb775",
+      "expires_at": "2026-11-07T20:08:12Z",
+      "manifest": {
+        "schema": "massive1",
+        "commit": "107d433c739977a2de9a8cb0bedbe9d3fecdae2b",
+        "core_commit": "9a180da540a426d9cefb3edb34fc81c26a9bd5d9",
+        "source_dirty": false,
+        "actual_provider_proof": false,
+        "python": "3.12.10",
+        "system": "Windows",
+        "archives": {
+          "equity_feature_massive-0.1.0a0-py3-none-any.whl": "ce85a4b94e90a2f7c3421009a5e02c536c5dba9e59a7a4a1d5b051a5701bfbdd",
+          "equity_feature_massive-0.1.0a0.tar.gz": "1035e0395caa2c1bd92c4f6e9c789ee42e0e7160b59941d4cbce242763820539",
+          "equity_feature_acquisition-0.1.0a0-py3-none-any.whl": "54097268c067f2b794e6145a4ff40604afe1f90619ad3ddd97b2953d6a450abc",
+          "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "3fb31963c1f51b64c4b82fc874c1c38cc9c73461b933fb06d52f84bb29b7c7b2",
+          "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "d0027f97200149bcb05f7e8cf8a969a12e66cda6cc23ee5425fdaa175fdc7549",
+          "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "ffe8e8ab4b1aa7cb94c11e9d7a11f1f4a8a87762aa5f5b49ad0f7f47aa65eebb",
+          "equity_features-0.0.4a4-py3-none-any.whl": "0ff0745acf75f45ae7a2b38c7c106af200448f3026e4997fd0747101c79071f0"
+        },
+        "source_sha256": {
+          "packages/massive/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "packages/massive/pyproject.toml": "64a8d8d18a615a55021d0589b4460e4f37dc433f504b38cb89957f94a97a76de",
+          "packages/massive/README.md": "22c4db5a4f7f37f571ab17b4b3c5491bf54f6ed9b35460537fc77271ec832351",
+          "packages/massive/src/equity_feature_massive/__init__.py": "608074e112684eee08c1fb2e4862c0f66ba792eca780e4758ab24d52c4cda2ad",
+          "packages/massive/src/equity_feature_massive/adapter.py": "d8681cac281ffc0a81888d791a8769f489f8690c6fa06584d5fd399544799f4f",
+          "packages/massive/src/equity_feature_massive/codec.py": "5d164512d67cb515e0059e9cb98f6981f8642d5dfa45c761ea7b9cd6b4b5fa0c",
+          "packages/massive/src/equity_feature_massive/model.py": "8a513272ec78697b92f8ac2e4a753fd514729490af0919201d478a2cd7ac82b2",
+          "packages/massive/src/equity_feature_massive/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "packages/massive/src/equity_feature_massive/transport.py": "b9823aa293cf7c9d4e3de2ddc93c1eb3cc3223507c2a4cb29a6721104e000ad4",
+          "packages/acquisition/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "packages/acquisition/pyproject.toml": "55e8f5ae80b8f3efc65f526a79a85ee7f0a9a446b8adb252e5cdf5d0fac4a227",
+          "packages/acquisition/README.md": "11d8095cef9f571b5d6c698513e107a6078b21957dd6ace60ba3426d889907af",
+          "packages/acquisition/src/equity_feature_acquisition/__init__.py": "97873433211f4190e8a8dc204fb5fc560ee528ad22f89a90749bc1522318a1a2",
+          "packages/acquisition/src/equity_feature_acquisition/cache.py": "24cada01ad84f23fc6899e0c6fbecb819b5a12d19a7724e0f91f45c487db897e",
+          "packages/acquisition/src/equity_feature_acquisition/controls.py": "debab9a7d5a75818f0e3eb1d878efd22d681a11d1ecd395f4f989ba6ef37420b",
+          "packages/acquisition/src/equity_feature_acquisition/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "packages/io-contracts/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "packages/io-contracts/pyproject.toml": "9fed91a3b763bdc59079e8915d1a597efaa132944117225d9f45ac6c911c4081",
+          "packages/io-contracts/README.md": "cd944a8640be237e10a1dea8140b8eeadd0e4969aecdd20e2abd6ee566b11ed5",
+          "packages/io-contracts/src/equity_feature_io_contracts/__init__.py": "4b8f12e8bc62dcee1c38a7b94b6a945862522d7da8368d27c786cacedccf6f94",
+          "packages/io-contracts/src/equity_feature_io_contracts/factories.py": "68c96e6b8ed7ebfd50420ef20091f3452fd38fc323254aa97c6a74473ff9fec8",
+          "packages/io-contracts/src/equity_feature_io_contracts/publication.py": "150aff12da3f760e4f2cd8e2f4980c31ee9056c25c5fc73c23e239784566f9d6",
+          "packages/io-contracts/src/equity_feature_io_contracts/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "packages/io-sdk/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "packages/io-sdk/pyproject.toml": "41fe9e411a476cbc1fa50c2153673cd4585bec3922046289cca2e92fd9617c07",
+          "packages/io-sdk/README.md": "1b204a8f4d916f1ef841e922f26cd473042fd69fcccfae8d32f3edd6436dc4ae",
+          "packages/io-sdk/src/equity_feature_io_sdk/__init__.py": "0fea910e4aa66b4a2a733fa1e835b6665ffacca501d6eba38a026e566e6940f0",
+          "packages/io-sdk/src/equity_feature_io_sdk/codec.py": "2dbd595418cb7c5ea5231b2c32863304399453a6a7ad46dcca0be55dbdcd2dfc",
+          "packages/io-sdk/src/equity_feature_io_sdk/conformance.py": "e3051246479f696d2d272f27b6778dffdbd9e7b54d7db6c439f70a8c54f37ca5",
+          "packages/io-sdk/src/equity_feature_io_sdk/factories.py": "8045218cf70e6188a5b51278e5c79ddba2a7a3b8150e4997ba6c5f11706b7218",
+          "packages/io-sdk/src/equity_feature_io_sdk/publication.py": "bcac45f3fea1b1e9a28e352df4641840cb2cc078d5ab7efc63d6e539ce60ac88",
+          "packages/io-sdk/src/equity_feature_io_sdk/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests/massive/test_massive.py": "60786b1c6a0a71e707affaaffb7b5d907bc856ad8313382051a01c89edbf692b",
+          "tests/massive_oracle.json": "148a472c2b15c4dceab4e56dc40aef314426f7cc667080cb950af7046a2a34a2",
+          "tests/massive_probe.py": "3e92175fe998be815a3fa836ebac4a0ff27f3d508a5927335e0f7c597804b05a",
+          "examples/massive_consumer.py": "f6dbb9d6b35069725817fc1727ef85af75ed994e173a7409c56de6aea201e4f9",
+          "tools/build_massive.py": "b11d0bdd9ad6b323011ba2f68016503fd2dbfe3524a22205f0a7f9563c575271",
+          "tools/build_foundation.py": "c5d7ffe187c13b4f11c706074725608963070b4610e2b6575fb00ab4a79dea91",
+          "requirements-dev.txt": "008a66fd483b8918eae1b2c63ce92ff0e8473e2b82fe44f319b6b0c70a531217",
+          ".github/workflows/massive.yml": "1e6a761bb72588772c628dfc72e5901f4f43a2f9a8e311f2cbf46e2491cef325"
+        },
+        "forms": [
+          {
+            "installed_public_execution": true,
+            "actual_provider_proof": false,
+            "versions": {
+              "equity-feature-massive": "0.1.0a0",
+              "equity-feature-acquisition": "0.1.0a0",
+              "equity-feature-io-sdk": "0.1.0a2",
+              "equity-feature-io-contracts": "0.1.0a2",
+              "equity-feature-contracts": "0.0.4a4",
+              "equity-features": "0.0.4a4"
+            },
+            "tests_run": 22,
+            "failures": 0,
+            "skips": 0,
+            "strict_typing": true,
+            "rejected_invalid_calls": 2,
+            "source_sha256": {
+              "tests/massive/test_massive.py": "60786b1c6a0a71e707affaaffb7b5d907bc856ad8313382051a01c89edbf692b",
+              "tests/massive_oracle.json": "148a472c2b15c4dceab4e56dc40aef314426f7cc667080cb950af7046a2a34a2",
+              "examples/massive_consumer.py": "f6dbb9d6b35069725817fc1727ef85af75ed994e173a7409c56de6aea201e4f9"
+            },
+            "light_isolation": true,
+            "form": "wheel",
+            "source_commit": "107d433c739977a2de9a8cb0bedbe9d3fecdae2b",
+            "core_before_sha256": "71d8f93d3cbae904d5975f3ade702d44bf2de4a5d4ce7430c9821cf851ff654b",
+            "core_after_sha256": "71d8f93d3cbae904d5975f3ade702d44bf2de4a5d4ce7430c9821cf851ff654b"
+          },
+          {
+            "installed_public_execution": true,
+            "actual_provider_proof": false,
+            "versions": {
+              "equity-feature-massive": "0.1.0a0",
+              "equity-feature-acquisition": "0.1.0a0",
+              "equity-feature-io-sdk": "0.1.0a2",
+              "equity-feature-io-contracts": "0.1.0a2",
+              "equity-feature-contracts": "0.0.4a4",
+              "equity-features": "0.0.4a4"
+            },
+            "tests_run": 22,
+            "failures": 0,
+            "skips": 0,
+            "strict_typing": true,
+            "rejected_invalid_calls": 2,
+            "source_sha256": {
+              "tests/massive/test_massive.py": "60786b1c6a0a71e707affaaffb7b5d907bc856ad8313382051a01c89edbf692b",
+              "tests/massive_oracle.json": "148a472c2b15c4dceab4e56dc40aef314426f7cc667080cb950af7046a2a34a2",
+              "examples/massive_consumer.py": "f6dbb9d6b35069725817fc1727ef85af75ed994e173a7409c56de6aea201e4f9"
+            },
+            "light_isolation": true,
+            "form": "sdist",
+            "source_commit": "107d433c739977a2de9a8cb0bedbe9d3fecdae2b",
+            "core_before_sha256": "71d8f93d3cbae904d5975f3ade702d44bf2de4a5d4ce7430c9821cf851ff654b",
+            "core_after_sha256": "71d8f93d3cbae904d5975f3ade702d44bf2de4a5d4ce7430c9821cf851ff654b"
+          }
+        ]
+      },
+      "files": {
+        "equity_features-0.0.4a4-py3-none-any.whl": "0ff0745acf75f45ae7a2b38c7c106af200448f3026e4997fd0747101c79071f0",
+        "equity_feature_acquisition-0.1.0a0-py3-none-any.whl": "54097268c067f2b794e6145a4ff40604afe1f90619ad3ddd97b2953d6a450abc",
+        "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "3fb31963c1f51b64c4b82fc874c1c38cc9c73461b933fb06d52f84bb29b7c7b2",
+        "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "d0027f97200149bcb05f7e8cf8a969a12e66cda6cc23ee5425fdaa175fdc7549",
+        "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "ffe8e8ab4b1aa7cb94c11e9d7a11f1f4a8a87762aa5f5b49ad0f7f47aa65eebb",
+        "equity_feature_massive-0.1.0a0-py3-none-any.whl": "ce85a4b94e90a2f7c3421009a5e02c536c5dba9e59a7a4a1d5b051a5701bfbdd",
+        "equity_feature_massive-0.1.0a0.tar.gz": "1035e0395caa2c1bd92c4f6e9c789ee42e0e7160b59941d4cbce242763820539",
+        "manifest.json": "14e93947053c5224073d3f147113cab998f6f8c4dfa7e599343bca00f7a062df"
+      }
+    },
+    {
+      "id": 11575168897,
+      "name": "massive-107d433c739977a2de9a8cb0bedbe9d3fecdae2b-ubuntu-24.04",
+      "zip_sha256": "bdbfa27e53a174a29d3d14b81fa4caff7310055f70975116879823e25426d1c6",
+      "expires_at": "2026-11-07T20:03:32Z",
+      "manifest": {
+        "schema": "massive1",
+        "commit": "107d433c739977a2de9a8cb0bedbe9d3fecdae2b",
+        "core_commit": "9a180da540a426d9cefb3edb34fc81c26a9bd5d9",
+        "source_dirty": false,
+        "actual_provider_proof": false,
+        "python": "3.12.15",
+        "system": "Linux",
+        "archives": {
+          "equity_feature_massive-0.1.0a0-py3-none-any.whl": "8c170426f468362417c043b273fb5c966771c1516f7edb362454812df4526b73",
+          "equity_feature_massive-0.1.0a0.tar.gz": "cfc7c8bbf7e924d7373a5a17daa0afc38427d8d2c11643de4b719d6165915cb4",
+          "equity_feature_acquisition-0.1.0a0-py3-none-any.whl": "9b6dca40280850599db8e194fe280cd651aa06b7132998d55e61861dfdd2d1e3",
+          "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "acaa84fc0340c4640ced2b7cdbef04d5ba7cfaec20cd0525b866b415147635cc",
+          "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "ef4deb9adc03b0e77075a36236fc20fe30d9373218386a60dc769d0145c09c99",
+          "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "71c2316ab93d3382b24701ce6f4990b1355f90b8f66e562c8b1d34e539d60783",
+          "equity_features-0.0.4a4-py3-none-any.whl": "cf8965e1600a3d8ef10dbefcfdea21f2d48ad8c8f80e0268abe12c365b1cd26e"
+        },
+        "source_sha256": {
+          "packages/massive/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "packages/massive/README.md": "22c4db5a4f7f37f571ab17b4b3c5491bf54f6ed9b35460537fc77271ec832351",
+          "packages/massive/pyproject.toml": "64a8d8d18a615a55021d0589b4460e4f37dc433f504b38cb89957f94a97a76de",
+          "packages/massive/src/equity_feature_massive/__init__.py": "608074e112684eee08c1fb2e4862c0f66ba792eca780e4758ab24d52c4cda2ad",
+          "packages/massive/src/equity_feature_massive/adapter.py": "d8681cac281ffc0a81888d791a8769f489f8690c6fa06584d5fd399544799f4f",
+          "packages/massive/src/equity_feature_massive/codec.py": "5d164512d67cb515e0059e9cb98f6981f8642d5dfa45c761ea7b9cd6b4b5fa0c",
+          "packages/massive/src/equity_feature_massive/model.py": "8a513272ec78697b92f8ac2e4a753fd514729490af0919201d478a2cd7ac82b2",
+          "packages/massive/src/equity_feature_massive/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "packages/massive/src/equity_feature_massive/transport.py": "b9823aa293cf7c9d4e3de2ddc93c1eb3cc3223507c2a4cb29a6721104e000ad4",
+          "packages/acquisition/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "packages/acquisition/README.md": "11d8095cef9f571b5d6c698513e107a6078b21957dd6ace60ba3426d889907af",
+          "packages/acquisition/pyproject.toml": "55e8f5ae80b8f3efc65f526a79a85ee7f0a9a446b8adb252e5cdf5d0fac4a227",
+          "packages/acquisition/src/equity_feature_acquisition/__init__.py": "97873433211f4190e8a8dc204fb5fc560ee528ad22f89a90749bc1522318a1a2",
+          "packages/acquisition/src/equity_feature_acquisition/cache.py": "24cada01ad84f23fc6899e0c6fbecb819b5a12d19a7724e0f91f45c487db897e",
+          "packages/acquisition/src/equity_feature_acquisition/controls.py": "debab9a7d5a75818f0e3eb1d878efd22d681a11d1ecd395f4f989ba6ef37420b",
+          "packages/acquisition/src/equity_feature_acquisition/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "packages/io-contracts/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "packages/io-contracts/README.md": "cd944a8640be237e10a1dea8140b8eeadd0e4969aecdd20e2abd6ee566b11ed5",
+          "packages/io-contracts/pyproject.toml": "9fed91a3b763bdc59079e8915d1a597efaa132944117225d9f45ac6c911c4081",
+          "packages/io-contracts/src/equity_feature_io_contracts/__init__.py": "4b8f12e8bc62dcee1c38a7b94b6a945862522d7da8368d27c786cacedccf6f94",
+          "packages/io-contracts/src/equity_feature_io_contracts/factories.py": "68c96e6b8ed7ebfd50420ef20091f3452fd38fc323254aa97c6a74473ff9fec8",
+          "packages/io-contracts/src/equity_feature_io_contracts/publication.py": "150aff12da3f760e4f2cd8e2f4980c31ee9056c25c5fc73c23e239784566f9d6",
+          "packages/io-contracts/src/equity_feature_io_contracts/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "packages/io-sdk/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "packages/io-sdk/README.md": "1b204a8f4d916f1ef841e922f26cd473042fd69fcccfae8d32f3edd6436dc4ae",
+          "packages/io-sdk/pyproject.toml": "41fe9e411a476cbc1fa50c2153673cd4585bec3922046289cca2e92fd9617c07",
+          "packages/io-sdk/src/equity_feature_io_sdk/__init__.py": "0fea910e4aa66b4a2a733fa1e835b6665ffacca501d6eba38a026e566e6940f0",
+          "packages/io-sdk/src/equity_feature_io_sdk/codec.py": "2dbd595418cb7c5ea5231b2c32863304399453a6a7ad46dcca0be55dbdcd2dfc",
+          "packages/io-sdk/src/equity_feature_io_sdk/conformance.py": "e3051246479f696d2d272f27b6778dffdbd9e7b54d7db6c439f70a8c54f37ca5",
+          "packages/io-sdk/src/equity_feature_io_sdk/factories.py": "8045218cf70e6188a5b51278e5c79ddba2a7a3b8150e4997ba6c5f11706b7218",
+          "packages/io-sdk/src/equity_feature_io_sdk/publication.py": "bcac45f3fea1b1e9a28e352df4641840cb2cc078d5ab7efc63d6e539ce60ac88",
+          "packages/io-sdk/src/equity_feature_io_sdk/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests/massive/test_massive.py": "60786b1c6a0a71e707affaaffb7b5d907bc856ad8313382051a01c89edbf692b",
+          "tests/massive_oracle.json": "148a472c2b15c4dceab4e56dc40aef314426f7cc667080cb950af7046a2a34a2",
+          "tests/massive_probe.py": "3e92175fe998be815a3fa836ebac4a0ff27f3d508a5927335e0f7c597804b05a",
+          "examples/massive_consumer.py": "f6dbb9d6b35069725817fc1727ef85af75ed994e173a7409c56de6aea201e4f9",
+          "tools/build_massive.py": "b11d0bdd9ad6b323011ba2f68016503fd2dbfe3524a22205f0a7f9563c575271",
+          "tools/build_foundation.py": "c5d7ffe187c13b4f11c706074725608963070b4610e2b6575fb00ab4a79dea91",
+          "requirements-dev.txt": "008a66fd483b8918eae1b2c63ce92ff0e8473e2b82fe44f319b6b0c70a531217",
+          ".github/workflows/massive.yml": "1e6a761bb72588772c628dfc72e5901f4f43a2f9a8e311f2cbf46e2491cef325"
+        },
+        "forms": [
+          {
+            "installed_public_execution": true,
+            "actual_provider_proof": false,
+            "versions": {
+              "equity-feature-massive": "0.1.0a0",
+              "equity-feature-acquisition": "0.1.0a0",
+              "equity-feature-io-sdk": "0.1.0a2",
+              "equity-feature-io-contracts": "0.1.0a2",
+              "equity-feature-contracts": "0.0.4a4",
+              "equity-features": "0.0.4a4"
+            },
+            "tests_run": 22,
+            "failures": 0,
+            "skips": 0,
+            "strict_typing": true,
+            "rejected_invalid_calls": 2,
+            "source_sha256": {
+              "tests/massive/test_massive.py": "60786b1c6a0a71e707affaaffb7b5d907bc856ad8313382051a01c89edbf692b",
+              "tests/massive_oracle.json": "148a472c2b15c4dceab4e56dc40aef314426f7cc667080cb950af7046a2a34a2",
+              "examples/massive_consumer.py": "f6dbb9d6b35069725817fc1727ef85af75ed994e173a7409c56de6aea201e4f9"
+            },
+            "light_isolation": true,
+            "form": "wheel",
+            "source_commit": "107d433c739977a2de9a8cb0bedbe9d3fecdae2b",
+            "core_before_sha256": "1059d913cc6d4a346b3a928c5bc48d9d79646dd9ed711134e5319698798f534c",
+            "core_after_sha256": "1059d913cc6d4a346b3a928c5bc48d9d79646dd9ed711134e5319698798f534c"
+          },
+          {
+            "installed_public_execution": true,
+            "actual_provider_proof": false,
+            "versions": {
+              "equity-feature-massive": "0.1.0a0",
+              "equity-feature-acquisition": "0.1.0a0",
+              "equity-feature-io-sdk": "0.1.0a2",
+              "equity-feature-io-contracts": "0.1.0a2",
+              "equity-feature-contracts": "0.0.4a4",
+              "equity-features": "0.0.4a4"
+            },
+            "tests_run": 22,
+            "failures": 0,
+            "skips": 0,
+            "strict_typing": true,
+            "rejected_invalid_calls": 2,
+            "source_sha256": {
+              "tests/massive/test_massive.py": "60786b1c6a0a71e707affaaffb7b5d907bc856ad8313382051a01c89edbf692b",
+              "tests/massive_oracle.json": "148a472c2b15c4dceab4e56dc40aef314426f7cc667080cb950af7046a2a34a2",
+              "examples/massive_consumer.py": "f6dbb9d6b35069725817fc1727ef85af75ed994e173a7409c56de6aea201e4f9"
+            },
+            "light_isolation": true,
+            "form": "sdist",
+            "source_commit": "107d433c739977a2de9a8cb0bedbe9d3fecdae2b",
+            "core_before_sha256": "1059d913cc6d4a346b3a928c5bc48d9d79646dd9ed711134e5319698798f534c",
+            "core_after_sha256": "1059d913cc6d4a346b3a928c5bc48d9d79646dd9ed711134e5319698798f534c"
+          }
+        ]
+      },
+      "files": {
+        "equity_feature_acquisition-0.1.0a0-py3-none-any.whl": "9b6dca40280850599db8e194fe280cd651aa06b7132998d55e61861dfdd2d1e3",
+        "equity_feature_contracts-0.0.4a4-py3-none-any.whl": "acaa84fc0340c4640ced2b7cdbef04d5ba7cfaec20cd0525b866b415147635cc",
+        "equity_feature_io_contracts-0.1.0a2-py3-none-any.whl": "ef4deb9adc03b0e77075a36236fc20fe30d9373218386a60dc769d0145c09c99",
+        "equity_feature_io_sdk-0.1.0a2-py3-none-any.whl": "71c2316ab93d3382b24701ce6f4990b1355f90b8f66e562c8b1d34e539d60783",
+        "equity_feature_massive-0.1.0a0-py3-none-any.whl": "8c170426f468362417c043b273fb5c966771c1516f7edb362454812df4526b73",
+        "equity_feature_massive-0.1.0a0.tar.gz": "cfc7c8bbf7e924d7373a5a17daa0afc38427d8d2c11643de4b719d6165915cb4",
+        "equity_features-0.0.4a4-py3-none-any.whl": "cf8965e1600a3d8ef10dbefcfdea21f2d48ad8c8f80e0268abe12c365b1cd26e",
+        "manifest.json": "85f7c41502f73c168e4c35fd04f020ad5b67f89bb24ee1896ac3faddedafbc8f"
+      }
+    }
+  ],
+  "captured_at": "2026-10-08T20:09:20.026052+00:00"
+}
