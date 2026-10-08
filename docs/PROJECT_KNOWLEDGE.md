@@ -1,32 +1,38 @@
+## EQ071 reviewed runtime and source artifacts; corrected metadata pending — October 8, 2026
+
+Separate automated reviewer /root/r6_review independently43methods/strict5files and own path-invariant/unselected-invalid/denied-before-open/DBNannotation-identity adversaries pass; no runtime findings atd168f0f. Original metadata encoding defect acknowledged by author prevents final metadata acceptance; restored exact prior Git UTF-8 histories, package inputs unchanged. Canonical80 remains Code review pending renewed corrected-head coverage/current checks. No human/hosted review claim.
+
+Actual native source push37807389308 atd168f0f passed; author downloaded/verified2serverZIPs/14archives/four fresh wheel/sdist forms, default-light absent codecs/full optional43methods each/strict2negativecalls/exact committed-source maps/61corefile invariance/finite future expiry. LF receipt1a7636a2170d4bb02f40807d8e263aca4084f4887621a3756ba0ea7088cba63b is source qualification, not release. Local committed default-light/full wheel/sdist/repeat build also passed. Renew corrected-head review/currentallCI/native archive/source parity, then actual-main delivery/owner/expiry/readback beforeReleasedDone. No provider requests/charges; freequalificationonly;69/70NOT_READY, E09 open.
+
 ## EQ071 local-file source under qualification — October 8, 2026
 
 Optional Files.a0 implements explicit historical ordinary raw trades via normalized CSV/uncompressed Parquet/DBN3, existing HistoricalAdapter/ComponentFactory and scoped acquisition/cache controls. Pre-code owned goldens173da27 and full-profile identity refinementd983fc6 precede runtime. Author43 independent local fixture methods and strict5 source/example files pass, including genuine owned codecs and actual pure3format reconstruction count3/volume6/notional13e9/VWAP13/6/mean2; causal retains null/future known-at and allfivevaluesnull. Initial strict typing found four source boundary errors and nine union-narrowing example diagnostics; corrected without claiming a passing candidate. No numerical/core/version/SDK/worker changes, provider requests or charges.
 
 Canonical80 remains In progress; componentPR13/canonicalPR345 are draft. Next freeze source, run separately authorized /root/r6_review exact-head review, current all checks, default/light/full fresh wheel/sdist Windows/Linux/repeat builds/61corefile invariance, actual source+main ZIP/archive/receipt/expiry/owner/readback. No acceptance/release claimed;69/70 provider inputs remain NOT_READY and E09/milestone7 open. Free qualification downloads only approved; no data or charges. Original workspace unrelated changes preserved. Source docs include api/LOCAL_FILES.md and owned examples/files_consumer.py.
 
-## EQ071 Project-item admission correction â€” October 8, 2026
+## EQ071 Project-item admission correction — October 8, 2026
 
 [Correction](https://github.com/atulsrivas1/equity-features/issues/80#issuecomment-6063783896): initial command accidentally selected adjacent81/e4do, marking unimplementedEQ072 Ready/In progress and13points. Live issue number/item-ID inventory caught this before runtime;81restoredBacklog/mistakenpoints cleared, correct80/e4dk now13points/Ready->Inprogress. Accidental metadata transitions are not readiness or implementation evidence. Source71 scope/PR13/345 unchanged; no provider/charge. Future status mutations resolve and assert current issue URL/number/itemID, preserve actual lifecycle and read back final state.
 
-## EQ068 accepted; independent local-file preparation â€” October 8, 2026
+## EQ068 accepted; independent local-file preparation — October 8, 2026
 
 EQ067/068 accepted Closed/Project Done under [6768 acceptance](https://github.com/atulsrivas1/equity-features/issues/77#issuecomment-6063497519). Canonical final9a180da/component9473f88/fulltrees/3receiptbytes/Atul ownership/current allsource+main CI/actual source/native archive/version/expiry/readback independently verified. Acquisition.a0 four32caseforms and retained purecore four43caseforms/61files invariant; source inventory22exact inputs. Two P2 runtime findings and generated-inventory audit failure fixed; excluded candidates/cancellations retained. No provider/rights/charge acceptance; free qualification downloads only approved.
 
 EQ069/070 actual integration remains NOT_READY: no approved provider download/account/dataset/mode/secure credential injection/terms/use rights/finite cost scope. Do not waive proof or replace it with mocks. Owner handoff allows independent EQ071 local-file pull after accepted6768; publish its pre-code plan13provisionalpoints before Ready/In progress. Isolated canonical/I/O codex/eq071-local-file-adapters branches, no open PRs at pull; owned synthetic fixtures only. Optional Files.a0 reuses existing protocols/acquisition/SDK, explicitly supports normalized CSV/Parquet and DBN3 supplied trades; other kinds/modes unsupported. Local free PyArrow20/DBN0.70 imports and owned248byte DBN3 integer roundtrip are preparation, not adapter/Linux/native/provider proof. Resume exact scoped plan/independent fixtures then source/review/current all CI/native4forms/source+actual-main artifacts/receipt/readback. No provider requests/charges/private/stable/registry/R7/destructive/recurring work; E09/milestone7 open. Live Project is authority.
 
-## EQ068 artifact-receipt gate correction â€” October 8, 2026
+## EQ068 artifact-receipt gate correction — October 8, 2026
 
 Author independently audited actual native source78e6bde/run37798564438 ZIPs and found builder source inventory collected after setuptools generated egg-info/build files; those generated paths cannot equal Git committed inputs. Audit failed as required; that source receipt is excluded, despite32-case native execution passing. Freeze the committed input inventory before build, assert exact Git ls-tree path set, then renewed exact-head review/current CI/native source/readback. Runtime/P2 fixes are unchanged. Preserve failed audit and both earlier P2s; no provider calls/charges. Canonical77 returns to In progress for build-evidence rework. Resume corrected-source current gates, never bypass this inventory failure.
 
-## EQ068 independent review rework â€” October 8, 2026
+## EQ068 independent review rework — October 8, 2026
 
 Reviewer/root/r6_review exact6f181a92 independently ran29tests/strict4 and reproduced two P2s: advancing clock crossed retry target producing negative sleep/SCHEMA; expired cache permission raised before expiry purge. Author rechecked sleep timestamp/target/deadline and purged before permission rejection, added independent clock/expiry/oversized-row regressions.32localtests/strict4 pass; prior29case/build/native checks are superseded, not acceptance. No other reviewer findings; no provider requests/charges. Freeze correction head, renew separate semantic coverage/current all CI/four fresh native forms/source+actual-main receipts/readback. Canonical77 In progress; E09 open. Free qualification downloads only approved, account/provider/rights gates remain later.
 
-## EQ068 source implemented; qualification pending â€” October 8, 2026
+## EQ068 source implemented; qualification pending — October 8, 2026
 
 ComponentPR12 contains acquisition0.1.0a0 public controls/cache/third-party owned synthetic fixture, exact pre-code plan and committed independent goldens14a8a9c. Author29 independent local tests pass, strict4 source files/example pass. First draft test used a nonexistent AvailabilitySpec field and failed one fixture before correction to accepted constructor; no runtime defect or pass fabricated. Existing pure/core/I/O SDK/contracts/sinks/workers unchanged. Documentation freezes trusted cooperative callback limitations, integer budgets/cost reservation, secret context removal and caller-controlled retention/session cleanup. No provider requests or charges. Current source needs independent exact-head semantic review, all repository CI, native four fresh wheel/sdist forms and source/actual-main receipt/readback before Released/Done. Resume those gates; canonical77 is In progress, E09/milestone7 open. Free qualification downloads only approved.
 
-## EQ068 pre-code pull â€” October 8, 2026
+## EQ068 pre-code pull — October 8, 2026
 
 EQ067 is accepted Closed/Project Done under [actual-main acceptance](https://github.com/atulsrivas1/equity-features/issues/76#issuecomment-6062640543); research documentation4689892 matches independently reviewed df7, actual docs/native37795965068/37795964926 pass and server ZIP/archive/source/readback verified. No provider integration/rights acceptance. Free qualification downloads approved; provider acquisition and all charges still require explicit user approval. Preserved failed CRLF/LF receipt-label candidate remains excluded.
 
@@ -40,7 +46,7 @@ Owner-authorized output-only repair of canonical301 uses completion-first immuta
 
 ## EQ130 release audit under qualification
 
-EQ121â€“129 are accepted; EQ130 is the sole active docs/audit story. [canonical R4.1 audit](https://github.com/atulsrivas1/equity-features/blob/main/docs/R4_1_ACCEPTANCE.md) and [canonical R5 resume](https://github.com/atulsrivas1/equity-features/blob/main/docs/R5_AUTONOMOUS_HANDOFF.md) bind actual accepted versions/heads/receipts, separate automated reviews, source/backend/composed evidence and preserved rights/limits. Final current head review/CI/artifact/publication/readback and canonical287Done precede epic/milestone closure and EQ057#65 Ready. R5 is prepared only; this chat stops before its implementation. No runtime/test/workflow/package/math/private execution change. Live Project/issue evidence is authority; earlier snapshots below preserve history.
+EQ121–129 are accepted; EQ130 is the sole active docs/audit story. [canonical R4.1 audit](https://github.com/atulsrivas1/equity-features/blob/main/docs/R4_1_ACCEPTANCE.md) and [canonical R5 resume](https://github.com/atulsrivas1/equity-features/blob/main/docs/R5_AUTONOMOUS_HANDOFF.md) bind actual accepted versions/heads/receipts, separate automated reviews, source/backend/composed evidence and preserved rights/limits. Final current head review/CI/artifact/publication/readback and canonical287Done precede epic/milestone closure and EQ057#65 Ready. R5 is prepared only; this chat stops before its implementation. No runtime/test/workflow/package/math/private execution change. Live Project/issue evidence is authority; earlier snapshots below preserve history.
 
 ## EQ129 accepted / EQ130 concrete audit plan
 
@@ -78,11 +84,11 @@ Custom source500/51200/102.6 remains distinct from minute source8/11.625/notiona
 
 Next freeze these final documentation heads, renewed exact-head separate review/current CI/current146archives/16ZIP202files source/channel guards, exacthead publication/successful actualmain artifact equality/sourceowner/report/expiry readback before Released/postreadDone. EQ130 final audit follows; STOP before R5/providers/services/registry/stabletags/privategeneration. Earlier snapshots below remain historical; live Project is authority.
 
-## EQ128 accepted / EQ129 concrete pre-code plan â€” October 7, 2026
+## EQ128 accepted / EQ129 concrete pre-code plan — October 7, 2026
 
 Canonical285 Closed/Project Done after actual Released6031894489/Done6031899095 selected-item readbacks. Actual IOmain395beba80b3bcb2e9db344c6a9d2bcab085be1a6/coremain45d0fb292234060f8196ba6569ce7805dd921846: all82 archive files equal final qualified artifacts by platform, twelve actual server ZIP digests/all134 files/current sources+reports/finite expiry/155+385 public blobs/Atul ownership verified. Receipt SHA256 e3179f097ef99257cf8ed75c49ee8d7a54c78830225f86b2a30ba3cc87d0dad2. Successful main foundation37577826128/source37577826233/Parquet37577826256/DuckDBsink37577826237/extensions37577826215/core37577802708/docs37577802663. Separate final reviews6031735476/6031736124/artifact6031762971/6031763541 no unresolved. Prior runtime prose finding/correction preserved. GraphQL quota interrupted actual Ready/merge paths; guarded REST merges and documented Projects REST2026-03-10 live predecessor/mutation/selected-item readback preserved exact gates, no fabricated transitions.
 
-Next canonical286 concrete plan publishes exact9-package/18-archive native composed matrix and worker.a1 skeleton metadata/provenance alignment only. Core/source/SDK/backends/extension/math remain unchanged. Pre-code reviewer corrected source-fixture assumptions: custom example retains500/51200/102.6; accepted standalone DuckDBminute fixture volume8/weighted11.625/notionalnull has separate full12 expectations; no fabricated notional or interval mapping. Worker build provenance uses exact I/O pin/committed probe/end guards and historical negative tests use full offline actual candidates. These are preparation results, not matrix acceptance. All278â€“285 are live Closed/Done;286/287 Backlog before formal pull. One active story. Publish plans/Ready, linked drafts/In progress, implement and separately review/qualify/current native+actualmain release/readbacks. EQ130 final audit follows, STOP before R5/providers/services/registry/stable tags/private generation.
+Next canonical286 concrete plan publishes exact9-package/18-archive native composed matrix and worker.a1 skeleton metadata/provenance alignment only. Core/source/SDK/backends/extension/math remain unchanged. Pre-code reviewer corrected source-fixture assumptions: custom example retains500/51200/102.6; accepted standalone DuckDBminute fixture volume8/weighted11.625/notionalnull has separate full12 expectations; no fabricated notional or interval mapping. Worker build provenance uses exact I/O pin/committed probe/end guards and historical negative tests use full offline actual candidates. These are preparation results, not matrix acceptance. All278–285 are live Closed/Done;286/287 Backlog before formal pull. One active story. Publish plans/Ready, linked drafts/In progress, implement and separately review/qualify/current native+actualmain release/readbacks. EQ130 final audit follows, STOP before R5/providers/services/registry/stable tags/private generation.
 
 Earlier snapshots below remain historical; live canonical Project is execution authority.
 
@@ -106,7 +112,7 @@ Earlier snapshots below preserve history; live canonical Project is current auth
 
 ## Current execution entry, October7 UTC
 
-EQ121â€“125 accepted under canonical issue/Project evidence; matching I/OcontractsSDK.a2/fixture.a1 and DuckDBsource.a8. EQ126 accepted under actualmain/ReleasedDone283. Current next EQ127 pre-code transactional output sink; see SESSION_HANDOFF.md/EQ126_PLAN.md and canonical283. Earlier preparation text below is historical, not execution authority. Pure core0.0.4a4 unchanged; stop after130 beforeR5.
+EQ121–125 accepted under canonical issue/Project evidence; matching I/OcontractsSDK.a2/fixture.a1 and DuckDBsource.a8. EQ126 accepted under actualmain/ReleasedDone283. Current next EQ127 pre-code transactional output sink; see SESSION_HANDOFF.md/EQ126_PLAN.md and canonical283. Earlier preparation text below is historical, not execution authority. Pure core0.0.4a4 unchanged; stop after130 beforeR5.
 
 # Project knowledge
 

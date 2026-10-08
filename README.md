@@ -1,6 +1,6 @@
 # equity-feature-io
 
-I/O contracts/SDK.a2 provide explicit per-run factories/direct admission and complete logical publication. Source extraction and Parquet sink are accepted through canonical EQ121â€“126; [EQ127 delivery](docs/EQ127_DELIVERY.md) records the transactional DuckDB sink's review, qualification and publication evidence. Live Project is the status authority for R4.1 acceptance.
+I/O contracts/SDK.a2 provide explicit per-run factories/direct admission and complete logical publication. Source extraction and Parquet sink are accepted through canonical EQ121–126; [EQ127 delivery](docs/EQ127_DELIVERY.md) records the transactional DuckDB sink's review, qualification and publication evidence. Live Project is the status authority for R4.1 acceptance.
 
 Canonical scope: [EQ-121](https://github.com/atulsrivas1/equity-features/issues/278), [R4.1 handoff](https://github.com/atulsrivas1/equity-features/blob/main/docs/R4_1_AUTONOMOUS_HANDOFF.md) and [architecture](https://github.com/atulsrivas1/equity-features/blob/main/docs/IO_WORKER_ARCHITECTURE.md). This companion owns component implementation/evidence. Planning, lifecycle, epics and milestones stay in equity-features. Pure calculations and existing acquisition protocols retain their original repository/imports.
 
