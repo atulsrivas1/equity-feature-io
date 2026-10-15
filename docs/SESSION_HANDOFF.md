@@ -1,3 +1,7 @@
+## EQ098 pre-code P2 corrections; renewed Ready review pending — October15,2026
+
+Separate paired design review30c19651 at canonicaldee51c54/companion10aae188 requested exact immutable public field types/outcome-state invariants and literal lexical token bounds before parsing/conversion. Complete canonical packet now freezes BundleVersions and all record scalar/tuple constraints, ten-row ReplayReport state/count/timing/match/output matrix, direct-constructor contradictions, integer grammars, raw/decoded string/surrogate limits,24character canonicalfloat guard and shared pre-parse array/node/depth budgets. Original report retained in canonical EQ-098_PRECODE_REVIEW.json; known manifest/archive oracle bytes unchanged and independently audited. No new runtime code;198Backlog/notReady until renewed paired exact-head review. Synchronous replay scope was accepted, not a prompt deadline promise. No new owner input needed.
+
 ## EQ098 paired pre-code preparation — October15,2026
 
 Canonical EQ096/097 accepted, latest main ec1e3b1/[197acceptance](https://github.com/atulsrivas1/equity-features/issues/197#issuecomment-6193790651); dependencyEQ045#51freshlyDone. Currentcomponentbase19aa266b9debb92a6c5eb707baafeb9ae7a82942; clean codex/eq098-bundles branch prepares [companion boundary](EQ098_PLAN.md)/canonical complete packet and independent archive fixture only. Owner existing R9 local-review grant explicitly recorded in CODE_REVIEW; no repeat permission question.
