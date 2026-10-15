@@ -1,3 +1,7 @@
+## EQ098 qualifier origin correction before execution — October15,2026
+
+Author self-check found inherited MYPYPATH/PYTHONPATH/PYTHONHOME/PYTHONUSERBASE could affect fresh installed typing/build subprocesses. New qualifier removes them per subprocess; runtime probes also use -I. Original d91095d candidate was never built/installed/executed as qualification. Source-only author typing deliberately uses source paths; installed qualification must not. Runtime bundle sources unchanged; renewed exact-head independent review remains pending. A guessed old merge-helper filename was absent during read-only tooling discovery; no mutation/build occurred.
+
 ## EQ098 implementation candidate; qualification pending — October15,2026
 
 Separate corrected pre-code review5109e1d1 at canonicalce7fa33e/companion9eae14f7 approved with no remaining findings. [Actual Ready evidence](https://github.com/atulsrivas1/equity-features/issues/198#issuecomment-6194312464) precedes actual Ready→In progress/Atul assignment. New companion bundles0.1.0a1 implements data-only fixed stored ZIP/strict manifest/35 closed typed branches/full supplied content binding and explicit optional fixed compute_trades replay. Root parsing never imports features; missing references never fetch. The five-second acceptance check runs after return and is not an interruption deadline. Existing core/evidence/old-I/O package sources/versions are unchanged.

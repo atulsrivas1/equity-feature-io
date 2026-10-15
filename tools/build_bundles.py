@@ -28,7 +28,12 @@ PACKAGES={'contracts':('equity_feature_contracts','0.0.4a4'),
 
 
 def run(*args, cwd=ROOT, env=None):
-    subprocess.run([str(a) for a in args], cwd=cwd, env=env, check=True)
+    clean = dict(os.environ if env is None else env)
+    # Fresh installed typing must not resolve a caller's checkout through
+    # mypy/Python search-path configuration. Runtime probes also use -I.
+    for name in ('MYPYPATH', 'PYTHONPATH', 'PYTHONHOME', 'PYTHONUSERBASE'):
+        clean.pop(name, None)
+    subprocess.run([str(a) for a in args], cwd=cwd, env=clean, check=True)
 
 
 def sha(data): return hashlib.sha256(data).hexdigest()
