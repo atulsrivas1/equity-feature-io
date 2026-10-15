@@ -39,7 +39,8 @@ def shape(configuration: ConfigSpec, result: FeatureResult) -> EntityKey:
         and len(configuration.parameters) == 1 and configuration.parameters[0].name == 'eligibility_policy'
         and type(configuration.parameters[0].value) is str, 'unsupported_version')
     require(len(result.values) == 5 and not result.evidence and result.metadata.evidence_limit == 0
-        and result.metadata.backend_id == 'python-exact' and result.metadata.backend_version == '0.0.4a4', 'unsupported_version')
+        and result.metadata.backend_id == 'python-exact' and result.metadata.backend_version == '0.0.4a4'
+        and result.metadata.schema_version == '1' and result.metadata.math_policy_version == 'v1', 'unsupported_version')
     entity = result.values[0].entities
     require(type(entity) is tuple and len(entity) == 1 and type(entity[0]) is EntityKey, 'unsupported_version')
     specs = (('count', ValueType.INT64, 'trades'), ('volume', ValueType.INT64, 'shares'),

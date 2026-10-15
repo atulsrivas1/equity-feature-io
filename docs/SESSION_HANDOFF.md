@@ -1,3 +1,9 @@
+## EQ098 source P2 corrected before qualification — October15,2026
+
+Separate reviewer d0de0d8f at canonical60017883/companion9bd10876 found a receipt-consistent result declaring math_policy_version v2 reached the fixed v1 calculator and reported one-call mismatch. Shared registry admission now pins result schema1/math policyv1 before export/read/replay; independent re-bound ZIP and manually forged exact-wrapper counter tests prove unsupported_version/zero calculator-loader calls. Supported v1 output disagreement remains a one-call mismatch.28source methods pass. [Original finding/disposition](https://github.com/atulsrivas1/equity-features/blob/codex/eq098-bundles/docs/stories/EQ-098_SOURCE_REWORK.json) preserves the changes-requested scope; renewed exact-head review remains pending. No build/install/bothOS/runtime delivery or Done inferred.
+
+Prior author qualifier correction removes inherited MYPYPATH/PYTHONPATH/PYTHONHOME/PYTHONUSERBASE per subprocess; actual poisoned-environment helper child passed. Original inline shell-quote SyntaxError stopped before execution, saved-script check succeeded. No original failed/rework evidence is overwritten or relabeled as pass.
+
 ## EQ098 qualifier origin correction before execution — October15,2026
 
 Author self-check found inherited MYPYPATH/PYTHONPATH/PYTHONHOME/PYTHONUSERBASE could affect fresh installed typing/build subprocesses. New qualifier removes them per subprocess; runtime probes also use -I. Original d91095d candidate was never built/installed/executed as qualification. Source-only author typing deliberately uses source paths; installed qualification must not. Runtime bundle sources unchanged; renewed exact-head independent review remains pending. A guessed old merge-helper filename was absent during read-only tooling discovery; no mutation/build occurred.

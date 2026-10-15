@@ -226,6 +226,41 @@ class BundleTests(unittest.TestCase):
             report=replay.replay_bundle(self.bundle)
             self.assertEqual((report.status,report.calculation_count),('incompatible',0))
 
+    def test_consistent_unknown_math_policy_refuses_before_calculator(self):
+        b=self.bundle
+        result=replace(b.result,metadata=replace(b.result.metadata,math_policy_version='v2'))
+        receipt=make_content_receipt(result,b.configuration,(('trades',b.inputs[0].batch),),
+            b.receipt.environment,b.receipt.execution,b.receipt.evidence)
+        with self.assertRaises(BundleError) as caught:
+            write_bundle(receipt,b.configuration,result,(('trades',b.inputs[0].batch),),b.manifest.publication)
+        self.assertEqual(caught.exception.code,'unsupported_version')
+        # Independently rebind every changed byte/hash through standard JSON/ZIP,
+        # so integrity failure cannot accidentally stand in for policy admission.
+        entries=members()
+        wire=json.loads(entries['result.json'])
+        wire['value']['fields']['metadata']['fields']['math_policy_version']='v2'
+        encode=lambda x:json.dumps(x,ensure_ascii=True,sort_keys=True,separators=(',',':')).encode('ascii')
+        entries['result.json']=encode(wire)
+        claim=json.loads(entries['receipt.json'])
+        claim['metadata']['math_policy_version']='v2'
+        claim['output'].update(digest=hashlib.sha256(entries['result.json']).hexdigest(),byte_length=len(entries['result.json']))
+        entries['receipt.json']=encode(claim)
+        manifest=json.loads(entries['manifest.json'])
+        manifest['result']['content']=claim['output']
+        manifest['receipt'].update(digest=hashlib.sha256(entries['receipt.json']).hexdigest(),byte_length=len(entries['receipt.json']))
+        entries['manifest.json']=encode(manifest)
+        with self.assertRaises(BundleError) as caught: read_bundle(standard_zip(entries))
+        self.assertEqual(caught.exception.code,'unsupported_version')
+        # Revalidate a caller-forged exact wrapper too; no admission flag is trusted.
+        forged=object.__new__(ReproductionBundle)
+        for name,value in (('manifest',b.manifest),('receipt',receipt),('configuration',b.configuration),('result',result),('inputs',b.inputs)):
+            object.__setattr__(forged,name,value)
+        loader=Mock(side_effect=AssertionError('must not reach calculator loader'))
+        with patch.object(replay,'_installed_calculator',loader):
+            with self.assertRaises(BundleError) as caught: replay.replay_bundle(forged)
+        self.assertEqual(caught.exception.code,'unsupported_version')
+        self.assertEqual(loader.call_count,0)
+
     def test_controlled_one_call_outcomes_and_gate(self):
         b=self.bundle
         changed=replace(b.result,values=(replace(b.result.values[0],values=(4,)),)+b.result.values[1:])

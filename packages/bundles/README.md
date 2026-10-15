@@ -55,3 +55,7 @@ version and renewed qualification; do not replace exact pins with latest.
 See the canonical EQ-098 plan for the complete schema, report matrix, lexical
 limits, threat model and delivery requirements. The independent pre-code
 fixture is tests/fixtures/bundle_oracle.json in the companion repository.
+
+The fixed registry admits result schema1/math policyv1 only. A content-consistent
+receipt with another mathematical policy is rejected before any calculator
+call; mismatch describes returned disagreement under the supported policy.
