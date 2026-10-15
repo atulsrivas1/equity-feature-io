@@ -1,3 +1,7 @@
+## EQ098 reproduction bundle candidate
+
+Optional [bundles package](packages/bundles/README.md) implements data-only byte archives and explicit trusted fixed replay, separate from I/O sinks and pure calculations. [Actual synthetic example](examples/bundles_consumer.py). Candidate under canonical198; source review/freshbothOS/paired-main acceptance pending. No source/provider/executable-content resolver or active-call interruption promise.
+
 # equity-feature-io
 
 I/O contracts/SDK.a2 provide explicit per-run factories/direct admission and complete logical publication. Source extraction and Parquet sink are accepted through canonical EQ121–126; [EQ127 delivery](docs/EQ127_DELIVERY.md) records the transactional DuckDB sink's review, qualification and publication evidence. Live Project is the status authority for R4.1 acceptance.

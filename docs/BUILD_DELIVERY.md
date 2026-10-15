@@ -1,3 +1,7 @@
+## EQ098 candidate qualification
+
+`python tools/build_bundles.py --core-root <clean-canonical-checkout>` requires exact canonicalec1e3b1b55a2c3e7e8a7c2ecddc43f11a99c72ca. Committed Git bytes feed repeat eight-archive builds; normalized sdists and complete archive/license/RECORD/source maps precede four fresh wheel/sdist light/replay consumers. Light has no features/SDK/workers/native optional dependencies; replay runs the actual fixed producer and full-byte parity. Results under dist/bundles require a fresh empty directory and preserve original qualification on failure. CI uploads unexpired exact-head server ZIPs; source approval alone does not qualify an artifact. No registry publication. Existing package build workflows remain unchanged.
+
 ## EQ130 release audit under qualification
 
 EQ121–129 are accepted; EQ130 is the sole active docs/audit story. [canonical R4.1 audit](https://github.com/atulsrivas1/equity-features/blob/main/docs/R4_1_ACCEPTANCE.md) and [canonical R5 resume](https://github.com/atulsrivas1/equity-features/blob/main/docs/R5_AUTONOMOUS_HANDOFF.md) bind actual accepted versions/heads/receipts, separate automated reviews, source/backend/composed evidence and preserved rights/limits. Final current head review/CI/artifact/publication/readback and canonical287Done precede epic/milestone closure and EQ057#65 Ready. R5 is prepared only; this chat stops before its implementation. No runtime/test/workflow/package/math/private execution change. Live Project/issue evidence is authority; earlier snapshots below preserve history.
