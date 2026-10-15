@@ -261,6 +261,41 @@ class BundleTests(unittest.TestCase):
         self.assertEqual(caught.exception.code,'unsupported_version')
         self.assertEqual(loader.call_count,0)
 
+    def test_empty_zero_input_policy_refuses_before_calculator(self):
+        b=self.bundle
+        # A known missing-result shape is independent of a calculator call here.
+        missing=replace(b.result,
+            values=tuple(replace(c,values=(None,)) for c in b.result.values),
+            quality=tuple(replace(q,status=r.Status.MISSING_INPUT,expected=None,observed=0,reasons=(r.Reason.ABSENT_INPUT,)) for q in b.result.quality),
+            metadata=replace(b.result.metadata,inputs=()))
+        baseline=make_content_receipt(missing,b.configuration,(),b.receipt.environment,b.receipt.execution,b.receipt.evidence)
+        good=read_bundle(write_bundle(baseline,b.configuration,missing,(),b.manifest.publication))
+        from equity_feature_evidence import encode_receipt
+        for policy in ('','   ','\t\n'):
+            config=replace(b.configuration,parameters=(s.Parameter('eligibility_policy',policy),))
+            output=replace(missing,metadata=replace(missing.metadata,config_digest=config.digest))
+            receipt=make_content_receipt(output,config,(),b.receipt.environment,b.receipt.execution,b.receipt.evidence)
+            with self.assertRaises(BundleError) as caught:
+                write_bundle(receipt,config,output,(),b.manifest.publication)
+            self.assertEqual(caught.exception.code,'unsupported_version')
+            # Accepted foundation encoders + independent standard JSON/ZIP rebind
+            # every changed descriptor; no new writer creates its own negative.
+            entries=members(exported(good)); entries['configuration.json']=canonical_content(config)
+            entries['result.json']=canonical_content(output); entries['receipt.json']=encode_receipt(receipt)
+            claim=json.loads(entries['receipt.json']); manifest=json.loads(entries['manifest.json'])
+            manifest['configuration']['content']=claim['configuration']; manifest['result']['content']=claim['output']
+            manifest['receipt'].update(digest=hashlib.sha256(entries['receipt.json']).hexdigest(),byte_length=len(entries['receipt.json']))
+            entries['manifest.json']=json.dumps(manifest,sort_keys=True,separators=(',',':')).encode('ascii')
+            with self.assertRaises(BundleError) as caught: read_bundle(standard_zip(entries))
+            self.assertEqual(caught.exception.code,'unsupported_version')
+            forged=object.__new__(ReproductionBundle)
+            for name,value in (('manifest',b.manifest),('receipt',receipt),('configuration',config),('result',output),('inputs',())):
+                object.__setattr__(forged,name,value)
+            loader=Mock(side_effect=AssertionError('invalid request must not load calculator'))
+            with patch.object(replay,'_installed_calculator',loader):
+                with self.assertRaises(BundleError) as caught: replay.replay_bundle(forged)
+            self.assertEqual(caught.exception.code,'unsupported_version'); self.assertEqual(loader.call_count,0)
+
     def test_controlled_one_call_outcomes_and_gate(self):
         b=self.bundle
         changed=replace(b.result,values=(replace(b.result.values[0],values=(4,)),)+b.result.values[1:])

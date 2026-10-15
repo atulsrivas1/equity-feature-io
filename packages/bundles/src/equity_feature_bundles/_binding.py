@@ -37,7 +37,8 @@ def shape(configuration: ConfigSpec, result: FeatureResult) -> EntityKey:
     require(type(configuration) is ConfigSpec and type(result) is FeatureResult)
     require(configuration.schema_version == '1' and configuration.algorithm_version == 'v1'
         and len(configuration.parameters) == 1 and configuration.parameters[0].name == 'eligibility_policy'
-        and type(configuration.parameters[0].value) is str, 'unsupported_version')
+        and type(configuration.parameters[0].value) is str
+        and bool(configuration.parameters[0].value.strip()), 'unsupported_version')
     require(len(result.values) == 5 and not result.evidence and result.metadata.evidence_limit == 0
         and result.metadata.backend_id == 'python-exact' and result.metadata.backend_version == '0.0.4a4'
         and result.metadata.schema_version == '1' and result.metadata.math_policy_version == 'v1', 'unsupported_version')
