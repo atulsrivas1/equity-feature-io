@@ -1,3 +1,7 @@
+## EQ098 bounded bundle/replay proposal — October15,2026
+
+[Packet](EQ098_PLAN.md) follows accepted canonical197/main ec1e3b1 and preserves existing I/O adapters/SDK/math. A new optional bundle distribution uses fixed data-only stored ZIP bytes with no extraction/resolvers/code, strict fingerprints, explicit unavailable refs and a separately invoked fixed replay module. Five seconds is an after-return acceptance gate, not enforced execution deadline; matching current replay does not authenticate original facts. Complete independent Ready review/actual pull/runtime/current artifacts/pairedmain gates remain pending. Owner R9 local-review grant is recorded; no new input required merely because implementation is pending.
+
 ## EQ071 actual source Released; final receipt publication — October 8, 2026
 
 Live80 Released/OPEN after separate actual-main verification: I/Oe34/canonical7abc fulltrees equal reviewedec/00, Atul author/GitHub committer,7publicblobs/all19mainchecks, Files native37811601093 LF7912c2e0245f75488b6baf6c1539f1cc363ba077befb1095b7f677203e9531f8/core37811609639 LF2da26ece252666b5dba5b8fe280666830c351121329b9235d8f8d257bc2f8dfb, actual serverZIP/source/archive/version/expiry parity verified. Fourfile43light-fullforms/39inputhashes and separatefourcore43consumer forms/61invariantfiles; source JSONs immutable. Reviewer actualsource/artifact/check/readback no findings, no independent reinstall/human/provider claim.

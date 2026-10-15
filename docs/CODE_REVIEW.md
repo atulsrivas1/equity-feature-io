@@ -1,3 +1,7 @@
+## R9 owner-authorized local review — October15,2026
+
+The owner explicitly answered "Authorize local review throughout R9" for EQ096–100/final delivery. This includes EQ098's companion bundle/replay implementation, exact final paired heads, artifacts and publication/readback. Canonical [review policy](https://github.com/atulsrivas1/equity-features/blob/ec1e3b1b55a2c3e7e8a7c2ecddc43f11a99c72ca/docs/CODE_REVIEW.md) records the original grant. Record actual separate automated reviewer identity/head/checks/findings/disposition/limitations; author self-review/CI alone are insufficient, renew relevant final-head coverage. All numerical/docs/installed bothOS/current-artifact/guarded-publication/lifecycle gates remain mandatory. Not human or hosted activation, account administration, provider/private acquisition, stable registry/publicservice/spending/automation or later-release scope.
+
 ## BUG-005 bounded local review authorization — October 7, 2026
 
 Owner responds to the explicit policy gate with "can you review". Separate local Codex review is authorized for canonical BUG-005 #301, componentPR11 and canonical continuityPR302, including final-head semantic/runtime/findings and delivery coverage. This is local automated review, not hosted activation or human review, and grants no general R5 authorization. Preserve all numerical/documentation/CI/installed/publication/readback gates; author self-review is insufficient. Earlier pending-authorization snapshots are superseded for this repair only.
