@@ -1,3 +1,7 @@
+## EQ098 bundles candidate
+
+New optional bundles0.1.0a1 pins contracts0.0.4a4/evidence0.1.0a2 and explicit replay extra features0.0.4a4 on CPython3.12 Windows/Linux. Root read/write does not import features or install/fetch missing inputs. Existing I/O package versions/sources remain unchanged. Unknown versions refuse; EQ099 or a future format/dependency extension requires explicit versioning and renewed bundle compatibility qualification. Source candidate is not fresh installed/actual-main acceptance.
+
 ## BUG-005 correction candidate
 
 Parquet0.1.0a1 corrects cooperating-reader completion observation; other accepted nine-package versions remain unchanged. Current matrix expectations select.a1 and independently repeat/qualify its archives. Historical accepted .a0 hashes remain preserved and still constrain unchanged packages; exclusions explicitly identify changed Parquet and already separately-qualified worker archives. No arbitrary version/platform claim. Review/CI/installed/current-main readback remain required on canonical301 before acceptance. Source adapter/private/calculation semantics are unchanged; no worker commands.

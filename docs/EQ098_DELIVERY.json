@@ -1,0 +1,45 @@
+{
+  "schema": "eq098-companion-delivery:1",
+  "candidate_heads": {
+    "canonical": "e414f517a6b258ad35d83ec83c3be7b0d950db6c",
+    "io": "89a8a41fd923877c050fbcae2cefb714b15c5bc0"
+  },
+  "full_maps": "Canonical docs/stories/EQ-098_VALIDATION.json in paired final documentation commit; later actual-main receipts on issue198.",
+  "independent_reviews": [
+    {
+      "disposition": "approved_source_no_actionable_findings",
+      "findings": [],
+      "raw_report_sha256": "0b1c4daea7d25db1d6cfe92d983d51908148457d4f358867b006862f518c6bde",
+      "reviewer": "Separate local Codex automated reviewer /root/r9_plan_review; not author self-review, hosted or human review",
+      "role": "source"
+    },
+    {
+      "disposition": "approved_corrective_source_bundle_artifacts_no_actionable_findings",
+      "findings": [],
+      "raw_report_sha256": "e5864e25113b9c5529516917135e8b5f516026b1d7ef50d8b3a16cf22b733792",
+      "reviewer": "Separate local Codex automated reviewer /root/r9_plan_review",
+      "role": "artifacts"
+    },
+    {
+      "disposition": "approved_tooling_no_actionable_findings",
+      "findings": [],
+      "raw_report_sha256": "9899a9c2c32d7c807ecc128d28f507eea973f97ecc350ba1f88fe911c12b04fc",
+      "reviewer": "Separate local Codex automated reviewer /root/r9_plan_review",
+      "role": "tooling"
+    }
+  ],
+  "artifact_ids": [
+    11983597672,
+    11983093636
+  ],
+  "qualification": "Windows/Linux eight archives each; four fresh consumer forms each; 29 distinct methods (light two explicit skips), typing, actual fixed producer.",
+  "status": "Test; final docs/current-head/paired-main review and lifecycle gates pending.",
+  "limits": [
+    "29 distinct test methods per form; light consumers explicitly skip two calculator-dependent cases. Repeated cohorts are not additional unique methods.",
+    "Reviewer audited actual CI logs, delivered artifacts, installed maps and public source; no independent reviewer reinstall or execution of consumer forms.",
+    "Five-second replay gate is evaluated after synchronous return; no prompt mid-call cancellation, physical resource quota or kernel cleanup claim.",
+    "Content consistency does not authenticate source rights, original execution or environment. Missing referenced inputs remain unavailable; no fetching or arbitrary resolver.",
+    "OS-specific wheel metadata/archive bytes may differ; archive equality is checked within each OS against its own repeat build and later publication."
+  ],
+  "tool_history": "Final-doc preparer assumed root canonical CHANGELOG.md; stopped after canonical docs writes. Resumed only missing operations using actual docs/CHANGELOG.md; no duplicate checkpoint or remote mutation."
+}

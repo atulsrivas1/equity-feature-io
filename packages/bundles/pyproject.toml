@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "equity-feature-bundles"
+version = "0.1.0a1"
+description = "Data-only reproduction bundles with explicit trusted replay"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{name = "Atul Srivastava"}]
+dependencies = ["equity-feature-contracts==0.0.4a4", "equity-feature-evidence==0.1.0a2"]
+
+[project.optional-dependencies]
+replay = ["equity-features==0.0.4a4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+equity_feature_bundles = ["py.typed"]
