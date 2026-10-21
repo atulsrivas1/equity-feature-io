@@ -1,3 +1,23 @@
+## EF1 regular first-trade I/O conversion source - October 21, 2026
+
+Actual composition supersedes the pending bootstrap statement below only within
+its scoped epochs: initial core candidate exercised281requests/122wholeSDK
+results/159actualstages and122freshDB fullreadback/retry/reopen/NULsidecars.
+Outer report parser failed after child completion; native child exit was not
+independently persisted and remains an explicit limitation. Corrected core V2
+separately passes numerical-only281/122SDK/159stages with actual child/controller
+exit0 and unchanged215source maps. No repeatedphysicalDBs; corrected worker
+physical and all review/install/release gates remain separate.
+
+Additive exact3-role supplied conversion and original synthetic R001/R019 helper
+source is authored under EQ212#570; [checkpoint](EF1_REGULAR_FIRST_TRADE_PRICE_IO.md)
+records9new/118combined input methods,11source/example strict typing and retained
+19+4additive extraction checks. Frozen whole oraclee1835 is byte-identical.
+Conversion225accepted/56actualearlierrefusals is distinct from numerical
+conformance; N154 remains deepest BatchMetadata BOUNDS. Full281producer/122freshDB
+composition is authored but waits stable coordinator core/resource grant. SDK,
+sink, versions and old source modules unchanged; review/install/release open.
+
 ## EF1 gap endpoint I/O source composition completed — October 21, 2026
 
 [Current checkpoint](EF1_GAP_ENDPOINT_IO.md) records actual final-source Windows3.12.10 composition:3 methods/60.321s PASS, all71 complete computed SDK roundtrips,43 negative targets with exact earlier-stage distinctions and71 new separate DuckDB complete readback/retry/close/reopen. Original oracle retained; independently approved two-leaf E28 causal successor is current conformance. Final7 bootstrap methods and strict typing1source pass. Source authoring is uncommitted; coordinator actual diff/fresh independent code review, immutable installed/platform/browser/full-audit/release gates remain open. Earlier pending snapshots below are historical.
