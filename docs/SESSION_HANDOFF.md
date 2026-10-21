@@ -1,5 +1,9 @@
 ## EF1 cumulative io source checkpoint - October 21, 2026
 
+[Current qualification and limits](EF1_CUMULATIVE_QUALIFICATION.md) records the exact frozen runtime cohort: all four installed forms passed on Windows and Linux, with 665 methods per form, zero skips and 200 verified-readback demos across both platforms. Coordinator artifact audit and fresh independent final review passed. Later documentation integration commits are not executed runtime source identities. Actual browser inspection, full original audit/source-version/consumer bindings, suitable N-drive input qualification and EF1 release gates remain open. Earlier source-authoring, pending and resource-hold entries below retain their original historical scope; no whole-story completion or package publication is claimed.
+
+## EF1 cumulative io source checkpoint - October 21, 2026
+
 Current source, completed earlier-cohort validation and pending final qualification are recorded in [EF1 cumulative io source checkpoint - October 21, 2026](EF1_CUMULATIVE_QUALIFICATION.md). Earlier source-authoring, uncommitted, pending-pins, unexecuted and resource-hold entries below are historical snapshots; they do not override the current checkpoint. Final installed/platform/browser and full original-audit release gates remain open.
 
 # Observable EQ165 source authoring — October21,2026
@@ -573,6 +577,49 @@ study hold is explicitly lifted from actual evidence, execute exact-commit
 local input/composition/type/extraction checks, build/install and integrated
 worker/full-sink checks with qualified core dependency pins. Root owns final
 pins/helper/census. Full EQ164 audit and EF1/release/browser-demo gates remain.
+
+## EF1 supplied reference source candidate — October20,2026
+
+Added exact nullable classification/action input containers and explicit supplied
+REFERENCE row/proof conversion in the existing additive ef1.py. Industry is EF1
+local; legacy reader/utility APIs stay unchanged. Synthetic R01/R02/R03 sources,
+55 independent full packet oracles and full generic sink roundtrip cases are
+source-authored. See EF1_REFERENCE_IO.md. No local runtime/import/syntax/type/test/
+build/install/database validation was executed under the protected reservation.
+Coordinator review and fresh independent review are pending; no merge, release,
+publication or full EQ168 completion is claimed. Original19-source inventory is
+unchanged; only the additive helper evolution hash is refreshed. Current versions
+remain unchanged. Next: coordinator source review, independent exact-diff review,
+then admitted exact-head local numerical/artifact/composition checks.
+Independent source review correction: an actual empty proof batch previously
+escaped publisher/revision comparison because it had no decoded target row. The
+adapter now compares actual source/snapshot metadata for every present batch in
+each facts/market relationship group, independently of row target IDs. Empty
+proofs cannot bypass an actual target or conflict with another supplied proof even
+when the target is missing. No target ID is manufactured. Original decoded-target
+checks remain unchanged. Three new source-authored methods cover wrong publisher,
+wrong revision and missing-target proof conflicts across classification/action
+facts and market proof groups. Current count27methods=22inputs+5composition;
+no runtime check was executed. Fresh independent recheck remains required.
+October21 local typing correction: actual installed strict mypy at source7ad9d858
+reported a redundant narrowed fact_kind cast and ternary literal dictionary
+inference mismatch. Removed only that redundant cast and declared the two original
+R01 row dictionaries as Mapping[str,Cell] before constructing the same tuple.
+Canonical cells/order, R02 empty selection, fixtures/contracts/provenance and
+27 authored tests are unchanged. The additive helper hash is refreshed. Original
+failed log remains retained at local-qualification-20261021/io-mypy-run1.log;
+source-selected strict recheck and full fresh installed qualification are separate
+scopes. The stale EQ142 reservation was explicitly released by coordinator after
+actual-state reconciliation; this is no assertion of any official study success.
+Targeted local source correction check: shared fresh driver Windows Python3.12.10,
+`python -I -B -m mypy --strict --cache-dir ../local-qualification-20261021/io-correction-mypy-cache packages/duckdb/src/equity_feature_duckdb`
+completed exit0, `Success: no issues found in 7 source files`. A separate -I/-B
+origin probe explicitly selected this checkout's I/O source, asserted the actual
+ef1.__file__, and confirmed SHA c9749175bc2e8cc5c68aac9204d3e009a102c612322ce09eb306a11e9661e7b2.
+This checks uncommitted source atop7ad9d858, not a fresh installed artifact. No
+27-test rerun, DB/N-drive operation, environment install or benchmark was performed
+by this author. Coordinator owns fresh installed four-form qualification after
+reviewed commits; original installed mypy failure evidence remains retained.
 
 ## EF1 supplied reference source candidate — October20,2026
 
