@@ -1,3 +1,7 @@
+## First-trade source/main bridge prepared - October21,2026
+
+[Source/qualification scope](EF1_FIRST_TRADE_MAIN_BRIDGE.md) records exact first-trade `c5cae7bbc57b01bfb43cb94e42c44d1d5f700905` and actual main `ae8bb17dd93d79ef3faa111d84fbceebe7e94795`. The incoming main is exact reviewed BAR tree; all package/test/tool/version/oracle Git and original physical bytes remain frozen. Original overlapping merge/physical-check failures are preserved locally. Separately launched installed qualification remains RUNNING at this checkpoint, not accepted; coordinator/distinct actual-head review and actual completed evidence remain before delivery. Full EF1/browser/source/release gates remain open. Earlier checkpoints below remain historical.
+
 ## EF1 first-trade I/O composition and corrected numerical recheck - October21,2026
 
 Root resumed this author with stable grantfcaa95dd/all107core+45IO+63worker
