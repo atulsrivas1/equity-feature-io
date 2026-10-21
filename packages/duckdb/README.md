@@ -1,6 +1,6 @@
 # Experimental DuckDB adapter
 
-`equity-feature-duckdb`0.1.0a8 is optional and stays outside both pure packages.
+`equity-feature-duckdb`0.1.0a9 is an unreleased candidate and stays outside both pure packages.
 It resolves bounded catalog metadata and maps owned retained-source columns into
 canonical schema1. Bounded original-Parquet historical reads use caller-supplied
 sessions, explicit coverage policies and exact UTCns predicates. R4 is incomplete.
@@ -40,3 +40,13 @@ Version0.1.0a6 adds installed synthetic SDK qualification with thirty actual Duc
 Version0.1.0a7 parses SQL UTCns with a connection-local native macro and exact HUGEINT arithmetic/guardedBIGINT, strict ASCII ISO/null/calendar/clock/fraction/bounds checks. Python mapping stays exact; undocumented Unicode clock/fraction digits reject consistently. Purecore/runtimepins unchanged; actual receipt stampa7. See docs/api/DUCKDB_REAL_QUALIFICATION.md; current installed/private/delivery gates remain.
 
 EQ122 moves current implementation to equity-feature-io; existing distributions/imports and R4 behavior are preserved. Only adapter receipt/package version markers and repository metadata change. See [migration](../../docs/DUCKDB_MIGRATION.md) and [current API](../../docs/api/DUCKDB_READER.md). Historical a7 acquisition/receipt evidence is retained in canonical equity-features.
+
+## EF1 anchor adapter source authoring
+
+The additive `equity_feature_duckdb.ef1` module supplies explicit canonical
+anchor-provenance mapping, original synthetic trade/actual-notional-bar fixtures
+and source/output path separation. See [API](../../docs/api/EF1_ANCHOR_INPUTS.md).
+EQ212#570 is In progress; source authoring is not test/artifact acceptance. The
+candidate carries the reviewed source version bump0.1.0a9; no existing a8
+artifact identity includes these changes. SDK/sink codecs and
+accepted historical acquisition remain unchanged.

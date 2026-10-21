@@ -84,7 +84,7 @@ def qualify(output, form, source_commit):
         compatibility.update(system=platform.system(),form=form,core_source_commit=CORE_COMMIT,
             old_adapter_artifact={old_adapter.name:digest(old_adapter)},new_artifacts={p.name:digest(p) for p in [*paths,adapter]})
         compatibility_path.write_text(json.dumps(compatibility,sort_keys=True,indent=2)+'\n',encoding='utf-8')
-        run(str(py),'-I','-c',"from pathlib import Path; import equity_feature_duckdb as d,duckdb,numpy; assert 'site-packages' in Path(d.__file__).parts; assert d.__version__=='0.1.0a8'; assert duckdb.__version__=='1.5.6'; assert numpy.__version__=='2.2.6'",cwd=env)
+        run(str(py),'-I','-c',"from pathlib import Path; import equity_feature_duckdb as d,duckdb,numpy; assert 'site-packages' in Path(d.__file__).parts; assert d.__version__=='0.1.0a9'; assert duckdb.__version__=='1.5.6'; assert numpy.__version__=='2.2.6'",cwd=env)
         result=subprocess.run([str(py),'-I','-m','unittest','discover','-s',str(ROOT/'tests/duckdb')],cwd=env,text=True,capture_output=True)
         print(result.stdout+result.stderr)
         result.check_returncode()
@@ -117,7 +117,7 @@ print('Pure core registry executes with DuckDB forbidden')
         assert before==after,'adapter execution changed installed core'
         fingerprint = lambda x: hashlib.sha256(json.dumps(x,sort_keys=True).encode()).hexdigest()
         report = dict(schema='duckdb-install1',source_commit=source_commit,
-                      form=form,system=platform.system(),python=platform.python_version(),duckdb='1.5.6',numpy='2.2.6',adapter='0.1.0a8',
+                      form=form,system=platform.system(),python=platform.python_version(),duckdb='1.5.6',numpy='2.2.6',adapter='0.1.0a9',
                       artifacts={p.name:digest(p) for p in [*paths,adapter]},synthetic_tests=count,
                       test_suite_sha256=hashlib.sha256(b''.join(p.read_bytes() for p in sorted((ROOT/'tests/duckdb').glob('test_*.py')))).hexdigest(),
                       before_core_sha256=fingerprint(before),after_core_sha256=fingerprint(after),

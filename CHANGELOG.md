@@ -17,3 +17,12 @@ Typed independently buildable foundation packages, inward metadata dependencies,
 Existing distribution/import/API/source behavior preserved; adapter/receipt implementation stamp and repository metadata updated. Source/evidence precision/availability/R4 limitations remain unchanged. Actual reviewed installed/native/main publication gates under canonical279.
 
 EQ098 corrected candidate qualification: both OS current artifacts/four fresh forms/29-method cohorts independently audited; final publication remains gated. Full maps: canonical docs/stories/EQ-098_VALIDATION.json. Both source P2 findings and delivery-tooling corrections retained.
+
+## Unreleased — EF1 anchor I/O source authoring
+
+- EQ212 adds explicit canonical anchor-provenance mapping, labelled original
+  synthetic trade/actual-notional-bar fixtures and source/output alias refusal.
+- Adds unexecuted independent anchor input/composition/readback checks and an
+  explicit existing-sink publication example. No source DB acquisition, feature
+  math or sink codec changes are claimed. New source candidate0.1.0a9 is distinct
+  from accepted a8 artifacts; coordinated build/CI and qualification remain pending.
