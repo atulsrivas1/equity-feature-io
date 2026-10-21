@@ -7,22 +7,28 @@
   "current_distribution_version": "0.1.0a9",
   "allowed_version_marker_substitutions": {
     "packages/duckdb/src/equity_feature_duckdb/__init__.py": {
-      "from": "0.1.0a7", "to": "0.1.0a9", "occurrences": 1,
+      "from": "0.1.0a7",
+      "to": "0.1.0a9",
+      "occurrences": 1,
       "reason": "Current package version; existing exports otherwise unchanged"
     },
     "packages/duckdb/src/equity_feature_duckdb/evidence.py": {
-      "from": "0.1.0a7", "to": "0.1.0a9", "occurrences": 1,
+      "from": "0.1.0a7",
+      "to": "0.1.0a9",
+      "occurrences": 1,
       "reason": "Current acquisition receipt adapter stamp; schema and remaining fields unchanged"
     },
     "tests/duckdb/test_evidence.py": {
-      "from": "0.1.0a7", "to": "0.1.0a9", "occurrences": 1,
+      "from": "0.1.0a7",
+      "to": "0.1.0a9",
+      "occurrences": 1,
       "reason": "Exact current receipt stamp assertion; historical expectations elsewhere preserved"
     }
   },
   "additive_package_files": {
     "packages/duckdb/src/equity_feature_duckdb/ef1.py": {
-      "sha256": "159600598a7688890d91c4247ac3d5669b1671a2d9337b51ecfa0479835f4314",
-      "reason": "Additive anchor/calendar/status/path conversion, explicit slot provenance and literal anchor/C01/S01-S03/G01-G03/D01 fixtures; inherited status tuple annotation only; supplied reference classification/action conversion and literal R01-R03 fixtures; period/extended exact nullable slots and literal base transport; no legacy reader mathematics changed"
+      "sha256": "22794c54d0bd17abc76b3bc6cd922be95d69807ec8441d52b02c74e4dd5ac790",
+      "reason": "Additive anchor/calendar/status/path conversion, explicit slot provenance and literal anchor/C01/S01-S03/G01-G03/D01 fixtures; inherited status tuple annotation only; supplied reference classification/action conversion and literal R01-R03 fixtures; period/extended exact nullable slots and literal base transport; no legacy reader mathematics changed; additive observable fixed nullable transport and literal O01/O02/H01/H11 examples, no inferred identities or mathematics"
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."

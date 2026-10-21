@@ -1282,3 +1282,210 @@ def synthetic_extended_fixture() -> ExtendedInputs:
 
 __all__ += ["synthetic_period_context", "synthetic_extended_context", "synthetic_period_config",
             "synthetic_extended_config", "synthetic_period_fixture", "synthetic_extended_fixture"]
+
+# Observable transport: preserve logical roles even when a source is absent.
+# Proof grammar remains opaque original representation; reducers live in features.
+def _validate_observable_slots(roles: tuple[str, ...], slots: tuple[CanonicalBatch | None, ...],
+                               provenance: tuple[str, ...]) -> None:
+    if type(provenance) is not tuple or len(provenance) != len(roles):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact observable per-slot provenance required")
+    identities: set[str] = set()
+    namespaces: set[str] = set()
+    instruments: set[Cell] = set()
+    for role, batch, origin in zip(roles, slots, provenance, strict=True):
+        if type(origin) is not str or origin not in _MODES or (batch is None) != (origin == "unavailable"):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Actual delivery and provenance must agree")
+        if batch is None:
+            continue
+        expected = DataKind.TRADE if role == "trades" else DataKind.REFERENCE
+        if type(batch) is not CanonicalBatch or batch.kind != expected:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Original canonical observable role kind required")
+        validate_batch(batch, required_fields=())
+        if batch.metadata.source.input_id in identities:
+            raise ContractError(ErrorCode.DUPLICATE, "Distinct original source input identities required")
+        identities.add(batch.metadata.source.input_id)
+        namespaces.add(batch.metadata.namespace)
+        column = batch.column("instrument_id")
+        if column is None:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Original instrument column required")
+        instruments.update(column.values)
+    if len(namespaces) > 1 or len(instruments) > 1:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Coherent namespace and instrument required")
+
+
+@dataclass(frozen=True)
+class OpeningTradeInputs:
+    """Four nullable opening/seconds slots; pass .slots to the pure API."""
+    calendar_provenance: CanonicalBatch | None = None
+    market_prefix: CanonicalBatch | None = None
+    source_capability: CanonicalBatch | None = None
+    trades: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 4
+
+    def __post_init__(self) -> None:
+        _validate_observable_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "market_prefix", "source_capability", "trades")
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.market_prefix, self.source_capability, self.trades)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        """Present originals for inspection/publication, never compressed pure input."""
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+@dataclass(frozen=True)
+class StatusHistoryInputs:
+    """Five nullable physical-record history slots; seed absence keeps its index."""
+    calendar_provenance: CanonicalBatch | None = None
+    history_events: CanonicalBatch | None = None
+    history_prefix: CanonicalBatch | None = None
+    history_seed: CanonicalBatch | None = None
+    source_capability: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 5
+
+    def __post_init__(self) -> None:
+        _validate_observable_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "history_events", "history_prefix", "history_seed", "source_capability")
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.history_events, self.history_prefix, self.history_seed, self.source_capability)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        """Present originals only; never use this property for pure dispatch."""
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+def make_observable_batch(kind: DataKind, column_order: tuple[str, ...],
+                          rows: tuple[tuple[Cell, ...], ...], *, metadata: BatchMetadata) -> CanonicalBatch:
+    """Lossless original rectangular cells, including raw closed reference grammar.
+
+    No event IDs/order, proofs, timestamps, capability, sorting or filtering are
+    inferred. An absent original identity is an unavailable capability, not an
+    invitation to fabricate an ordinal. Mathematical admission belongs in features.
+    """
+    if (kind not in (DataKind.TRADE, DataKind.REFERENCE) or type(column_order) is not tuple
+            or type(rows) is not tuple
+            or any(type(row) is not tuple or len(row) != len(column_order) for row in rows)):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact concrete observable rectangular rows required")
+    batch = CanonicalBatch(kind, tuple(Column(name, tuple(row[i] for row in rows))
+                                      for i, name in enumerate(column_order)), metadata)
+    validate_batch(batch, required_fields=())
+    return batch
+
+
+__all__ += ["OpeningTradeInputs", "StatusHistoryInputs", "make_observable_batch"]
+
+
+def synthetic_opening_trade_context() -> dict[str, object]:
+    """Detached literal synthetic O01-first context; no source discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"opening_trade","selection":{"action_map":[],"epoch":"E","flag_map":[],"include_opening_auction":false,"mapping_version":"ef1-observable-map2","population":"regular_half_open_v2","publisher":"P","source_id":"SYN-OBS","source_snapshot":"R1"},"version":"ef1-observable-context2"}'))
+
+
+def synthetic_opening_trade_config() -> ConfigSpec:
+    """Literal independently frozen O01-first config."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"observable-v2","availability":{"evaluation_ns":40,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.opening_trade","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"opening_trade\\",\\"selection\\":{\\"action_map\\":[],\\"epoch\\":\\"E\\",\\"flag_map\\":[],\\"include_opening_auction\\":false,\\"mapping_version\\":\\"ef1-observable-map2\\",\\"population\\":\\"regular_half_open_v2\\",\\"publisher\\":\\"P\\",\\"source_id\\":\\"SYN-OBS\\",\\"source_snapshot\\":\\"R1\\"},\\"version\\":\\"ef1-observable-context2\\"}"}],"price_unit":{"currency":"USD","scale":0},"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":1,"governed_sessions":["S"],"target_session_id":"S"}}')
+
+
+def synthetic_opening_trade_fixture() -> OpeningTradeInputs:
+    """Original synthetic O01-first cells; no private-data capability claim."""
+    calendar_provenance = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:97b10ecabd7dbe43ce93fb7db74b448720c5903638aca175494f6a893a761b58', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-CAL',snapshot_id='R1',mapping_version='ef1-reference-map1',input_id='calendar'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    market_prefix = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'op2~4bf38aab795237dde5f72714dcbd084df100de0d7118be10843d1192245dbead~PRE', 'ef1.observable.market_prefix', 10, 20, 'pv2~1~complete', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='prefix'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    source_capability = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oc2~4bf38aab795237dde5f72714dcbd084df100de0d7118be10843d1192245dbead~CAP', 'ef1.observable.capability', 0, 30, 'opening_ready', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='capability'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    trades = make_observable_batch(DataKind.TRADE, ('instrument_id', 'session_id', 'event_ns', 'order_key', 'event_id', 'eligible', 'price', 'size', 'condition', 'known_at_ns'), (('X', 'S', 13, 0, 'T1', True, 10, 1, 'regular', 13),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='trades'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=PriceUnit(scale=0,currency='USD'),adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=InputScope(start_ns=10,end_ns=20,eligibility_policy='observable_regular_v2',include_opening_auction=False,include_closing_auction=False),interval_coverage=()))
+    return OpeningTradeInputs(calendar_provenance, market_prefix, source_capability, trades, ('synthetic', 'synthetic', 'synthetic', 'synthetic'))
+
+
+__all__ += ["synthetic_opening_trade_context", "synthetic_opening_trade_config", "synthetic_opening_trade_fixture"]
+
+
+def synthetic_opening_trade_seconds_context() -> dict[str, object]:
+    """Detached literal synthetic O02-seconds context; no source discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"opening_trade_seconds","selection":{"action_map":[],"epoch":"E","flag_map":[],"include_opening_auction":false,"mapping_version":"ef1-observable-map2","population":"regular_half_open_v2","publisher":"P","source_id":"SYN-OBS","source_snapshot":"R1"},"version":"ef1-observable-context2"}'))
+
+
+def synthetic_opening_trade_seconds_config() -> ConfigSpec:
+    """Literal independently frozen O02-seconds config."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"observable-v2","availability":{"evaluation_ns":40,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.opening_trade_seconds","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"opening_trade_seconds\\",\\"selection\\":{\\"action_map\\":[],\\"epoch\\":\\"E\\",\\"flag_map\\":[],\\"include_opening_auction\\":false,\\"mapping_version\\":\\"ef1-observable-map2\\",\\"population\\":\\"regular_half_open_v2\\",\\"publisher\\":\\"P\\",\\"source_id\\":\\"SYN-OBS\\",\\"source_snapshot\\":\\"R1\\"},\\"version\\":\\"ef1-observable-context2\\"}"}],"price_unit":{"currency":"USD","scale":0},"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":1,"governed_sessions":["S"],"target_session_id":"S"}}')
+
+
+def synthetic_opening_trade_seconds_fixture() -> OpeningTradeInputs:
+    """Original synthetic O02-seconds cells; no private-data capability claim."""
+    calendar_provenance = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:97b10ecabd7dbe43ce93fb7db74b448720c5903638aca175494f6a893a761b58', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-CAL',snapshot_id='R1',mapping_version='ef1-reference-map1',input_id='calendar'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    market_prefix = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'op2~4bf38aab795237dde5f72714dcbd084df100de0d7118be10843d1192245dbead~PRE', 'ef1.observable.market_prefix', 10, 20, 'pv2~1~complete', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='prefix'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    source_capability = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oc2~4bf38aab795237dde5f72714dcbd084df100de0d7118be10843d1192245dbead~CAP', 'ef1.observable.capability', 0, 30, 'opening_ready', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='capability'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    trades = make_observable_batch(DataKind.TRADE, ('instrument_id', 'session_id', 'event_ns', 'order_key', 'event_id', 'eligible', 'price', 'size', 'condition', 'known_at_ns'), (('X', 'S', 13, 0, 'T1', True, 10, 1, 'regular', 13),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='trades'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=PriceUnit(scale=0,currency='USD'),adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=InputScope(start_ns=10,end_ns=20,eligibility_policy='observable_regular_v2',include_opening_auction=False,include_closing_auction=False),interval_coverage=()))
+    return OpeningTradeInputs(calendar_provenance, market_prefix, source_capability, trades, ('synthetic', 'synthetic', 'synthetic', 'synthetic'))
+
+
+__all__ += ["synthetic_opening_trade_seconds_context", "synthetic_opening_trade_seconds_config", "synthetic_opening_trade_seconds_fixture"]
+
+
+def synthetic_status_history_context() -> dict[str, object]:
+    """Detached literal synthetic H01-one-record-three-dimensions context; no source discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"status_history","selection":{"action_map":[[1,"halt"],[2,"active"],[3,"initial"],[4,"resume"],[5,"irrelevant"],[6,"unknown"]],"epoch":"E","flag_map":[["trading","59","4e"],["quoting","59","4e"],["ssr","59","4e"]],"include_opening_auction":false,"mapping_version":"ef1-observable-map2","population":"regular_half_open_v2","publisher":"P","source_id":"SYN-OBS","source_snapshot":"R1"},"version":"ef1-observable-context2"}'))
+
+
+def synthetic_status_history_config() -> ConfigSpec:
+    """Literal independently frozen H01-one-record-three-dimensions config."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"observable-v2","availability":{"evaluation_ns":40,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.status_history","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"status_history\\",\\"selection\\":{\\"action_map\\":[[1,\\"halt\\"],[2,\\"active\\"],[3,\\"initial\\"],[4,\\"resume\\"],[5,\\"irrelevant\\"],[6,\\"unknown\\"]],\\"epoch\\":\\"E\\",\\"flag_map\\":[[\\"trading\\",\\"59\\",\\"4e\\"],[\\"quoting\\",\\"59\\",\\"4e\\"],[\\"ssr\\",\\"59\\",\\"4e\\"]],\\"include_opening_auction\\":false,\\"mapping_version\\":\\"ef1-observable-map2\\",\\"population\\":\\"regular_half_open_v2\\",\\"publisher\\":\\"P\\",\\"source_id\\":\\"SYN-OBS\\",\\"source_snapshot\\":\\"R1\\"},\\"version\\":\\"ef1-observable-context2\\"}"}],"price_unit":null,"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":1,"governed_sessions":["S"],"target_session_id":"S"}}')
+
+
+def synthetic_status_history_fixture() -> StatusHistoryInputs:
+    """Original synthetic H01-one-record-three-dimensions cells; no private-data capability claim."""
+    calendar_provenance = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:97b10ecabd7dbe43ce93fb7db74b448720c5903638aca175494f6a893a761b58', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-CAL',snapshot_id='R1',mapping_version='ef1-reference-map1',input_id='calendar'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    history_events = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oe2~P~E~0000000000000000000~E1', 'ef1.observable.status_event', 12, None, 'ov2~00001~00000~00000~59~59~59~12', 12),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='history_events'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=InputScope(start_ns=10,end_ns=20,eligibility_policy='observable_status_v2',include_opening_auction=False,include_closing_auction=False),interval_coverage=()))
+    history_prefix = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'op2~89592a4925a97a373eed6b9c090d9df50ee68a323c4ab0bddfa5841863eefb0f~PRE', 'ef1.observable.history_prefix', 10, 20, 'pv2~1~complete', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='prefix'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    history_seed = None
+    source_capability = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oc2~89592a4925a97a373eed6b9c090d9df50ee68a323c4ab0bddfa5841863eefb0f~CAP', 'ef1.observable.capability', 0, 30, 'history_ready', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='capability'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    return StatusHistoryInputs(calendar_provenance, history_events, history_prefix, history_seed, source_capability, ('synthetic', 'synthetic', 'synthetic', 'unavailable', 'synthetic'))
+
+
+__all__ += ["synthetic_status_history_context", "synthetic_status_history_config", "synthetic_status_history_fixture"]
+
+
+def synthetic_status_history_missing_capability_context() -> dict[str, object]:
+    """Detached literal synthetic H11-missing-source-identity context; no source discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"status_history","selection":{"action_map":[[1,"halt"],[2,"active"],[3,"initial"],[4,"resume"],[5,"irrelevant"],[6,"unknown"]],"epoch":"E","flag_map":[["trading","59","4e"],["quoting","59","4e"],["ssr","59","4e"]],"include_opening_auction":false,"mapping_version":"ef1-observable-map2","population":"regular_half_open_v2","publisher":"P","source_id":"SYN-OBS","source_snapshot":"R1"},"version":"ef1-observable-context2"}'))
+
+
+def synthetic_status_history_missing_capability_config() -> ConfigSpec:
+    """Literal independently frozen H11-missing-source-identity config."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"observable-v2","availability":{"evaluation_ns":40,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.status_history","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"status_history\\",\\"selection\\":{\\"action_map\\":[[1,\\"halt\\"],[2,\\"active\\"],[3,\\"initial\\"],[4,\\"resume\\"],[5,\\"irrelevant\\"],[6,\\"unknown\\"]],\\"epoch\\":\\"E\\",\\"flag_map\\":[[\\"trading\\",\\"59\\",\\"4e\\"],[\\"quoting\\",\\"59\\",\\"4e\\"],[\\"ssr\\",\\"59\\",\\"4e\\"]],\\"include_opening_auction\\":false,\\"mapping_version\\":\\"ef1-observable-map2\\",\\"population\\":\\"regular_half_open_v2\\",\\"publisher\\":\\"P\\",\\"source_id\\":\\"SYN-OBS\\",\\"source_snapshot\\":\\"R1\\"},\\"version\\":\\"ef1-observable-context2\\"}"}],"price_unit":null,"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":1,"governed_sessions":["S"],"target_session_id":"S"}}')
+
+
+def synthetic_status_history_missing_capability_fixture() -> StatusHistoryInputs:
+    """Original synthetic H11-missing-source-identity cells; no private-data capability claim."""
+    calendar_provenance = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:97b10ecabd7dbe43ce93fb7db74b448720c5903638aca175494f6a893a761b58', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-CAL',snapshot_id='R1',mapping_version='ef1-reference-map1',input_id='calendar'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    history_events = None
+    history_prefix = None
+    history_seed = None
+    source_capability = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oc2~89592a4925a97a373eed6b9c090d9df50ee68a323c4ab0bddfa5841863eefb0f~CAP', 'ef1.observable.capability', 0, 30, 'missing_identity', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='capability'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    return StatusHistoryInputs(calendar_provenance, history_events, history_prefix, history_seed, source_capability, ('synthetic', 'unavailable', 'unavailable', 'unavailable', 'synthetic'))
+
+
+__all__ += ["synthetic_status_history_missing_capability_context", "synthetic_status_history_missing_capability_config", "synthetic_status_history_missing_capability_fixture"]
