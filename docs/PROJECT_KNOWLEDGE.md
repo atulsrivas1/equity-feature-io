@@ -190,3 +190,14 @@ target if states are absent. Synthetic evidence cannot attest observed facts;
 calendar source/provenance is independently declared. This is source-only learning,
 not executed numerical, installed, DB or release evidence. Existing anchor/clock
 rules and original extraction records remain historical and unchanged.
+
+## Sampled path boundary lesson — October 20, 2026
+
+[Path I/O source authoring](api/EF1_PATH_INPUTS.md) preserves exact present-only
+role order and per-slot origin; missing delivery is omission and covered-empty
+is a real batch. The explicit prior DAILY converter retains every supplied
+volume/OHLC field, because structurally invalid source facts must reject before
+readiness rather than disappear in conversion. Independent literal goldens and
+existing full-result sink readback were authored, not executed under the EQ142
+hold. Original baseline receipts/old producer behavior remain protected; full
+EF1 audit, independent review and integration/release evidence are still needed.

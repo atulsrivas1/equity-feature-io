@@ -540,3 +540,24 @@ receipt; resolve review findings before authorizing push. Qualify compatible cor
 status source and unchanged worker/sink boundaries through current-head remote CI,
 installed forms, actual numerical/readback integration and browser demo. Source
 completion is not tested/released/Done status.
+
+## EF1 sampled path I/O source authoring — October 20, 2026
+
+Branch codex/ef1-path-io; source base22de254d6cd0ad79bbe746e9484ba4f64dc616a1.
+EQ212 supports original EQ167 with frozen path amendment reviewed by
+/root/ef1_status_worker_review. Added PathGapInputs/PathDriveInputs present-only
+role packets, explicit make_path_prior_close preserving all supplied canonical
+cells and source metadata, G01/G02/G03/D01 literal synthetic fixture/context
+helpers, API/README/changelog and 26 authored test methods (15 conversion,
+11 composition). Existing canonical/sink/schema/version/old baseline receipts
+remain unchanged. Inherited status fixture tuple annotation correction carried
+forward under coordinator direction; no status values changed.
+
+Actual checks: source/Git/text/hash inspection only. No Python/runtime/import,
+syntax/type check, tests, builds, benchmarks, DB operation or N: access during
+protected EQ142 study reservation. No commit/push or runtime validation claimed.
+Resume: coordinator review actual diff; fresh independent source review; when
+study hold is explicitly lifted from actual evidence, execute exact-commit
+local input/composition/type/extraction checks, build/install and integrated
+worker/full-sink checks with qualified core dependency pins. Root owns final
+pins/helper/census. Full EQ164 audit and EF1/release/browser-demo gates remain.

@@ -622,6 +622,7 @@ def synthetic_status_fixture(case: str = "S01") -> StatusInputs:
     """Literal public source cases, distinct from expected numerical result fixtures."""
     synthetic_status_context(case)  # Reject unknown case without inventing a default.
     dimension = "trading" if case == "S01" else "ssr"
+    rows: tuple[StatusState, ...]
     if case == "S01":
         rows = (StatusState(0, "seed", 8, None, "active", 8),
                 StatusState(1, "halt", 12, None, "halted", 12),
@@ -648,3 +649,163 @@ def synthetic_status_fixture(case: str = "S01") -> StatusInputs:
 
 __all__ += ["StatusState", "StatusCertificate", "StatusInputs", "make_status_states",
             "make_status_proof", "synthetic_status_context", "synthetic_status_fixture"]
+
+# Sampled path conversion is additive; existing producers above are unchanged.
+def _validate_path_slots(slots: tuple[CanonicalBatch | None, ...],
+                         provenance: tuple[str, ...]) -> None:
+    if type(provenance) is not tuple or len(provenance) != len(slots):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact path provenance tuple required")
+    present: list[CanonicalBatch] = []
+    for index, (batch, mode) in enumerate(zip(slots, provenance)):
+        if type(mode) is not str or mode not in _MODES or (batch is None) != (mode == "unavailable"):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Path source mode must match actual delivery")
+        if batch is None:
+            continue
+        kinds = ((DataKind.REFERENCE,), (DataKind.TRADE, DataKind.BAR), (DataKind.DAILY,))[index]
+        if type(batch) is not CanonicalBatch or batch.kind not in kinds:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Canonical path role kind mismatch")
+        validate_batch(batch, required_fields=())
+        present.append(batch)
+    if (len({b.metadata.source.input_id for b in present}) != len(present)
+            or len({b.metadata.namespace for b in present}) > 1):
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Distinct actual path bindings in one namespace required")
+
+
+@dataclass(frozen=True)
+class PathGapInputs:
+    """Present-only role-ordered actual inputs; origins are caller declarations."""
+    calendar_provenance: CanonicalBatch | None = None
+    path: CanonicalBatch | None = None
+    prior_close: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable", "unavailable", "unavailable")
+
+    def __post_init__(self) -> None:
+        _validate_path_slots((self.calendar_provenance, self.path, self.prior_close), self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "path", "prior_close")
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(b for b in (self.calendar_provenance, self.path, self.prior_close) if b is not None)
+
+
+@dataclass(frozen=True)
+class PathDriveInputs:
+    """Calendar and sampled path, with omitted delivery preserved as omission."""
+    calendar_provenance: CanonicalBatch | None = None
+    path: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable", "unavailable")
+
+    def __post_init__(self) -> None:
+        _validate_path_slots((self.calendar_provenance, self.path), self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "path")
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(b for b in (self.calendar_provenance, self.path) if b is not None)
+
+
+def make_path_prior_close(row: Mapping[str, Cell], *, metadata: BatchMetadata,
+                          instrument_id: str, session_id: str) -> CanonicalBatch:
+    """Convert exactly one explicitly selected DAILY row without field dropping.
+
+    Times, optional operands and original known-at are supplied canonical cells.
+    This does not select a previous day, manufacture coverage, quantize prices,
+    infer auction flags or repair invalid original OHLC/volume.
+    """
+    fields = ("start_ns", "end_ns", "open", "high", "low", "close", "volume",
+              "actual_notional", "known_at_ns")
+    if (not isinstance(row, Mapping) or not {"start_ns", "end_ns"} <= set(row)
+            or set(row) - set(fields) or type(metadata) is not BatchMetadata):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Explicit canonical DAILY row required")
+    _label(instrument_id)
+    _label(session_id)
+    result = CanonicalBatch(DataKind.DAILY,
+        (Column("instrument_id", (instrument_id,)), Column("session_id", (session_id,)))
+        + tuple(Column(name, (row[name],)) for name in fields if name in row), metadata)
+    validate_batch(result, required_fields=())
+    return result
+
+
+def _synthetic_path_context(producer: str, sampling: str) -> dict[str, object]:
+    sessions: list[list[object]] = [["S", "2026-10-20", 10, 30]]
+    if producer == "path_gap":
+        sessions.insert(0, ["P", "2026-10-19", -10, 0])
+    selection: dict[str, object] = {"sampling": sampling}
+    if producer == "path_drive":
+        selection["duration_ns"] = 5
+    return {"version": "ef1-context1", "producer": producer,
+        "calendar": {"calendar_id": "SYN-CAL", "revision": "R1", "timezone": "UTC",
+            "target_date": "2026-10-20", "sessions": sessions,
+            "segments": [["regular", 10, 30]], "scheduled_close_ns": 30, "early_close": False},
+        "selection": selection}
+
+
+def synthetic_path_gap_context(case: str = "G01") -> dict[str, object]:
+    """Fresh literal reviewed G01/G02/G03 context; no implicit source discovery."""
+    if case not in ("G01", "G02", "G03"):
+        raise ContractError(ErrorCode.INVALID_CONFIG, "Unknown synthetic gap case")
+    return _synthetic_path_context("path_gap", "completed_bar_close" if case == "G02" else "eligible_trade")
+
+
+def synthetic_path_drive_context(case: str = "D01") -> dict[str, object]:
+    if case != "D01":
+        raise ContractError(ErrorCode.INVALID_CONFIG, "Unknown synthetic drive case")
+    return _synthetic_path_context("path_drive", "eligible_trade")
+
+
+def _synthetic_path_proof(context: Mapping[str, object], start: int) -> CanonicalBatch:
+    calendar = cast(Mapping[str, object], context["calendar"])
+    proof = make_calendar_provenance(calendar, namespace="SYN", instrument_id="X", session_id="S",
+        source_id="SYN-CALENDAR", input_id="calendar", known_at_ns=-10, start_ns=start, end_ns=30)
+    # Freeze the amendment's explicit source-column order; no result codec changes.
+    names = ("instrument_id", "session_id", "reference_id", "fact_kind", "effective_start_ns",
+             "effective_end_ns", "text", "known_at_ns")
+    return CanonicalBatch(proof.kind, tuple(c for name in names for c in proof.columns if c.name == name), proof.metadata)
+
+
+def _synthetic_path_batch(rows: tuple[tuple[Cell, ...], ...], *, bar: bool, end: int) -> CanonicalBatch:
+    names = (("start_ns", "end_ns", "open", "high", "low", "close", "volume", "known_at_ns") if bar else
+             ("event_ns", "order_key", "event_id", "eligible", "price", "size", "known_at_ns"))
+    count = len(rows)
+    columns = (Column("instrument_id", ("X",) * count), Column("session_id", ("S",) * count)) + tuple(
+        Column(name, tuple(row[i] for row in rows)) for i, name in enumerate(names))
+    metadata = BatchMetadata("SYN", SourceBinding("SYN-PATH", "R1", "ef1-path-map1", "path"),
+        Coverage(count, count, True), PriceUnit(0, "USD"), AdjustmentSpec(),
+        scope=InputScope(10, end, "supplied_path"))
+    return CanonicalBatch(DataKind.BAR if bar else DataKind.TRADE, columns, metadata)
+
+
+def synthetic_path_gap_fixture(case: str = "G01") -> PathGapInputs:
+    """Original literal reviewed source populations, separate from result goldens."""
+    context = synthetic_path_gap_context(case)
+    if case == "G02":
+        rows: tuple[tuple[Cell, ...], ...] = ((10, 12, 12, 13, 9, 11, 2, 12),)
+    elif case == "G03":
+        rows = ((10, 0, "a", True, 10, 1, 10), (11, 1, "b", True, 11, 1, 11), (12, 2, "c", True, 12, 1, 12))
+    else:
+        rows = ((10, 0, "a", True, 12, 1, 10), (11, 1, "b", True, 11, 1, 11), (12, 2, "c", True, 9, 1, 12))
+    prior = make_path_prior_close({"start_ns": -10, "end_ns": 0, "close": 12 if case == "G03" else 10,
+        "known_at_ns": 0}, metadata=BatchMetadata("SYN", SourceBinding("SYN-DAILY", "R1", "ef1-path-map1", "prior"),
+        Coverage(1, 1, True), PriceUnit(0, "USD"), AdjustmentSpec(), scope=InputScope(-10, 0, "supplied_path")),
+        instrument_id="X", session_id="P")
+    return PathGapInputs(_synthetic_path_proof(context, -10),
+        _synthetic_path_batch(rows, bar=case == "G02", end=12 if case == "G02" else 13), prior, ("synthetic",) * 3)
+
+
+def synthetic_path_drive_fixture(case: str = "D01") -> PathDriveInputs:
+    context = synthetic_path_drive_context(case)
+    rows: tuple[tuple[Cell, ...], ...] = ((10, 0, "a", True, 10, 1, 10),
+        (12, 1, "b", True, 12, 1, 12), (14, 2, "c", True, 11, 1, 14))
+    return PathDriveInputs(_synthetic_path_proof(context, -10),
+        _synthetic_path_batch(rows, bar=False, end=15), ("synthetic",) * 2)
+
+
+__all__ += ["PathGapInputs", "PathDriveInputs", "make_path_prior_close",
+            "synthetic_path_gap_context", "synthetic_path_drive_context",
+            "synthetic_path_gap_fixture", "synthetic_path_drive_fixture"]

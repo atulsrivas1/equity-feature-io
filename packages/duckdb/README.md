@@ -63,3 +63,10 @@ slots retain missingness and original metadata; observed/synthetic provenance is
 caller-declared per role. The candidate includes labelled S01/S02/S03 fixtures and
 source-authored independent composition/readback tests, without executed
 qualification or any provider/N: dataset admission.
+
+Sampled gap/opening-drive: `equity_feature_duckdb.ef1.PathGapInputs`,
+`PathDriveInputs`, `make_path_prior_close`, and G01/G02/G03/D01 synthetic fixture
+and context helpers are additive source candidates. See
+[the path input contract](../../docs/api/EF1_PATH_INPUTS.md). Original knowledge,
+coverage and supplied invalid volume/OHLC are preserved; no acquisition or
+feature mathematics is added. Validation remains unexecuted during the study hold.

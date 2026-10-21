@@ -34,3 +34,8 @@ The public module `equity_feature_duckdb.ef1` adds StatusInputs and original
 S01/S02/S03 synthetic helpers; independent composition/readback checks are authored
 but unexecuted under the EQ142 reservation. No status feed acquisition or full EF1
 acceptance is claimed.
+
+Sampled gap/opening-drive source helpers are described in
+[EF1 path inputs](docs/api/EF1_PATH_INPUTS.md). Literal synthetic G01/G02/G03/D01
+fixtures and present-only role packets are source-authored; runtime validation
+and the full EF1 release gates remain pending.

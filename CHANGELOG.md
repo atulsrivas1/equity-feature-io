@@ -43,3 +43,15 @@ EQ098 corrected candidate qualification: both OS current artifacts/four fresh fo
   execution under EQ142, no numerical/artifact/release acceptance claimed.
 - Existing anchor/clock behavior, versions, original19 guards and sink codecs are
   preserved. See docs/api/EF1_STATUS_INPUTS.md; full EF1 audit/residual gates remain.
+
+### EF1 sampled path source authoring — unreleased
+
+- Add present-only gap/drive input packets, explicit DAILY prior converter and
+  original public synthetic G01/G02/G03/D01 fixtures/context against the reviewed
+  frozen amendment. Supplied fields, coverage and knowledge remain original.
+- Author independent literal result and full-result existing-sink readback tests;
+  no local execution under the protected EQ142 study reservation.
+- Carry forward the coordinator's inherited status-fixture tuple type annotation
+  correction; no status source values or numerical behavior changed.
+- No schema/version/codec change, private-source qualification, legacy numerical
+  parity, completed full EF1 audit or release claim.
