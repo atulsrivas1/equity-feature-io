@@ -1132,3 +1132,153 @@ __all__ += ["ReferenceClassificationInputs", "ReferenceActionInputs", "Reference
             "make_reference_rows", "make_reference_proof", "synthetic_reference_classification_context",
             "synthetic_reference_classification_fixture", "synthetic_reference_action_context",
             "synthetic_reference_action_fixture"]
+
+# Period/phase input transport preserves the actual supplied columns. Selection,
+# schedule admission, scope interpretation and every aggregate stay in features.
+def _validate_period_slots(roles: tuple[str, ...], slots: tuple[CanonicalBatch | None, ...],
+                           provenance: tuple[str, ...]) -> None:
+    if type(provenance) is not tuple or len(provenance) != 3:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact three-slot provenance tuple required")
+    namespaces: set[str] = set()
+    instruments: set[Cell] = set()
+    identities: set[str] = set()
+    for role, batch, origin in zip(roles, slots, provenance, strict=True):
+        if type(origin) is not str or origin not in _MODES or (batch is None) != (origin == "unavailable"):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Actual delivery and origin must agree")
+        if batch is None:
+            continue
+        expected = DataKind.REFERENCE if role == "calendar_provenance" else DataKind.BAR if role == "bars" else DataKind.DAILY
+        if type(batch) is not CanonicalBatch or batch.kind != expected:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact canonical period/phase role kind required")
+        # No regular SessionSpec here: legitimate phase bars and prior sessions
+        # lie outside that target regular interval. Do not drop unused fields.
+        validate_batch(batch, required_fields=())
+        if batch.metadata.source.input_id in identities:
+            raise ContractError(ErrorCode.DUPLICATE, "Distinct original input identities required")
+        identities.add(batch.metadata.source.input_id)
+        namespaces.add(batch.metadata.namespace)
+        instrument_column = batch.column("instrument_id")
+        if instrument_column is None:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Original instrument identities required")
+        instruments.update(instrument_column.values)
+    if len(namespaces) > 1 or len(instruments) > 1:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Coherent original namespace/instrument required")
+
+
+@dataclass(frozen=True)
+class PeriodInputs:
+    """Exact nullable period slots, with original per-slot provenance."""
+    calendar_provenance: CanonicalBatch | None = None
+    daily_history: CanonicalBatch | None = None
+    bars: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 3
+
+    def __post_init__(self) -> None:
+        _validate_period_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "daily_history", "bars")
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.daily_history, self.bars)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+@dataclass(frozen=True)
+class ExtendedInputs:
+    """BAR-only phase inputs; prior DAILY is an independent original role."""
+    calendar_provenance: CanonicalBatch | None = None
+    bars: CanonicalBatch | None = None
+    prior_close: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 3
+
+    def __post_init__(self) -> None:
+        _validate_period_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "bars", "prior_close")
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.bars, self.prior_close)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+def make_period_batch(kind: DataKind, column_order: tuple[str, ...],
+                      rows: tuple[tuple[Cell, ...], ...], *, metadata: BatchMetadata) -> CanonicalBatch:
+    """Lossless rectangular row-to-column conversion, including empty columns.
+
+    Never manufacture OHLC, notional, availability or calendar coverage. This
+    conversion cannot certify source rights, authenticity or phase membership.
+    """
+    if (kind not in (DataKind.REFERENCE, DataKind.DAILY, DataKind.BAR)
+            or type(column_order) is not tuple or type(rows) is not tuple
+            or any(type(row) is not tuple or len(row) != len(column_order) for row in rows)):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact concrete canonical rectangular rows required")
+    batch = CanonicalBatch(kind, tuple(Column(name, tuple(row[i] for row in rows))
+                                      for i, name in enumerate(column_order)), metadata)
+    validate_batch(batch, required_fields=())
+    return batch
+
+
+__all__ += ["PeriodInputs", "ExtendedInputs", "make_period_batch"]
+
+
+# Independent literal source examples copied from the frozen bounded proposal.
+from equity_feature_contracts import ConfigSpec, IntervalCoverage
+
+def synthetic_period_context() -> dict[str, object]:
+    """Frozen PERIOD_BASE mathematical context; no calendar discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["P","2026-10-19",0,10],["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"period","selection":{"count":1,"end_date_exclusive":"2026-11-01","inclusion":"current_to_cutoff","kind":"month","period_id":"M","start_date":"2026-10-01"},"version":"ef1-context1"}'))
+
+def synthetic_period_config() -> ConfigSpec:
+    """Frozen full config matching the independently authored base packet."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"v1","availability":{"evaluation_ns":20,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.period","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"P\\",\\"2026-10-19\\",0,10],[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"period\\",\\"selection\\":{\\"count\\":1,\\"end_date_exclusive\\":\\"2026-11-01\\",\\"inclusion\\":\\"current_to_cutoff\\",\\"kind\\":\\"month\\",\\"period_id\\":\\"M\\",\\"start_date\\":\\"2026-10-01\\"},\\"version\\":\\"ef1-context1\\"}"}],"price_unit":{"currency":"USD","scale":0},"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":2,"governed_sessions":["P","S"],"target_session_id":"S"}}')
+
+def synthetic_period_fixture() -> PeriodInputs:
+    """Literal PERIOD_BASE supplied inputs, all explicitly synthetic.
+
+    One preceding DAILY row and one target-session BAR prefix retain their
+    original calendar/source bindings. No private-data or legacy-parity claim.
+    """
+    calendar_provenance = make_period_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:003c4b31ea9adbd2016d12832e50a69368c85e629fd52668fb1942df9adb7afd', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 0),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-CALENDAR', snapshot_id='R1', mapping_version='ef1-reference-map1', input_id='calendar-period'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=None, adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=None, interval_coverage=()))
+    daily_history = make_period_batch(DataKind.DAILY, ('instrument_id', 'session_id', 'start_ns', 'end_ns', 'open', 'high', 'low', 'close', 'volume', 'actual_notional', 'known_at_ns'), (('X', 'P', 0, 10, 10, 12, 9, 11, 2, 21, 10),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-DAILY', snapshot_id='R1', mapping_version='ef1-period-map1', input_id='daily-period'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=PriceUnit(scale=0, currency='USD'), adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=InputScope(start_ns=0, end_ns=10, eligibility_policy='supplied_period', include_opening_auction=False, include_closing_auction=False), interval_coverage=(IntervalCoverage(name='P', start_ns=0, end_ns=10, coverage=Coverage(expected=1, observed=1, complete=True)),)))
+    bars = make_period_batch(DataKind.BAR, ('instrument_id', 'session_id', 'start_ns', 'end_ns', 'open', 'high', 'low', 'close', 'volume', 'actual_notional', 'known_at_ns'), (('X', 'S', 10, 20, 11, 14, 10, 13, 3, 36, 20),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-BARS', snapshot_id='R1', mapping_version='ef1-period-map1', input_id='bars-period'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=PriceUnit(scale=0, currency='USD'), adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=InputScope(start_ns=10, end_ns=20, eligibility_policy='supplied_period', include_opening_auction=False, include_closing_auction=False), interval_coverage=(IntervalCoverage(name='period_prefix', start_ns=10, end_ns=20, coverage=Coverage(expected=1, observed=1, complete=True)),)))
+    return PeriodInputs(calendar_provenance, daily_history, bars, ("synthetic",) * 3)
+
+def synthetic_extended_context() -> dict[str, object]:
+    """Frozen EXTENDED_BASE mathematical context; no calendar discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["premarket",0,10],["regular",10,30],["postmarket",30,40]],"sessions":[["P","2026-10-19",-10,0],["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"extended","selection":{"phase":"premarket"},"version":"ef1-context1"}'))
+
+def synthetic_extended_config() -> ConfigSpec:
+    """Frozen full config matching the independently authored base packet."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"v1","availability":{"evaluation_ns":10,"knowledge_cutoff_ns":10,"market_cutoff_ns":10,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.extended","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"premarket\\",0,10],[\\"regular\\",10,30],[\\"postmarket\\",30,40]],\\"sessions\\":[[\\"P\\",\\"2026-10-19\\",-10,0],[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"extended\\",\\"selection\\":{\\"phase\\":\\"premarket\\"},\\"version\\":\\"ef1-context1\\"}"}],"price_unit":{"currency":"USD","scale":0},"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":2,"governed_sessions":["P","S"],"target_session_id":"S"}}')
+
+def synthetic_extended_fixture() -> ExtendedInputs:
+    """Literal EXTENDED_BASE supplied inputs, all explicitly synthetic.
+
+    The extended base has two bars and prior close5; it is distinct from the
+    original one-bar E01 witness. No private-data or legacy-parity claim.
+    """
+    calendar_provenance = make_period_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:e618c133e6613780104e5cf5cedd1967bae0f99b0871e00b61f295f2030ede3b', 'ef1.calendar.provenance', -10, 40, 'supplied_schedule', -10),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-CALENDAR', snapshot_id='R1', mapping_version='ef1-reference-map1', input_id='calendar-phase'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=None, adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=None, interval_coverage=()))
+    bars = make_period_batch(DataKind.BAR, ('instrument_id', 'session_id', 'start_ns', 'end_ns', 'open', 'high', 'low', 'close', 'volume', 'actual_notional', 'known_at_ns'), (('X', 'S', 0, 5, 8, 10, 7, 9, 2, 17, 5), ('X', 'S', 5, 10, 9, 12, 8, 10, 3, 29, 10)),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-BARS', snapshot_id='R1', mapping_version='ef1-phase-map1', input_id='bars-phase'), coverage=Coverage(expected=2, observed=2, complete=True), price_unit=PriceUnit(scale=0, currency='USD'), adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=InputScope(start_ns=0, end_ns=10, eligibility_policy='supplied_phase', include_opening_auction=False, include_closing_auction=False), interval_coverage=(IntervalCoverage(name='phase_prefix', start_ns=0, end_ns=10, coverage=Coverage(expected=2, observed=2, complete=True)),)))
+    prior_close = make_period_batch(DataKind.DAILY, ('instrument_id', 'session_id', 'start_ns', 'end_ns', 'open', 'high', 'low', 'close', 'volume', 'actual_notional', 'known_at_ns'), (('X', 'P', -10, 0, 5, 5, 5, 5, 1, 5, 0),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-DAILY', snapshot_id='R1', mapping_version='ef1-phase-map1', input_id='prior-phase'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=PriceUnit(scale=0, currency='USD'), adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=InputScope(start_ns=-10, end_ns=0, eligibility_policy='supplied_phase', include_opening_auction=False, include_closing_auction=False), interval_coverage=(IntervalCoverage(name='P', start_ns=-10, end_ns=0, coverage=Coverage(expected=1, observed=1, complete=True)),)))
+    return ExtendedInputs(calendar_provenance, bars, prior_close, ("synthetic",) * 3)
+
+__all__ += ["synthetic_period_context", "synthetic_extended_context", "synthetic_period_config",
+            "synthetic_extended_config", "synthetic_period_fixture", "synthetic_extended_fixture"]

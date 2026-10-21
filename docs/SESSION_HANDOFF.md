@@ -1,3 +1,7 @@
+## EF1 period/extended I/O source authoring — October21,2026
+
+Bounded EQ166/supporting570 parallel authoring adds PeriodInputs/ExtendedInputs and exact literal base source/config/context helpers; docs/EF1_PERIOD_PHASE_IO.md records frozen contracts, API, provenance,13+4 authored methods and actual source validation.All17 new source-selected methods PASS on Windows in73.242s, covering42fullresults/20typederrors and42actualsinkreadback subcases; strict typing7files and original19file extraction guard PASS. Inherited reference ConfigSpec.digest property typo corrected without changing its assertion. No commit/push yet; coordinator review and fresh independent PR review plus immutable integration/build/install remain required. Original full-scope/audit/release gates remain open. This heading supersedes no older accepted evidence.
+
 ## EQ098 corrected candidate qualified; final publication gates — October15,2026
 
 Corrected source e414f517/89a8a41f passed separate review0b1c4dae, findings[]. Shared fixed-registry admission now rejects both unknown mathematical policy and stripped-empty eligibility policy before export/read/replay; original P2/rework/earlier approval scopes remain preserved. Fresh author Windows qualification completed eight repeat archives/79source pins/four fresh light/replay wheel/sdist forms/29methods/typing/actual fixed producer, raw logSHAf72820d2b230c81c23cd9a8a2fd18d5957cc9b58d693b74b313d6adbba562e51.
