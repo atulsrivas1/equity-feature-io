@@ -1,3 +1,11 @@
+## EF1 gap endpoint I/O source composition completed — October 21, 2026
+
+[Current checkpoint](EF1_GAP_ENDPOINT_IO.md) records actual final-source Windows3.12.10 composition:3 methods/60.321s PASS, all71 complete computed SDK roundtrips,43 negative targets with exact earlier-stage distinctions and71 new separate DuckDB complete readback/retry/close/reopen. Original oracle retained; independently approved two-leaf E28 causal successor is current conformance. Final7 bootstrap methods and strict typing1source pass. Source authoring is uncommitted; coordinator actual diff/fresh independent code review, immutable installed/platform/browser/full-audit/release gates remain open. Earlier pending snapshots below are historical.
+
+## EF1 gap endpoint adapter bootstrap — October 21, 2026
+
+Uncommitted four-slot source conversion and explicit synthetic trade/bar helpers are authored under EQ212 #570. [Checkpoint](EF1_GAP_ENDPOINT_IO.md) records actual31 source methods passed, original114-target conversion stages and preserved first-run test-stage failure. Full numerical/SDK/DuckDB composition, strict typing (system mypy unavailable), coordinator/independent review and release gates remain pending; E28 frozen fixture defect is being resolved by coordinator without changing production math. No observed source, package or release acceptance.
+
 ## Daily source-integrity declaration: canonical Git bytes — October 21, 2026
 
 Coordinator found that the additive source manifest hashed local mixed-line-ending bytes 189928c37ca1cce04b12c55b92d64b44d113a21b0a4a44ed5f2f483c07b291e4, while Git stores the reviewed file as canonical LF bytes 418ac41536522feed784a9c83ecfcf852a9a6bdcc81c88b234260ee933d3083c. The local copy contained55CRLF pairs; replacing only CRLF withLF equals the existing committed blob exactly, and parsed Python ASTs are identical. The public declaration now identifies those existing Git bytes. No production Git blob, API, mathematical result, fixture or extraction guard changes. Historical author runs retain their local-byte identity; final clean-checkout installed qualification remains pending. A bounded extraction-source recheck and independent declaration review follow; this correction itself does not establish numerical/platform/release acceptance.

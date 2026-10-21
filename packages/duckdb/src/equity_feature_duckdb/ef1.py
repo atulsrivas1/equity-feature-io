@@ -1610,3 +1610,13 @@ def synthetic_daily_observations_fixture(case_id: str = "V235-literal-last252") 
 
 
 __all__ += ["synthetic_daily_observations_config", "synthetic_daily_observations_fixture"]
+
+
+# Additive endpoint-only conversion; previous producer contracts stay unchanged.
+from .gap_endpoint import GapEndpointInputs, make_gap_endpoint_batch, make_gap_population_proof
+
+__all__ += ["GapEndpointInputs", "make_gap_endpoint_batch", "make_gap_population_proof"]
+
+from .gap_endpoint import synthetic_gap_endpoint_config, synthetic_gap_endpoint_fixture
+
+__all__ += ["synthetic_gap_endpoint_config", "synthetic_gap_endpoint_fixture"]

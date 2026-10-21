@@ -74,3 +74,5 @@ feature mathematics is added. Validation remains unexecuted during the study hol
 Observable opening/seconds and physical status-history transport is documented in [EF1_OBSERVABLE_IO.md](../../docs/EF1_OBSERVABLE_IO.md). Fixed nullable `.slots` preserve absent source roles; the present-only `.batches` view is not pure observable input.
 
 Daily observation variants add fixed six nullable REFERENCE roles and lossless supplied-schema conversion with explicit provenance. See [daily observations](../../docs/EF1_DAILY_OBSERVATIONS_IO.md) for the supported exact-integer profile, original synthetic252/current-week/prior-week examples and remaining source/release gates.
+
+The additive supplied gap endpoint uses four fixed nullable roles, lossless canonical conversion and explicit synthetic trade/bar examples. See [gap endpoint input API](../../docs/api/EF1_GAP_ENDPOINT_INPUTS.md) and [actual source validation](../../docs/EF1_GAP_ENDPOINT_IO.md). Existing SDK/sink contracts and old path producers remain unchanged; observed-data and release qualification are separate.
