@@ -21,7 +21,7 @@
   },
   "additive_package_files": {
     "packages/duckdb/src/equity_feature_duckdb/ef1.py": {
-      "sha256": "0ac6643951e374db27c551a61926ef248b65c6af67ec0e05497ad1694076d05e",
+      "sha256": "30a842957a4c393631902bebad0bcdc4bc94b915e31598bffa9c3b4038256abb",
       "reason": "Additive canonical anchor proof mapping, labelled original fixtures and path separation; no legacy reader mathematics changed"
     }
   },

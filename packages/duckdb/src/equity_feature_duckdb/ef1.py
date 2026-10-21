@@ -135,6 +135,7 @@ def synthetic_anchor_fixture(case_id: str = "A01", *, mode: str = "trades") -> A
                                    source_id="F", input_id="synthetic-proof-" + case_id,
                                    known_at_ns=10)
     rows: tuple[tuple[Cell, ...], ...]
+    names: tuple[str, ...]
     if mode == "trades":
         names = ("event_ns", "order_key", "event_id", "eligible", "price", "size", "known_at_ns")
         rows = () if case_id == "A02" else ((10, 0, "a", True, 1000, 2, 10), (15, 1, "b", True, 1300, 1, 15))

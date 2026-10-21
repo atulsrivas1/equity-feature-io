@@ -434,3 +434,20 @@ source database reads or output database operations while official R18 owns the
 resource window. Independent current-diff review and coordinator authorization
 required before commit/push; then actual successor CI/native/artifact/EF1 evidence
 remains outstanding. Preserve these failures and original source receipts.
+
+### EQ212 actual successor strict-typing failure — October20,2026
+
+Coordinator reported actual PR18/headeddd0d35 strict-mypy failures in jobs
+118989878750 and118989878503. ef1.py line143 assigns the nine bar field names to
+`names`, which mypy inferred as a seven-element tuple from the trade branch.
+The previous independent source approval did not establish CI typing success.
+Added only `names: tuple[str, ...]` before the existing mode branches. Row data,
+field order, calculation behavior and contracts remain unchanged.
+
+Updated the additive ef1.py hash in docs/EF1_SOURCE_EVOLUTION.json from
+0ac6643951e374db27c551a61926ef248b65c6af67ec0e05497ad1694076d05e to
+30a842957a4c393631902bebad0bcdc4bc94b915e31598bffa9c3b4038256abb.
+All original19 source/fixture hashes and exact comparison rules remain unchanged.
+The prior hash/CI failure remains historical evidence above. No local imports,
+mypy/tests/builds/benchmarks/DB operations executed while R18 remains reserved;
+no commit/push. Fresh independent recheck and actual successor CI are still needed.
