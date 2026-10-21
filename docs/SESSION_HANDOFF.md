@@ -585,3 +585,22 @@ checks remain unchanged. Three new source-authored methods cover wrong publisher
 wrong revision and missing-target proof conflicts across classification/action
 facts and market proof groups. Current count27methods=22inputs+5composition;
 no runtime check was executed. Fresh independent recheck remains required.
+October21 local typing correction: actual installed strict mypy at source7ad9d858
+reported a redundant narrowed fact_kind cast and ternary literal dictionary
+inference mismatch. Removed only that redundant cast and declared the two original
+R01 row dictionaries as Mapping[str,Cell] before constructing the same tuple.
+Canonical cells/order, R02 empty selection, fixtures/contracts/provenance and
+27 authored tests are unchanged. The additive helper hash is refreshed. Original
+failed log remains retained at local-qualification-20261021/io-mypy-run1.log;
+source-selected strict recheck and full fresh installed qualification are separate
+scopes. The stale EQ142 reservation was explicitly released by coordinator after
+actual-state reconciliation; this is no assertion of any official study success.
+Targeted local source correction check: shared fresh driver Windows Python3.12.10,
+`python -I -B -m mypy --strict --cache-dir ../local-qualification-20261021/io-correction-mypy-cache packages/duckdb/src/equity_feature_duckdb`
+completed exit0, `Success: no issues found in 7 source files`. A separate -I/-B
+origin probe explicitly selected this checkout's I/O source, asserted the actual
+ef1.__file__, and confirmed SHA c9749175bc2e8cc5c68aac9204d3e009a102c612322ce09eb306a11e9661e7b2.
+This checks uncommitted source atop7ad9d858, not a fresh installed artifact. No
+27-test rerun, DB/N-drive operation, environment install or benchmark was performed
+by this author. Coordinator owns fresh installed four-form qualification after
+reviewed commits; original installed mypy failure evidence remains retained.

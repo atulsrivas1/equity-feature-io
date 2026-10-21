@@ -1049,7 +1049,7 @@ def make_reference_proof(rows: tuple[ReferenceCertificate, ...], *, role: str,
     if role == "classification_history":
         if fact_kind not in _REFERENCE_KINDS or scope_id is None:
             raise ContractError(ErrorCode.INVALID_SCHEMA, "Explicit classification kind/scope required")
-        prefix = "h1:" + _REFERENCE_KINDS[cast(str, fact_kind)] + ":" + _status_b64(scope_id) + ":" + target
+        prefix = "h1:" + _REFERENCE_KINDS[fact_kind] + ":" + _status_b64(scope_id) + ":" + target
     elif role == "action_history":
         if scope_id is None:
             raise ContractError(ErrorCode.INVALID_SCHEMA, "Explicit action scope required")
@@ -1081,11 +1081,11 @@ def synthetic_reference_classification_context(case: str = "R01", *, fact_kind: 
 
 def synthetic_reference_classification_fixture(case: str = "R01", *, fact_kind: str = "sector_membership") -> ReferenceClassificationInputs:
     synthetic_reference_classification_context(case, fact_kind=fact_kind)
-    rows: tuple[Mapping[str, Cell], ...] = () if case == "R02" else (
-        {"reference_id": "a", "fact_kind": fact_kind, "effective_start_ns": 0,
-         "effective_end_ns": 20, "text": "A", "known_at_ns": 5},
-        {"reference_id": "b", "fact_kind": fact_kind, "effective_start_ns": 20,
-         "effective_end_ns": 40, "text": "B", "known_at_ns": 5})
+    first: Mapping[str, Cell] = {"reference_id": "a", "fact_kind": fact_kind, "effective_start_ns": 0,
+         "effective_end_ns": 20, "text": "A", "known_at_ns": 5}
+    second: Mapping[str, Cell] = {"reference_id": "b", "fact_kind": fact_kind, "effective_start_ns": 20,
+         "effective_end_ns": 40, "text": "B", "known_at_ns": 5}
+    rows: tuple[Mapping[str, Cell], ...] = () if case == "R02" else (first, second)
     facts = make_reference_rows(rows, role="classification_facts", metadata=_synthetic_reference_metadata("cl", len(rows)),
         instrument_id="X", session_id="S")
     history = make_reference_proof((ReferenceCertificate("h", 0, 40, "historical", 5),),
