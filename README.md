@@ -39,3 +39,5 @@ Sampled gap/opening-drive source helpers are described in
 [EF1 path inputs](docs/api/EF1_PATH_INPUTS.md). Literal synthetic G01/G02/G03/D01
 fixtures and present-only role packets are source-authored; runtime validation
 and the full EF1 release gates remain pending.
+
+Supplied EF1 classification/action conversion source and validation limits are documented in [EF1_REFERENCE_IO](docs/EF1_REFERENCE_IO.md).

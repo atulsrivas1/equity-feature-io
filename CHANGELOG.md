@@ -55,3 +55,5 @@ EQ098 corrected candidate qualification: both OS current artifacts/four fresh fo
   correction; no status source values or numerical behavior changed.
 - No schema/version/codec change, private-source qualification, legacy numerical
   parity, completed full EF1 audit or release claim.
+
+EF1 source candidate (unreleased): exact nullable supplied classification/action input roles, retained original reference proof conversion, synthetic R01/R02/R03 fixtures and prospective full-result sink cases. Runtime qualification pending; package versions unchanged.

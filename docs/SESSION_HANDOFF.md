@@ -561,3 +561,27 @@ study hold is explicitly lifted from actual evidence, execute exact-commit
 local input/composition/type/extraction checks, build/install and integrated
 worker/full-sink checks with qualified core dependency pins. Root owns final
 pins/helper/census. Full EQ164 audit and EF1/release/browser-demo gates remain.
+
+## EF1 supplied reference source candidate — October20,2026
+
+Added exact nullable classification/action input containers and explicit supplied
+REFERENCE row/proof conversion in the existing additive ef1.py. Industry is EF1
+local; legacy reader/utility APIs stay unchanged. Synthetic R01/R02/R03 sources,
+55 independent full packet oracles and full generic sink roundtrip cases are
+source-authored. See EF1_REFERENCE_IO.md. No local runtime/import/syntax/type/test/
+build/install/database validation was executed under the protected reservation.
+Coordinator review and fresh independent review are pending; no merge, release,
+publication or full EQ168 completion is claimed. Original19-source inventory is
+unchanged; only the additive helper evolution hash is refreshed. Current versions
+remain unchanged. Next: coordinator source review, independent exact-diff review,
+then admitted exact-head local numerical/artifact/composition checks.
+Independent source review correction: an actual empty proof batch previously
+escaped publisher/revision comparison because it had no decoded target row. The
+adapter now compares actual source/snapshot metadata for every present batch in
+each facts/market relationship group, independently of row target IDs. Empty
+proofs cannot bypass an actual target or conflict with another supplied proof even
+when the target is missing. No target ID is manufactured. Original decoded-target
+checks remain unchanged. Three new source-authored methods cover wrong publisher,
+wrong revision and missing-target proof conflicts across classification/action
+facts and market proof groups. Current count27methods=22inputs+5composition;
+no runtime check was executed. Fresh independent recheck remains required.
