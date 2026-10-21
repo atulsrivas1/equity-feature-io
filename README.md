@@ -1,3 +1,7 @@
+## EF1 cumulative io source checkpoint - October 21, 2026
+
+Current source, completed earlier-cohort validation and pending final qualification are recorded in [EF1 cumulative io source checkpoint - October 21, 2026](docs/EF1_CUMULATIVE_QUALIFICATION.md). Earlier source-authoring, uncommitted, pending-pins, unexecuted and resource-hold entries below are historical snapshots; they do not override the current checkpoint. Final installed/platform/browser and full original-audit release gates remain open.
+
 ## EQ098 reproduction bundle candidate
 
 Optional [bundles package](packages/bundles/README.md) implements data-only byte archives and explicit trusted fixed replay, separate from I/O sinks and pure calculations. [Actual synthetic example](examples/bundles_consumer.py). Candidate under canonical198; source review/freshbothOS/paired-main acceptance pending. No source/provider/executable-content resolver or active-call interruption promise.

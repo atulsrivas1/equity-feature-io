@@ -1,3 +1,7 @@
+## EF1 cumulative io source checkpoint - October 21, 2026
+
+Current source, completed earlier-cohort validation and pending final qualification are recorded in [EF1 cumulative io source checkpoint - October 21, 2026](EF1_CUMULATIVE_QUALIFICATION.md). Earlier source-authoring, uncommitted, pending-pins, unexecuted and resource-hold entries below are historical snapshots; they do not override the current checkpoint. Final installed/platform/browser and full original-audit release gates remain open.
+
 # Observable EQ165 source authoring — October21,2026
 
 Uncommitted additive adapter implementation on codex/ef1-observable-io, base89bc3d0d. See EF1_OBSERVABLE_IO.md for exact public freeze, fixed slots,58 full-packet/31 error inventory and boundaries. Reviewed additive publication amendment06841dc4 adopted: separate exact646e402e fixture, originald0fb retained; algorithms/context/mapv2 unchanged, global policyv1, genericSDK/sink/codec untouched. All18 new methods PASS126.263s on source-selected Windows Python3.12.10:58 complete calculated results and58 realDuckDB publish/read/identicalretry/close/reopen fullreadbacks,29canonical/pureerrors,2explicitworker-stage inventory controls. All85 old/new input methods, strictmypy7 and extraction19 also PASS. Failed original fixture NameError log retained. No installed/package/release acceptance. Coordinator and fresh independent review before commit/push; original19 extraction inventory remains immutable.
