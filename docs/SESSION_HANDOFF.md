@@ -513,3 +513,30 @@ Original19 legacy hashes/guards unchanged. Twelve clock methods now authored,
 all unexecuted. No local imports/tests/builds/DB/N:scans, commit or push; frozen
 anchor F20 checkout untouched. Fresh reviewer recheck and actual qualification
 remain pending. This correction is not evidence of an executed reproduction.
+
+## EF1 status conversion source authored — October20,2026
+
+Worker /root/ef1_status_io authored additive supplied current-state status mapping
+and exact local four-slot packet in codex/ef1-status-io, based on8b84ddd. Canonical
+status-state/certificate identities, caller-supplied metadata/coverage and original
+availability are retained. Per-role provenance permits independent calendar origin
+while all present status facts/proofs share their observed/synthetic origin.
+`.slots` is the direct pure-library boundary; `.batches` is present-only transport.
+Explicit seed IDs and actual C01 proofs accompany original S01/S02/S03 helpers.
+See [API and mathematical/source semantics](api/EF1_STATUS_INPUTS.md).
+
+Independent source-authored tests cover literal conversion, malformed identity,
+partial missing and covered-empty facts, exact library quality/witness semantics,
+S01-S03 and full canonical existing-sink readback/replay. These checks have not run.
+No local import/syntax/test/build/benchmark/DB/N: operation during EQ142; no commit
+or push before coordinator review. Original anchor/clock source prefix and19
+extraction guards remain; additive ef1.py evolution hash refreshed only. Versions,
+CI/pins/build census and sink format unchanged. Coordinator owns cross-repository
+integration/current status/public evidence and release gates. Full EF1 audit,
+status-history/open diagnostics and other producer families remain incomplete.
+
+Resume: coordinator inspect actual source diff and independently reviewed slot
+receipt; resolve review findings before authorizing push. Qualify compatible core
+status source and unchanged worker/sink boundaries through current-head remote CI,
+installed forms, actual numerical/readback integration and browser demo. Source
+completion is not tested/released/Done status.

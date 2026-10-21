@@ -173,3 +173,20 @@ EQ121–125 accepted under canonical issue/Project evidence; matching I/Ocontrac
 I/O contracts and SDK foundations; source/sink/factory implementations are pending their canonical stories. [EQ-121](https://github.com/atulsrivas1/equity-features/issues/278) is the current canonical story; see its issue/Project for live stage. GOV014/GOV015 accepted preparation precedes implementation. Core contracts/features0.0.4a4 remain pure and source-independent. New I/O dependencies point inward, never from core to companions. R4.1 bounded ownership ends after EQ130 acceptance; R5 requires later direction.
 
 Read AGENTS.md, PUBLIC_DEVELOPMENT.md, SESSION_HANDOFF.md and the canonical issue before work. Historical R4 receipts remain in equity-features. No private paths/source material belongs here.
+
+## EF1 supplied status representation lesson — October20,2026
+
+The frozen ef1-contract1 plus reviewed STATUS_INPUT_SLOTS clarification establishes
+four in-process role positions with explicit None markers. Retaining present-only
+transport separately avoids assigning later actual proofs to a missing state role;
+covered-empty input remains a real original binding. See
+[status source conversion](api/EF1_STATUS_INPUTS.md), authored independent
+`tests/ef1/test_status_inputs.py` and `test_status_composition.py`.
+
+Do not infer publisher order, seed, prefix completeness, unknown knowledge or
+current state from delivery size, first row or observed prices. All present status
+proofs bind the actual publisher/epoch/input/revision, including a coherent declared
+target if states are absent. Synthetic evidence cannot attest observed facts;
+calendar source/provenance is independently declared. This is source-only learning,
+not executed numerical, installed, DB or release evidence. Existing anchor/clock
+rules and original extraction records remain historical and unchanged.

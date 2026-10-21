@@ -27,3 +27,10 @@ EQ125 accepted logical publication: [typed API/extension kit](docs/api/PUBLICATI
 ## Optional local ordinary trade files
 
 `equity-feature-files0.1.0a0` supports explicitly authorized normalized CSV/uncompressed Parquet/DBN3 through existing source/factory protocols. [API](docs/api/LOCAL_FILES.md), [owned pure consumer](examples/files_consumer.py), [source and delivery evidence](docs/EQ071_DELIVERY.md), [canonical80 current acceptance](https://github.com/atulsrivas1/equity-features/issues/80). No provider access, automatic downloads or numerical changes. Data/charges require explicit scoped user approval; free qualification downloads only are approved for this development session.
+
+EF1 supplied current-state status source candidate: see
+[exact conversion, missing slots and provenance](docs/api/EF1_STATUS_INPUTS.md).
+The public module `equity_feature_duckdb.ef1` adds StatusInputs and original
+S01/S02/S03 synthetic helpers; independent composition/readback checks are authored
+but unexecuted under the EQ142 reservation. No status feed acquisition or full EF1
+acceptance is claimed.

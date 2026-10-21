@@ -21,8 +21,8 @@
   },
   "additive_package_files": {
     "packages/duckdb/src/equity_feature_duckdb/ef1.py": {
-      "sha256": "945dfb5cab361ba2d7ac3d5732cf5d334a4d0bd347cd8e445cf636848b533300",
-      "reason": "Additive canonical anchor/calendar proof mapping, labelled original anchor/C01 fixtures and path separation; no legacy reader mathematics changed"
+      "sha256": "3bc27718cfc341c606f3bd0ec9e1672be964600bfeedc8507145319771ee9ce4",
+      "reason": "Additive canonical anchor/calendar/status conversion, explicit four-slot status packet and original anchor/C01/S01-S03 fixtures; no legacy reader mathematics changed"
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."

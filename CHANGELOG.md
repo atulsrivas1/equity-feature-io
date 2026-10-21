@@ -31,3 +31,15 @@ EQ098 corrected candidate qualification: both OS current artifacts/four fresh fo
   explicit existing-sink publication example. No source DB acquisition, feature
   math or sink codec changes are claimed. New source candidate0.1.0a9 is distinct
   from accepted a8 artifacts; coordinated build/CI and qualification remain pending.
+
+## Unreleased — EF1 supplied current-state status source authoring
+
+- Adds exact canonical state/certificate conversion, explicit four-position
+  StatusInputs with per-role provenance and original S01/S02/S03 synthetic helpers.
+  Unknown/future knowledge, partial missingness and covered-empty populations stay
+  explicit; no status inference, source acquisition or adapter calculations.
+- Authors independent direct library composition, literal quality/witness fixtures
+  and existing-sink full canonical readback/replay checks. Source only: no local
+  execution under EQ142, no numerical/artifact/release acceptance claimed.
+- Existing anchor/clock behavior, versions, original19 guards and sink codecs are
+  preserved. See docs/api/EF1_STATUS_INPUTS.md; full EF1 audit/residual gates remain.

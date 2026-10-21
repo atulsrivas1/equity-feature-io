@@ -56,3 +56,10 @@ original C01 clock source fixtures in `equity_feature_duckdb.ef1`. See
 [clock source API](../../docs/api/EF1_CLOCK_INPUTS.md). Clock readback checks are
 authored but unexecuted; status feed support and source qualification are not
 implied by this addition.
+
+The additive supplied current-state status conversion is documented in
+[EF1 status inputs](../../docs/api/EF1_STATUS_INPUTS.md). Its four explicit local
+slots retain missingness and original metadata; observed/synthetic provenance is
+caller-declared per role. The candidate includes labelled S01/S02/S03 fixtures and
+source-authored independent composition/readback tests, without executed
+qualification or any provider/N: dataset admission.

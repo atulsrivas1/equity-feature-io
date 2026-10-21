@@ -353,3 +353,298 @@ __all__ = ["AnchorInputs", "anchor_definition_bytes", "make_anchor_provenance",
            "separate_output_path", "synthetic_anchor_fixture", "ClockInputs",
            "calendar_definition_bytes", "make_calendar_provenance", "synthetic_clock_calendar",
            "synthetic_clock_fixture"]
+
+# Status conversion is additive. Existing anchor/calendar source behavior above
+# deliberately remains unchanged.
+from base64 import urlsafe_b64decode, urlsafe_b64encode
+
+_STATUS_ROLES = ("calendar_provenance", "status_states", "status_prefix", "status_validity")
+_STATUS_DIMENSIONS = {"trading": ("t", ("active", "halted", "closed")),
+                      "quoting": ("q", ("enabled", "disabled")), "ssr": ("s", ("on", "off"))}
+
+
+def _status_label(value: object) -> str:
+    if type(value) is not str or not value.strip():
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Nonempty exact status identity required")
+    if (len(value) > 128 or len(value.encode("utf-8", errors="surrogatepass")) > 512
+            or any(ord(c) < 32 or ord(c) == 127 or 0xD800 <= ord(c) <= 0xDFFF for c in value)):
+        raise ContractError(ErrorCode.BOUNDS, "Unsafe or over-limit status identity")
+    return value
+
+
+def _status_b64(value: str) -> str:
+    return urlsafe_b64encode(_status_label(value).encode("utf-8")).decode("ascii").rstrip("=")
+
+
+def _status_unb64(token: str) -> str:
+    if not token or any(c not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_" for c in token):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Canonical unpadded base64url required")
+    try:
+        raw = urlsafe_b64decode(token + "=" * ((-len(token)) % 4))
+        value = raw.decode("utf-8")
+    except (ValueError, UnicodeError):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Invalid UTF8 base64url identity") from None
+    if urlsafe_b64encode(raw).decode("ascii").rstrip("=") != token:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Noncanonical base64url identity")
+    return _status_label(value)
+
+
+def _status_dimension(dimension: str) -> str:
+    if type(dimension) is not str or dimension not in _STATUS_DIMENSIONS:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed status dimension required")
+    return _STATUS_DIMENSIONS[dimension][0]
+
+
+@dataclass(frozen=True)
+class StatusState:
+    """One original publisher event; sequence and knowledge are never generated."""
+    sequence: int
+    event_id: str
+    effective_start_ns: int
+    effective_end_ns: int | None
+    text: str
+    known_at_ns: int | None
+
+
+@dataclass(frozen=True)
+class StatusCertificate:
+    """An actual supplied complete-prefix or validity declaration."""
+    certificate_id: str
+    effective_start_ns: int
+    effective_end_ns: int
+    known_at_ns: int | None
+
+
+def _status_reference(rows: tuple[tuple[Cell, ...], ...], *, metadata: BatchMetadata,
+                      instrument_id: str, session_id: str) -> CanonicalBatch:
+    _status_label(instrument_id)
+    _status_label(session_id)
+    names = ("reference_id", "fact_kind", "effective_start_ns", "effective_end_ns", "text", "known_at_ns")
+    count = len(rows)
+    if count > 4096:
+        raise ContractError(ErrorCode.BOUNDS, "Status REFERENCE row bound exceeded")
+    columns = (Column("instrument_id", (instrument_id,) * count),
+               Column("session_id", (session_id,) * count)) + tuple(
+        Column(name, tuple(row[i] for row in rows)) for i, name in enumerate(names))
+    batch = CanonicalBatch(DataKind.REFERENCE, columns, metadata)
+    validate_batch(batch)
+    return batch
+
+
+def make_status_states(rows: tuple[StatusState, ...], *, dimension: str, epoch: str,
+                       metadata: BatchMetadata, instrument_id: str, session_id: str) -> CanonicalBatch:
+    """Map supplied state events in original order with explicit caller coverage.
+
+    A sequence gap conveys no completeness. Unknown/future known-at survives.
+    This factory performs no selection, cutoff filtering or status mathematics.
+    """
+    code = _status_dimension(dimension)
+    encoded_epoch = _status_b64(epoch)
+    if type(rows) is not tuple or any(type(row) is not StatusState for row in rows):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Concrete original status events required")
+    mapped: list[tuple[Cell, ...]] = []
+    for row in rows:
+        if type(row.sequence) is not int or not 0 <= row.sequence <= I64_MAX:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact nonnegative int64 sequence required")
+        reference = _status_label(f"s1:{code}:{encoded_epoch}:{row.sequence:019d}:{_status_b64(row.event_id)}")
+        mapped.append((reference, "ef1.status." + dimension, row.effective_start_ns,
+                       row.effective_end_ns, row.text, row.known_at_ns))
+    batch = _status_reference(tuple(mapped), metadata=metadata,
+                              instrument_id=instrument_id, session_id=session_id)
+    _status_validate_role(batch, "status_states")
+    return batch
+
+
+def make_status_proof(rows: tuple[StatusCertificate, ...], *, role: str, dimension: str,
+                      epoch: str, target_input_id: str, metadata: BatchMetadata,
+                      instrument_id: str, session_id: str) -> CanonicalBatch:
+    """Map original dedicated proof declarations, never infer proof population."""
+    if role not in ("status_prefix", "status_validity"):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Dedicated status proof role required")
+    code = _status_dimension(dimension)
+    encoded_epoch, target = _status_b64(epoch), _status_b64(target_input_id)
+    if type(rows) is not tuple or any(type(row) is not StatusCertificate for row in rows):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Concrete original certificates required")
+    kind = "ef1.status." + ("prefix_complete" if role == "status_prefix" else "validity")
+    mapped: list[tuple[Cell, ...]] = []
+    for row in rows:
+        reference = _status_label(f"p1:{code}:{encoded_epoch}:{target}:{_status_b64(row.certificate_id)}")
+        mapped.append((reference, kind, row.effective_start_ns, row.effective_end_ns, code, row.known_at_ns))
+    batch = _status_reference(tuple(mapped), metadata=metadata,
+                              instrument_id=instrument_id, session_id=session_id)
+    _status_validate_role(batch, role)
+    return batch
+
+
+def _status_validate_role(batch: CanonicalBatch, role: str) -> tuple[set[tuple[str, str]], set[str]]:
+    """Validate conversion identity only; semantic certificate admission is pure-core work."""
+    if batch.row_count > 4096:
+        raise ContractError(ErrorCode.BOUNDS, "Status REFERENCE row bound exceeded")
+    if batch.metadata.coverage.observed != batch.row_count:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Actual observed count must match original rows")
+    validate_batch(batch)
+    if batch.kind != DataKind.REFERENCE:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Status slots require canonical REFERENCE")
+    source = batch.metadata.source
+    for value in (batch.metadata.namespace, source.source_id, source.snapshot_id, source.input_id):
+        _status_label(value)
+    if source.mapping_version != "ef1-reference-map1":
+        raise ContractError(ErrorCode.INCOMPATIBLE_VERSION, "Exact EF1 reference mapping required")
+    columns = {column.name: column.values for column in batch.columns}
+    if any(name in columns for name in ("price", "factor_num", "factor_den")):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Status references have no numerical payload")
+    identities: set[tuple[str, str]] = set()
+    targets: set[str] = set()
+    previous: int | None = None
+    previous_start: int | None = None
+    texts = columns.get("text", (None,) * batch.row_count)
+    ends = columns.get("effective_end_ns", (None,) * batch.row_count)
+    for i in range(batch.row_count):
+        for name in ("instrument_id", "session_id", "reference_id"):
+            _status_label(columns[name][i])
+        if role == "calendar_provenance":
+            if columns["fact_kind"][i] != "ef1.calendar.provenance" or texts[i] != "supplied_schedule":
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Calendar role vocabulary required")
+            continue
+        reference = cast(str, columns["reference_id"][i])
+        parts = reference.split(":")
+        if len(parts) != 5 or parts[1] not in ("t", "q", "s"):
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed status identity grammar required")
+        code, epoch = parts[1], _status_unb64(parts[2])
+        identities.add((code, epoch))
+        start = _ns(columns["effective_start_ns"][i])
+        end = ends[i]
+        if end is not None and _ns(end) <= start:
+            raise ContractError(ErrorCode.BOUNDS, "Positive supplied effective interval required")
+        if role == "status_states":
+            if parts[0] != "s1" or len(parts[3]) != 19 or any(c not in "0123456789" for c in parts[3]) or int(parts[3]) > I64_MAX:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact s1 seq19 identity required")
+            sequence = int(parts[3])
+            _status_unb64(parts[4])
+            if previous is not None and sequence <= previous:
+                raise ContractError(ErrorCode.DUPLICATE if sequence == previous else ErrorCode.INVALID_ORDER,
+                                    "Strict original publisher sequence required")
+            if previous_start is not None and start < previous_start:
+                raise ContractError(ErrorCode.INVALID_ORDER, "Original effective times must not descend")
+            previous, previous_start = sequence, start
+            dimension = next(name for name, spec in _STATUS_DIMENSIONS.items() if spec[0] == code)
+            if columns["fact_kind"][i] != "ef1.status." + dimension or texts[i] not in _STATUS_DIMENSIONS[dimension][1]:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed status state vocabulary required")
+        else:
+            if parts[0] != "p1":
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact p1 certificate identity required")
+            targets.add(_status_unb64(parts[3]))
+            _status_unb64(parts[4])
+            kind = "ef1.status." + ("prefix_complete" if role == "status_prefix" else "validity")
+            if columns["fact_kind"][i] != kind or texts[i] != code:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Dedicated proof vocabulary required")
+            if end is None:
+                raise ContractError(ErrorCode.BOUNDS, "Finite status proof interval required")
+    if len(identities) > 1 or len(targets) > 1:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "One supplied dimension/epoch/target required")
+    return identities, targets
+
+
+@dataclass(frozen=True)
+class StatusInputs:
+    """Exact role positions and actual originals; None is missing, empty is present."""
+    calendar_provenance: CanonicalBatch | None
+    status_states: CanonicalBatch | None
+    status_prefix: CanonicalBatch | None
+    status_validity: CanonicalBatch | None
+    provenance: tuple[str, str, str, str]
+
+    def __post_init__(self) -> None:
+        if type(self.provenance) is not tuple or len(self.provenance) != 4:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Four explicit provenance modes required")
+        identities: set[tuple[str, str]] = set()
+        relations: set[tuple[str, str, str]] = set()
+        namespaces: set[str] = set()
+        entities: set[tuple[Cell, Cell]] = set()
+        input_ids: set[str] = set()
+        status_modes: set[str] = set()
+        status_sources: set[tuple[str, str]] = set()
+        for role, batch, mode in zip(self.roles, self.slots, self.provenance, strict=True):
+            if type(mode) is not str or mode not in _MODES or (batch is None) != (mode == "unavailable"):
+                raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Explicit role source mode must match delivery")
+            if batch is None:
+                continue
+            if type(batch) is not CanonicalBatch:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Actual canonical batch or None required")
+            if role != "calendar_provenance":
+                status_modes.add(mode)
+            declared, targets = _status_validate_role(batch, role)
+            identities.update(declared)
+            source = batch.metadata.source
+            if role != "calendar_provenance":
+                status_sources.add((source.source_id, source.snapshot_id))
+            if source.input_id in input_ids:
+                raise ContractError(ErrorCode.DUPLICATE, "Distinct actual input bindings required")
+            input_ids.add(source.input_id)
+            namespaces.add(batch.metadata.namespace)
+            cols = {column.name: column.values for column in batch.columns}
+            entities.update(zip(cols["instrument_id"], cols["session_id"], strict=True))
+            if role == "status_states":
+                relations.add((source.input_id, source.source_id, source.snapshot_id))
+            elif role != "calendar_provenance":
+                relations.update((target, source.source_id, source.snapshot_id) for target in targets)
+        if (len(status_modes) > 1 or len(status_sources) > 1 or len(identities) > 1
+                or len(relations) > 1 or len(namespaces) > 1 or len(entities) > 1):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Coherent actual status target/source/revision required")
+        if sum(batch.row_count for batch in self.batches) > 4096:
+            raise ContractError(ErrorCode.BOUNDS, "Aggregate status REFERENCE row bound exceeded")
+
+    @property
+    def roles(self) -> tuple[str, str, str, str]:
+        return _STATUS_ROLES
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.status_states, self.status_prefix, self.status_validity)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+def synthetic_status_context(case: str = "S01") -> dict[str, object]:
+    """Original S01-S03 selection only; no acquired state/availability in context."""
+    if case not in ("S01", "S02", "S03"):
+        raise ContractError(ErrorCode.INVALID_CONFIG, "Unknown synthetic status fixture")
+    dimension, code = ("trading", "t") if case == "S01" else ("ssr", "s")
+    seed = "YQ" if case == "S03" else "c2VlZA"
+    return {"version": "ef1-context1", "producer": "status", "calendar": synthetic_clock_calendar(),
+            "selection": {"dimension": dimension, "epoch": "e", "max_age_ns": None,
+                          "seed_reference_id": f"s1:{code}:ZQ:0000000000000000000:{seed}"}}
+
+
+def synthetic_status_fixture(case: str = "S01") -> StatusInputs:
+    """Literal public source cases, distinct from expected numerical result fixtures."""
+    synthetic_status_context(case)  # Reject unknown case without inventing a default.
+    dimension = "trading" if case == "S01" else "ssr"
+    if case == "S01":
+        rows = (StatusState(0, "seed", 8, None, "active", 8),
+                StatusState(1, "halt", 12, None, "halted", 12),
+                StatusState(2, "resume", 16, None, "active", 16))
+        start, prefix_end, validity_end, known = 8, 20, 21, 8
+    elif case == "S02":
+        rows = (StatusState(0, "seed", 5, None, "on", 5),)
+        start, prefix_end, validity_end, known = 5, 16, 17, 5
+    else:
+        rows = (StatusState(0, "a", 5, None, "on", 5), StatusState(1, "b", 5, None, "off", 5))
+        start, prefix_end, validity_end, known = 5, 20, 21, 5
+    states = make_status_states(rows, dimension=dimension, epoch="e", instrument_id="X", session_id="S",
+        metadata=BatchMetadata("SYN", SourceBinding("F", "R1", "ef1-reference-map1", "st"),
+                               Coverage(len(rows), len(rows), True), None))
+    proofs = []
+    for role, certificate, end, input_id in (("status_prefix", "pref", prefix_end, "status-prefix"),
+                                              ("status_validity", "valid", validity_end, "status-validity")):
+        proofs.append(make_status_proof((StatusCertificate(certificate, start, end, known),),
+            role=role, dimension=dimension, epoch="e", target_input_id="st", instrument_id="X", session_id="S",
+            metadata=BatchMetadata("SYN", SourceBinding("F", "R1", "ef1-reference-map1", input_id),
+                                   Coverage(1, 1, True), None)))
+    return StatusInputs(synthetic_clock_fixture().calendar_provenance, states, proofs[0], proofs[1],
+                        ("synthetic", "synthetic", "synthetic", "synthetic"))
+
+__all__ += ["StatusState", "StatusCertificate", "StatusInputs", "make_status_states",
+            "make_status_proof", "synthetic_status_context", "synthetic_status_fixture"]
