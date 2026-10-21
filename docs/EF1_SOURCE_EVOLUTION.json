@@ -27,8 +27,16 @@
   },
   "additive_package_files": {
     "packages/duckdb/src/equity_feature_duckdb/ef1.py": {
-      "sha256": "418ac41536522feed784a9c83ecfcf852a9a6bdcc81c88b234260ee933d3083c",
-      "reason": "Additive anchor/calendar/status/path conversion, explicit slot provenance and literal anchor/C01/S01-S03/G01-G03/D01 fixtures; inherited status tuple annotation only; supplied reference classification/action conversion and literal R01-R03 fixtures; period/extended exact nullable slots and literal base transport; no legacy reader mathematics changed; additive observable fixed nullable transport and literal O01/O02/H01/H11 examples, no inferred identities or mathematics; exact six-role daily REFERENCE transport and three literal synthetic daily examples"
+      "sha256": "4f158c6d4218262cb1faf693ace855783e1c89319ae679da0be9a6522da1b6c3",
+      "reason": "Retained merged EF1 conversion module; source unchanged by regular BAR work."
+    },
+    "packages/duckdb/src/equity_feature_duckdb/gap_endpoint.py": {
+      "sha256": "e662fea5fcd17ed10f149aa9736ce96b8c9f5cc90fae044a32aee2c5d9b8e4a5",
+      "reason": "Retained merged gap endpoint module; source unchanged by regular BAR work."
+    },
+    "packages/duckdb/src/equity_feature_duckdb/regular_bar_prices.py": {
+      "sha256": "805045fac14cbcc1f8f757fa517f0cda7b375e86c142584ef7aac57689f54ed5",
+      "reason": "Additive lossless supplied regular BAR/proof conversion and fixed three-role provenance; original R01/R08 synthetic requests, no endpoint mathematics."
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."

@@ -47,3 +47,5 @@ and the full EF1 release gates remain pending.
 Supplied EF1 classification/action conversion source and validation limits are documented in [EF1_REFERENCE_IO](docs/EF1_REFERENCE_IO.md).
 
 Observable opening/seconds and physical status-history transport is documented in [docs/EF1_OBSERVABLE_IO.md](docs/EF1_OBSERVABLE_IO.md). Fixed nullable `.slots` preserve absent source roles; the present-only `.batches` view is not pure observable input.
+
+Supplied regular completed-BAR first-open/calculated-close inputs: [public API](docs/api/EF1_REGULAR_BAR_PRICES_INPUTS.md), [author evidence](docs/EF1_REGULAR_BAR_PRICES_IO.md). Exact three-role conversion and explicit synthetic fixtures preserve original inputs; full EF1 gates remain open.
