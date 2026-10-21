@@ -20,6 +20,11 @@ EQ098 corrected candidate qualification: both OS current artifacts/four fresh fo
 
 ## Unreleased — EF1 anchor I/O source authoring
 
+- Adds the reviewed clock subset's actual c1 calendar-provenance REFERENCE
+  factory, explicit source/missing packet and original small C01 fixture;
+  independent mapping and prospective clock-to-existing-sink checks are authored,
+  unexecuted. Existing anchor scope and unreleased adaptera9 are retained.
+
 - EQ212 adds explicit canonical anchor-provenance mapping, labelled original
   synthetic trade/actual-notional-bar fixtures and source/output alias refusal.
 - Adds unexecuted independent anchor input/composition/readback checks and an

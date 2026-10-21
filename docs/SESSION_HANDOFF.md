@@ -451,3 +451,65 @@ All original19 source/fixture hashes and exact comparison rules remain unchanged
 The prior hash/CI failure remains historical evidence above. No local imports,
 mypy/tests/builds/benchmarks/DB operations executed while R18 remains reserved;
 no commit/push. Fresh independent recheck and actual successor CI are still needed.
+
+## EF1 session-clock source slice — EQ212 supporting EQ165, October20,2026
+
+Coordinator authorized the next reviewed clock subset in NEW branch
+codex/ef1-session-io based f20abd5, separate from frozen anchor checkout/CI. Only
+this checkout changed. EQ165#505 clock subset is coordinator-reported In progress;
+full session/status/EF1 acceptance is not claimed. Shared ef1-contract1 unchanged.
+
+Added to explicit equity_feature_duckdb.ef1: calendar_definition_bytes,
+make_calendar_provenance, ClockInputs, synthetic_clock_calendar and
+synthetic_clock_fixture. Actual REFERENCE factory hashes exact canonical ASCII
+calendar subobject including scheduled_close_ns/early_close; produces c1 SHA,
+kind ef1.calendar.provenance/text supplied_schedule, exact revision and unchanged
+original known-at. Supplied finite positive proof interval must cover all actual
+session and segment bounds. No timezone/time/date generation, source fetching,
+library clock arithmetic or hidden config facts. Declared source proof does not
+authenticate calendar authority, dataset rights or acquisition. Packet preserves
+actual metadata and explicit observed/synthetic/unavailable mode; missing slot
+remains absent, never a fallback. C01 is fictional F/R1/SYN/X/S with regular10..30,
+pre0..10/post30..40, scheduled40/earlyTrue, actual proof0..40 known5.
+
+Added six authored factory/identity/hash/knowledge/scope/provenance methods and
+five prospective clock-to-library/existing-sink methods with literal C01 boundary
+expectations, missing/future/unknown evidence, hash/revision rejection, exact full
+canonical byte readback/replay/sequential reopen. Sink limits explicit one result,
+1MiB chunk/total,5cells,128evidence. No new codec; existing anchor APIs/fixtures/tests
+retained unchanged. Adapter candidatea9/contracts.a4/SDK/sink pins unchanged.
+The standalone calendar4KiB guard does not prove full context/task wire admission.
+
+New public docs/api/EF1_CLOCK_INPUTS.md and README/changelog accompany source.
+Updated ONLY additive ef1.py evolution SHA from
+30a842957a4c393631902bebad0bcdc4bc94b915e31598bffa9c3b4038256abb to
+dce3a094f830041b8b207237f2acf2c285d7171816b1168b78d1f3a3258b0066;
+all original19 source hashes, marker substitutions and package file-set guard
+remain unchanged. Old anchor-source hash/CI evidence remains historical.
+
+No local imports/tests/typecheck/builds/benchmarks, N: scans, DB reads or output
+DB creation. Official R18 reservation remains active. No commit/push. Resume:
+coordinator actual-diff review; fresh independent source recheck; align sibling
+clock API and worker task/role/pins; admitted exact new current CI and native
+installed/runtime/readback/browser evidence. Root owns cross-repo pin updates.
+Status feed/proof families, complete EQ164 inventory and EF1 release gates remain
+outstanding; no new source qualification or release acceptance inferred.
+
+### Clock I/O independent-review P2 correction
+
+Fresh static reviewer /root/ef1_clock_io_review found ascending UTC intervals with
+descending supplied civil dates were admitted by I/O while the sibling library
+rejects them. Added previous_date tracking and the identical strict-less-than
+comparison (civil_date<previous_date), preserving caller labels and equal-date
+comparison semantics. Authored literal negative sessions P/2026-01-03/-20..-10,
+S/2026-01-02/10..30 for both serialization and proof conversion. Retained valid
+prior-date fixture and added distinct prior sessions sharing the same civil date
+to avoid accidentally tightening the check to less-than-or-equal.
+
+Updated only additive module evolution SHA from
+dce3a094f830041b8b207237f2acf2c285d7171816b1168b78d1f3a3258b0066 to
+945dfb5cab361ba2d7ac3d5732cf5d334a4d0bd347cd8e445cf636848b533300.
+Original19 legacy hashes/guards unchanged. Twelve clock methods now authored,
+all unexecuted. No local imports/tests/builds/DB/N:scans, commit or push; frozen
+anchor F20 checkout untouched. Fresh reviewer recheck and actual qualification
+remain pending. This correction is not evidence of an executed reproduction.

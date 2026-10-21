@@ -50,3 +50,9 @@ EQ212#570 is In progress; source authoring is not test/artifact acceptance. The
 candidate carries the reviewed source version bump0.1.0a9; no existing a8
 artifact identity includes these changes. SDK/sink codecs and
 accepted historical acquisition remain unchanged.
+
+The same candidate also authors explicit supplied-calendar proof mapping and
+original C01 clock source fixtures in `equity_feature_duckdb.ef1`. See
+[clock source API](../../docs/api/EF1_CLOCK_INPUTS.md). Clock readback checks are
+authored but unexecuted; status feed support and source qualification are not
+implied by this addition.
