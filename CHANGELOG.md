@@ -65,3 +65,7 @@ EF1 source candidate (unreleased): exact nullable supplied classification/action
 ## EF1 daily observations source candidate — October21,2026
 
 EQ212 supporting EQ166 adds lossless six-slot daily REFERENCE transport, explicit provenance and original synthetic fixed252/current-week/latest-prior examples. [API and limits](docs/EF1_DAILY_OBSERVATIONS_IO.md). Legacy DAILY/BAR, SDK/sink/codec and package versions remain unchanged. Full source qualification, independent review, integrated runtime/artifact/browser/release gates remain open.
+
+## Unreleased - EF1 supplied regular completed-BAR prices
+
+Adds lossless three-role supplied BAR/proof conversion, per-role provenance and original synthetic R01/R08 examples under EQ212 #570. [API](docs/api/EF1_REGULAR_BAR_PRICES_INPUTS.md) and [author evidence](docs/EF1_REGULAR_BAR_PRICES_IO.md). Existing SDK/sink schemas, versions and old producers remain unchanged; full EF1 release gates remain open.

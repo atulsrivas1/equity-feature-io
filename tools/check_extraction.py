@@ -39,7 +39,11 @@ def main():
             checked[name] = hashlib.sha256(current).hexdigest()
     assert len(checked) == evolution['baseline_compared_files'] == 19, len(checked)
     additions = evolution['additive_package_files']
-    assert set(additions) == {'packages/duckdb/src/equity_feature_duckdb/ef1.py'}
+    assert set(additions) == {
+        'packages/duckdb/src/equity_feature_duckdb/ef1.py',
+        'packages/duckdb/src/equity_feature_duckdb/gap_endpoint.py',
+        'packages/duckdb/src/equity_feature_duckdb/regular_bar_prices.py',
+    }
     additive_checked = {}
     for name, declaration in additions.items():
         digest = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()

@@ -228,3 +228,17 @@ X212's earlier retained duplicate-reference validation; corrected tests independ
 cover direct pure duplicate and actual adapter guard. The generic worker has its
 separate earlier row-count metadata refusal. Retain all boundaries and original
 failed probe evidence; do not weaken one layer to make error codes coincide.
+
+## Regular completed-BAR inputs - October 21, 2026
+
+[Bounded author checkpoint](EF1_REGULAR_BAR_PRICES_IO.md) records original 100-case source conversion, early constructor/canonical/container stages, exact three-role provenance and synthetic R01/R08 helpers. The adapter transports supplied facts only; independently causal membership proof and endpoint calculations remain pure/source-admission responsibilities. Actual producer/worker/stored parity is a separate gate; full EQ164/EF1 remains open.
+
+## Regular completed-BAR composition lesson - October 21, 2026
+
+[Actual pinned-source evidence](EF1_REGULAR_BAR_PRICES_IO.md) now proves all46
+complete computed results,54real refusal stages and46new synthetic stored/retried/
+reopened results against immutable core5b442ee6. Preserve the distinction between
+adapter/container refusal and direct pure entry, and between SDK literal roundtrip
+and actual calculation. Retained one-NUL sidecars are expected stable sink files;
+private output inventories include them. FullEQ164/source rights/original parity,
+independent review, installed/platform/browser and wholeEF1 gates stay separate.

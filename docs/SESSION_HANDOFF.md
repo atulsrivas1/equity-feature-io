@@ -837,3 +837,26 @@ integration/browser/release gates. Do not repeat91DB cycles on changing author
 sources automatically. No broad93/94 regressions repeated, source acquisition,
 N-drive query, install, commit, push or public tracker write. Next: coordinator
 final mathematical recheck, reviewed cohort/pins and actual acceptance gates.
+
+## Regular completed-BAR I/O bootstrap - October 21, 2026
+
+EQ212 source candidate on codex/ef1-regular-bar-prices-io at63a4a240; reviewed contractf4aeec98/oracle05d5 unchanged. Eight actual input methods and strict typing pass. 84 conversions/16 early refusals preserve stage distinctions; all46 full-result inputs retained. [Current scope and evidence](EF1_REGULAR_BAR_PRICES_IO.md). New producer/46DB composition tests authored, initially unexecuted pending coordinator stable core pin. Resume with actual coordinator-selected core, full stage/literal composition and unchanged-sink new separate outputs; then coordinator diff review and fresh independent exact-head/artifact/integration/browser/release gates. No commit/push/tracker mutation/publication. FullEQ164/source-rights/originalparity/remainingEF1 open.
+
+Regular BAR bootstrap final checks:109 matching EF1 input methods (includes8new),94 prior DuckDB methods,2 strict-typed source/example files, original19+3 additive extraction and diff whitespace all exit0. Private command/log receipts under work/ef1-regular-bar-prices-implementation/io-report. Actual new numerical/46DB composition still awaits stable coordinator core pin; do not infer it from legacy regressions.
+
+Regular BAR coordinator review correction: retained independent14 constructor/canonical stage checks and added actual packet_inputs pipeline calls for all14. Affected8inputmethods run3 pass; whitespace pass. Earlier run1/run2 did not execute those14 pipeline branches; logs preserved. New heading punctuation is ASCII. Production source and broad109/94 regression scope unchanged; wait stable core pin before composition.
+
+## Regular completed-BAR actual composition completed - October 21, 2026
+
+Coordinator-pinned core5b442ee6/tree9face/all106closedsource hashes and ownIO
+sources unchanged before/after actual execution. Reaped0 session97981:
+2methods/61.838s establish46complete computed goldens/SDK parity,54actualstage
+refusals and46new synthetic DuckDB fullwrite/readback/identicalretry/close-reopen.
+All46one-NULsidecars stable/retained;92DB/sidecarfiles hashed. Public R01/R08
+example exit0/full literal matches. Private exact command/child/controller receipts
+and source/output maps: work/ef1-regular-bar-prices-implementation/io-report/
+composition-core5b442ee6-run1/ACTUAL_COMPOSITION_REPORT.json. [Current evidence](EF1_REGULAR_BAR_PRICES_IO.md)
+supersedes pending bootstrap statements. Production module805045fa unchanged;
+prior109/94 regressions not repeated. Next: root final actualdiffreview, distinct
+independent PR review, exact-commit build/install/platform and integratedworker/
+browser/fullEQ164/remainingEF1/release gates. No commit/push/tracker/publication.
