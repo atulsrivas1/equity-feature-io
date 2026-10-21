@@ -61,7 +61,7 @@ def packet_inputs(packet):
 def calculate(packet):
     inputs = packet_inputs(packet)
     config = ConfigSpec.from_json(packet["canonical_config_json"])
-    assert config.digest() == packet["config_digest"]
+    assert config.digest == packet["config_digest"]
     return compute_ef1(inputs.slots, config, entity=EntityKey(**packet["entity"]))
 
 
