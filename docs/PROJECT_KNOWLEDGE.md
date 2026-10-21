@@ -1,3 +1,11 @@
+## EF1 gap endpoint I/O source composition completed — October 21, 2026
+
+[Current checkpoint](EF1_GAP_ENDPOINT_IO.md) records actual final-source Windows3.12.10 composition:3 methods/60.321s PASS, all71 complete computed SDK roundtrips,43 negative targets with exact earlier-stage distinctions and71 new separate DuckDB complete readback/retry/close/reopen. Original oracle retained; independently approved two-leaf E28 causal successor is current conformance. Final7 bootstrap methods and strict typing1source pass. Source authoring is uncommitted; coordinator actual diff/fresh independent code review, immutable installed/platform/browser/full-audit/release gates remain open. Earlier pending snapshots below are historical.
+
+## EF1 gap endpoint adapter bootstrap — October 21, 2026
+
+Uncommitted four-slot source conversion and explicit synthetic trade/bar helpers are authored under EQ212 #570. [Checkpoint](EF1_GAP_ENDPOINT_IO.md) records actual31 source methods passed, original114-target conversion stages and preserved first-run test-stage failure. Full numerical/SDK/DuckDB composition, strict typing (system mypy unavailable), coordinator/independent review and release gates remain pending; E28 frozen fixture defect is being resolved by coordinator without changing production math. No observed source, package or release acceptance.
+
 ## EQ098 corrected candidate qualified; final publication gates — October15,2026
 
 Corrected source e414f517/89a8a41f passed separate review0b1c4dae, findings[]. Shared fixed-registry admission now rejects both unknown mathematical policy and stripped-empty eligibility policy before export/read/replay; original P2/rework/earlier approval scopes remain preserved. Fresh author Windows qualification completed eight repeat archives/79source pins/four fresh light/replay wheel/sdist forms/29methods/typing/actual fixed producer, raw logSHAf72820d2b230c81c23cd9a8a2fd18d5957cc9b58d693b74b313d6adbba562e51.

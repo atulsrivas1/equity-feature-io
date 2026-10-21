@@ -1,3 +1,7 @@
+## Unreleased - EF1 supplied gap endpoint I/O
+
+Adds four nullable source roles, lossless supplied proof/row conversion and explicit original synthetic trade/bar helpers under EQ212 #570. See [API](docs/api/EF1_GAP_ENDPOINT_INPUTS.md) and [source validation](docs/EF1_GAP_ENDPOINT_IO.md). No observed-source, installed-artifact or release acceptance. Existing generic SDK/sink schemas and versions unchanged.
+
 ## EQ098 bundles0.1.0a1 candidate — October15,2026
 
 New packages/bundles implements the canonical reviewed data-only bundle and explicit trusted replay contract, with no extraction/source/resolver/code hooks. [API/format/limits](packages/bundles/README.md), [actual synthetic consumer](examples/bundles_consumer.py), [fixed dependency qualification](tools/build_bundles.py). Source candidate only; current bothOS/freshforms/paired-main delivery and canonical198 acceptance remain pending. Existing I/O packages and unrelated provider drafts15/16 unchanged.
