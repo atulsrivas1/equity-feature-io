@@ -1,3 +1,7 @@
+## Unreleased - EF1 supplied regular first-trade I/O
+
+Adds exact three nullable roles, lossless supplied TRADE/REFERENCE conversion and original synthetic R001/R019 requests under EQ212#570. See [API](docs/api/EF1_REGULAR_FIRST_TRADE_PRICE_INPUTS.md) and [source checkpoint](docs/EF1_REGULAR_FIRST_TRADE_PRICE_IO.md). No producer mathematics, observed-source admission, sink/SDK/schema/version change or release acceptance.
+
 ## Unreleased - EF1 supplied gap endpoint I/O
 
 Adds four nullable source roles, lossless supplied proof/row conversion and explicit original synthetic trade/bar helpers under EQ212 #570. See [API](docs/api/EF1_GAP_ENDPOINT_INPUTS.md) and [source validation](docs/EF1_GAP_ENDPOINT_IO.md). No observed-source, installed-artifact or release acceptance. Existing generic SDK/sink schemas and versions unchanged.

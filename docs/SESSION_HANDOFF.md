@@ -1,3 +1,73 @@
+## First-trade source/main bridge prepared - October21,2026
+
+[Source/qualification scope](EF1_FIRST_TRADE_MAIN_BRIDGE.md) records exact first-trade `c5cae7bbc57b01bfb43cb94e42c44d1d5f700905` and actual main `ae8bb17dd93d79ef3faa111d84fbceebe7e94795`. The incoming main is exact reviewed BAR tree; all package/test/tool/version/oracle Git and original physical bytes remain frozen. Original overlapping merge/physical-check failures are preserved locally. Separately launched installed qualification remains RUNNING at this checkpoint, not accepted; coordinator/distinct actual-head review and actual completed evidence remain before delivery. Full EF1/browser/source/release gates remain open. Earlier checkpoints below remain historical.
+
+## EF1 first-trade I/O composition and corrected numerical recheck - October21,2026
+
+Root resumed this author with stable grantfcaa95dd/all107core+45IO+63worker
+production sources. Comp1 preflight stopped before child/DB on actual same-byte
+core commit5b7ed1d versus earlier baseline856f963; failure retained and root
+authorized the transition. Comp2 actually executed2methods/162.323s,281requests
+including122whole computed/float.hex/SDK records and159actualdeepestrefusals,
+then122freshDuckDB fullwrite/readback/retry/close-reopen with122stableNULsidecars.
+Public R001/R019 helpers matched whole literals and actual example ran. All
+outputs and hashes remain in owned private io-report/comp2. No I/O production
+change or oracle regeneration; new adapter staysb69e90ef, frozen oraclee1835.
+
+Original outercontroller reaped1 at postchild log-parser assertion: unittest
+progress prefixed N001, so startswith missed it. Read-only recovery verified
+all159N IDs/122R DB IDs without rerunning. Child native exit was not separately
+persisted; report explicitly recordsnull and conditional-branch inference0,
+not unittestOK or an invented native receipt. Original source/log/failure and
+comp1preflight remain. Original controller after-map comparison executed but
+was not persisted; recovery captured equal215source map before root correction.
+See [complete checkpoint](EF1_REGULAR_FIRST_TRADE_PRICE_IO.md).
+
+Core independent PR628 P2 allocation finding led root to hoist3optionaldefault
+loops in2corefiles. NewV2grant2410e18b freezes corrected107/45/63epoch. Actual
+numeric-only1method passes281requests/122wholeSDK/159actualstages; nativechild0
+persisted BEFORE assertions, outer0/chunke5569e;215before/after maps equal.
+ReportSHA4f5d1875bf45cb655bee93a6b0e643874907e024e56e509d03d91454a94d8e3c.
+No122physicalrepeat; worker owns correctedcore physical checks. Existing sink/
+SDK/contracts/versions/oldadapters unchanged. Root final16pathdiffreview then
+commit/push/freshindependentactualPRreview/exactcommitlocal/platform/install/
+integration/browser/fullEQ164/remainingEF1/release gates remain. No authorcommit/
+push/trackerwrite/install/production/Ndrive/sourcewrite/publication. Earlier
+pending entries below are historical preparation, not current execution authority.
+
+## EF1 regular first-trade I/O source waiting stable core - October 21, 2026
+
+Fresh author /root/ef1_first_trade_io_implementation, branch
+codex/ef1-first-trade-price-io, base0a201082e336c0fe4d317eb3eaa11b34312af8fd.
+Current root grant0cdb2c10/current draft628856f963 binds the frozen17product
+manifestd1e4 and full oraclee1835. Actual Project receipt keeps partial570/506/571
+Open/Inprogress; no whole-story acceptance. [Source checkpoint](EF1_REGULAR_FIRST_TRADE_PRICE_IO.md)
+and [API](api/EF1_REGULAR_FIRST_TRADE_PRICE_INPUTS.md) document exact3 nullable
+roles, lossless TRADE/REFERENCE converter, supplied proof helper and literal
+R001/R019 requests. No firstness/eligibility/price/proof mathematics, original
+source admission, SDK/sink/schema/version change or expected regeneration.
+
+Actual Windows3.12.10 -I/-B/read-only driver/threadlimits1:9new methods run2
+exit0;118combined input methods exit0;11source/example strict typing exit0;
+original19+4additive extraction exit0; diff whitespace exit0. Generic bootstrap
+uses clean frozenBAR5b442 contracts only and asserts zero equity_features imports.
+281requests give225losslessconversions and56realearlyrefusals, including N154
+deepestBatchMetadataBOUNDS; all122positiveinputs preserve every cell/binding.
+First harness run failed due nullable expected_result selection; original log
+retained, corrected harness only. Full oracle byteSHAe1835 unchanged.
+
+Own private io-report/PRODUCTION_SOURCE_EPOCH.json closes45package/srcPython
+hashes inclnew adapterb69e90ef7178c1d0d07491abb461e5743465c09e9f5776a2ee5af05ac93210ec;
+root notified and production bytes held stable. Source remains UNCOMMITTED.
+Full281actual numerical-stage and122newsyntheticDuckDB SDK/fullreadback/retry/
+close-reopen tests plus public example are authored but UNEXECUTED. Next root
+stablecoreexactpin and boundedresourcegrant, pathpreflight<260 and before/after
+sourcehashes, actual native exits/logs/retained122DB+NULsidecars. No physical
+composition, install, commit/push, GitHubmutation, original/Ndrive/productionwrite
+or package/tagpublication. Rootfullactualdiffreview beforecommit/push, fresh
+independentactualPRreview, exactcommitlocal/platform/artifact/integration/browser/
+fullEQ164/remainingEF1/release gates remain. Notify root immediately on completion.
+
 ## EF1 gap endpoint I/O source composition completed — October 21, 2026
 
 [Current checkpoint](EF1_GAP_ENDPOINT_IO.md) records actual final-source Windows3.12.10 composition:3 methods/60.321s PASS, all71 complete computed SDK roundtrips,43 negative targets with exact earlier-stage distinctions and71 new separate DuckDB complete readback/retry/close/reopen. Original oracle retained; independently approved two-leaf E28 causal successor is current conformance. Final7 bootstrap methods and strict typing1source pass. Source authoring is uncommitted; coordinator actual diff/fresh independent code review, immutable installed/platform/browser/full-audit/release gates remain open. Earlier pending snapshots below are historical.
