@@ -7,9 +7,11 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import date
 import hashlib
 import json
 from pathlib import Path
+from typing import cast
 
 from equity_feature_contracts import (
     AdjustmentSpec, BatchMetadata, CanonicalBatch, Column, ContractError, Coverage,
@@ -19,6 +21,8 @@ from equity_feature_contracts.inputs import Cell, I64_MAX, I64_MIN
 
 _DEFINITION_KEYS = frozenset(("anchor_id", "reset_id", "start_ns", "selection_policy_id", "revision"))
 _MODES = frozenset(("duckdb_backed_observed", "synthetic", "unavailable"))
+_CALENDAR_KEYS = frozenset(("calendar_id", "revision", "timezone", "target_date", "sessions",
+                            "segments", "scheduled_close_ns", "early_close"))
 
 
 def _label(value: object) -> str:
@@ -175,5 +179,177 @@ def separate_output_path(output_path: Path, source_paths: tuple[Path, ...]) -> P
         raise ContractError(ErrorCode.INVALID_CONFIG, "Source/destination path resolution failed") from None
 
 
+def _calendar_document(calendar: Mapping[str, object]) -> tuple[dict[str, object], tuple[tuple[int, int], ...]]:
+    """Validate and detach only the supplied schedule; never infer calendar facts."""
+    if not isinstance(calendar, Mapping) or set(calendar) != _CALENDAR_KEYS:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact EF1 calendar definition required")
+    owned = dict(calendar)
+    for key in ("calendar_id", "revision", "timezone"):
+        _label(owned[key])
+    target_date = _calendar_date(owned["target_date"])
+    sessions = _calendar_rows(owned["sessions"], width=4, maximum=64)
+    segments = _calendar_rows(owned["segments"], width=3, maximum=3)
+    session_rows: list[list[Cell]] = []
+    segment_rows: list[list[Cell]] = []
+    bounds: list[tuple[int, int]] = []
+    identifiers: set[str] = set()
+    target_bounds: tuple[int, int] | None = None
+    previous_end: int | None = None
+    previous_date: str | None = None
+    for row in sessions:
+        identifier, civil_date = _label(row[0]), _calendar_date(row[1])
+        start, end = _ns(row[2]), _ns(row[3])
+        if (start >= end or (previous_end is not None and start < previous_end)
+                or (previous_date is not None and civil_date < previous_date)):
+            raise ContractError(ErrorCode.INVALID_ORDER, "Ordered disjoint supplied sessions required")
+        if identifier in identifiers:
+            raise ContractError(ErrorCode.DUPLICATE, "Duplicate supplied session identity")
+        identifiers.add(identifier)
+        if civil_date == target_date:
+            if target_bounds is not None:
+                raise ContractError(ErrorCode.DUPLICATE, "Ambiguous supplied target date")
+            target_bounds = (start, end)
+        session_rows.append([identifier, civil_date, start, end])
+        bounds.append((start, end))
+        previous_end, previous_date = end, civil_date
+    previous_end = None
+    phases: set[str] = set()
+    previous_phase = -1
+    regular: tuple[int, int] | None = None
+    for row in segments:
+        phase = _label(row[0])
+        start, end = _ns(row[1]), _ns(row[2])
+        if phase not in ("premarket", "regular", "postmarket") or phase in phases:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Unique declared calendar phase required")
+        phase_order = ("premarket", "regular", "postmarket").index(phase)
+        if phase_order <= previous_phase:
+            raise ContractError(ErrorCode.INVALID_ORDER, "Declared calendar phase order required")
+        if start >= end or (previous_end is not None and start < previous_end):
+            raise ContractError(ErrorCode.INVALID_ORDER, "Ordered disjoint supplied segments required")
+        phases.add(phase)
+        if phase == "regular":
+            regular = (start, end)
+        segment_rows.append([phase, start, end])
+        bounds.append((start, end))
+        previous_end = end
+        previous_phase = phase_order
+    scheduled = _ns(owned["scheduled_close_ns"])
+    early = owned["early_close"]
+    if regular is None or target_bounds != regular or type(early) is not bool or scheduled < regular[1] or early != (regular[1] < scheduled):
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Supplied target schedule operands disagree")
+    owned["sessions"], owned["segments"] = session_rows, segment_rows
+    return owned, tuple(bounds)
+
+
+def _calendar_rows(value: object, *, width: int, maximum: int) -> tuple[tuple[object, ...], ...]:
+    if type(value) not in (list, tuple):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Concrete supplied calendar rows required")
+    rows = cast(list[object] | tuple[object, ...], value)
+    if not 1 <= len(rows) <= maximum:
+        raise ContractError(ErrorCode.BOUNDS, "Supplied calendar row bound exceeded")
+    owned: list[tuple[object, ...]] = []
+    for row in rows:
+        if type(row) not in (list, tuple):
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Concrete supplied calendar row required")
+        cells = cast(list[object] | tuple[object, ...], row)
+        if len(cells) != width:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact supplied calendar row width required")
+        owned.append(tuple(cells))
+    return tuple(owned)
+
+
+def _calendar_date(value: object) -> str:
+    label = _label(value)
+    try:
+        parsed = date.fromisoformat(label)
+    except ValueError:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Explicit ISO calendar date required") from None
+    if parsed.isoformat() != label:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Canonical ISO calendar date required")
+    return label
+
+
+def calendar_definition_bytes(calendar: Mapping[str, object]) -> bytes:
+    """Exact canonical ASCII calendar bytes, including early/scheduled-close facts."""
+    owned, _ = _calendar_document(calendar)
+    encoded = json.dumps(owned, ensure_ascii=True, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("ascii")
+    if len(encoded) > 4096:
+        raise ContractError(ErrorCode.BOUNDS, "EF1 calendar exceeds context byte bound")
+    return encoded
+
+
+def make_calendar_provenance(
+    calendar: Mapping[str, object], *, namespace: str, instrument_id: str,
+    session_id: str, source_id: str, input_id: str, known_at_ns: int | None,
+    start_ns: int, end_ns: int,
+) -> CanonicalBatch:
+    """Map an actual supplied schedule declaration without inventing availability."""
+    owned, bounds = _calendar_document(calendar)
+    encoded = calendar_definition_bytes(owned)
+    start, end = _ns(start_ns), _ns(end_ns)
+    if start >= end or any(start > lower or end < upper for lower, upper in bounds):
+        raise ContractError(ErrorCode.BOUNDS, "Calendar proof must cover all supplied schedule bounds")
+    if known_at_ns is not None:
+        _ns(known_at_ns)
+    for value in (namespace, instrument_id, session_id, source_id, input_id):
+        _label(value)
+    sessions = _calendar_rows(owned["sessions"], width=4, maximum=64)
+    if not any(row[0] == session_id and row[1] == owned["target_date"] for row in sessions):
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Calendar proof target session mismatch")
+    columns = (
+        Column("instrument_id", (instrument_id,)), Column("session_id", (session_id,)),
+        Column("reference_id", ("c1:" + hashlib.sha256(encoded).hexdigest(),)),
+        Column("fact_kind", ("ef1.calendar.provenance",)), Column("text", ("supplied_schedule",)),
+        Column("effective_start_ns", (start,)), Column("effective_end_ns", (end,)),
+        Column("known_at_ns", (known_at_ns,)),
+    )
+    source = SourceBinding(source_id, _label(owned["revision"]), "ef1-reference-map1", input_id)
+    result = CanonicalBatch(DataKind.REFERENCE, columns,
+                            BatchMetadata(namespace, source, Coverage(1, 1, True), None))
+    validate_batch(result)
+    return result
+
+
+@dataclass(frozen=True)
+class ClockInputs:
+    """One actual calendar-proof slot or explicit missing delivery, no fallback."""
+    calendar_provenance: CanonicalBatch | None
+    provenance: str
+
+    def __post_init__(self) -> None:
+        if type(self.provenance) is not str or self.provenance not in _MODES or (self.calendar_provenance is None) != (self.provenance == "unavailable"):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Explicit clock source mode must match delivery")
+        if self.calendar_provenance is not None:
+            if type(self.calendar_provenance) is not CanonicalBatch or self.calendar_provenance.kind != DataKind.REFERENCE:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Canonical calendar reference required")
+            validate_batch(self.calendar_provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance",)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return () if self.calendar_provenance is None else (self.calendar_provenance,)
+
+
+def synthetic_clock_calendar() -> dict[str, object]:
+    """Original finite C01 schedule; return a fresh owned definition on each call."""
+    return {"calendar_id": "C01", "revision": "R1", "timezone": "UTC", "target_date": "2026-01-02",
+            "sessions": [["S", "2026-01-02", 10, 30]],
+            "segments": [["premarket", 0, 10], ["regular", 10, 30], ["postmarket", 30, 40]],
+            "scheduled_close_ns": 40, "early_close": True}
+
+
+def synthetic_clock_fixture(*, known_at_ns: int | None = 5) -> ClockInputs:
+    """C01's original explicit synthetic proof; no clock calculation or time lookup."""
+    proof = make_calendar_provenance(synthetic_clock_calendar(), namespace="SYN", instrument_id="X",
+        session_id="S", source_id="F", input_id="synthetic-clock-C01", known_at_ns=known_at_ns,
+        start_ns=0, end_ns=40)
+    return ClockInputs(proof, "synthetic")
+
+
 __all__ = ["AnchorInputs", "anchor_definition_bytes", "make_anchor_provenance",
-           "separate_output_path", "synthetic_anchor_fixture"]
+           "separate_output_path", "synthetic_anchor_fixture", "ClockInputs",
+           "calendar_definition_bytes", "make_calendar_provenance", "synthetic_clock_calendar",
+           "synthetic_clock_fixture"]
