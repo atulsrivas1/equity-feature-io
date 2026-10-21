@@ -21,7 +21,7 @@
   },
   "additive_package_files": {
     "packages/duckdb/src/equity_feature_duckdb/ef1.py": {
-      "sha256": "3bc27718cfc341c606f3bd0ec9e1672be964600bfeedc8507145319771ee9ce4",
+      "sha256": "c6305297fe51b1dd76659964418e3a725dd3f09098e26588e5fb8cc7a7620163",
       "reason": "Additive canonical anchor/calendar/status conversion, explicit four-slot status packet and original anchor/C01/S01-S03 fixtures; no legacy reader mathematics changed"
     }
   },

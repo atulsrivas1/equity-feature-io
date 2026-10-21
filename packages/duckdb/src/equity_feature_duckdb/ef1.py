@@ -622,6 +622,7 @@ def synthetic_status_fixture(case: str = "S01") -> StatusInputs:
     """Literal public source cases, distinct from expected numerical result fixtures."""
     synthetic_status_context(case)  # Reject unknown case without inventing a default.
     dimension = "trading" if case == "S01" else "ssr"
+    rows: tuple[StatusState, ...]
     if case == "S01":
         rows = (StatusState(0, "seed", 8, None, "active", 8),
                 StatusState(1, "halt", 12, None, "halted", 12),
