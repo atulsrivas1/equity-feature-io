@@ -69,3 +69,18 @@ checks remain unchanged. Three new source-authored methods cover wrong publisher
 wrong revision and missing-target proof conflicts across classification/action
 facts and market proof groups. Current count27methods=22inputs+5composition;
 no runtime check was executed. Fresh independent recheck remains required.
+## Actual Windows local validation correction — October21,2026
+
+The authoring-only statements above describe the original reserved-resource stage.
+After explicit release of that stale hold, the second installed-wheel attempt
+passed all older suites and the22 worker/99 core reference methods, then failed
+110 subcases in this27-method I/O suite: its shared test helper called the
+ConfigSpec.digest property as a method. The one-line correction reads the
+property and preserves the exact digest assertion, all55 frozen packets, full
+expected results and suite count. A fresh independent reviewer approved it.
+
+The corrected source-selected Windows27-method I/O reference suite now PASSES,
+including all55 full result comparisons and all55 DuckDB publish/read/idempotence/
+reopen subcases. The exact log and failed predecessor remain coordinator evidence.
+This is source-selected validation, not a completed four-form installed pass;
+fresh immutable cross-repository installed qualification remains required.
