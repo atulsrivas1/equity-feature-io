@@ -1,3 +1,7 @@
+## EF1 cumulative io source checkpoint - October 21, 2026
+
+[Current qualification and limits](docs/EF1_CUMULATIVE_QUALIFICATION.md) records the exact frozen runtime cohort: all four installed forms passed on Windows and Linux, with 665 methods per form, zero skips and 200 verified-readback demos across both platforms. Coordinator artifact audit and fresh independent final review passed. Later documentation integration commits are not executed runtime source identities. Actual browser inspection, full original audit/source-version/consumer bindings, suitable N-drive input qualification and EF1 release gates remain open. Earlier source-authoring, pending and resource-hold entries below retain their original historical scope; no whole-story completion or package publication is claimed.
+
 ## EQ098 reproduction bundle candidate
 
 Optional [bundles package](packages/bundles/README.md) implements data-only byte archives and explicit trusted fixed replay, separate from I/O sinks and pure calculations. [Actual synthetic example](examples/bundles_consumer.py). Candidate under canonical198; source review/freshbothOS/paired-main acceptance pending. No source/provider/executable-content resolver or active-call interruption promise.
@@ -27,3 +31,19 @@ EQ125 accepted logical publication: [typed API/extension kit](docs/api/PUBLICATI
 ## Optional local ordinary trade files
 
 `equity-feature-files0.1.0a0` supports explicitly authorized normalized CSV/uncompressed Parquet/DBN3 through existing source/factory protocols. [API](docs/api/LOCAL_FILES.md), [owned pure consumer](examples/files_consumer.py), [source and delivery evidence](docs/EQ071_DELIVERY.md), [canonical80 current acceptance](https://github.com/atulsrivas1/equity-features/issues/80). No provider access, automatic downloads or numerical changes. Data/charges require explicit scoped user approval; free qualification downloads only are approved for this development session.
+
+EF1 supplied current-state status source candidate: see
+[exact conversion, missing slots and provenance](docs/api/EF1_STATUS_INPUTS.md).
+The public module `equity_feature_duckdb.ef1` adds StatusInputs and original
+S01/S02/S03 synthetic helpers; independent composition/readback checks are authored
+but unexecuted under the EQ142 reservation. No status feed acquisition or full EF1
+acceptance is claimed.
+
+Sampled gap/opening-drive source helpers are described in
+[EF1 path inputs](docs/api/EF1_PATH_INPUTS.md). Literal synthetic G01/G02/G03/D01
+fixtures and present-only role packets are source-authored; runtime validation
+and the full EF1 release gates remain pending.
+
+Supplied EF1 classification/action conversion source and validation limits are documented in [EF1_REFERENCE_IO](docs/EF1_REFERENCE_IO.md).
+
+Observable opening/seconds and physical status-history transport is documented in [docs/EF1_OBSERVABLE_IO.md](docs/EF1_OBSERVABLE_IO.md). Fixed nullable `.slots` preserve absent source roles; the present-only `.batches` view is not pure observable input.

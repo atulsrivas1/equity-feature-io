@@ -56,3 +56,19 @@ original C01 clock source fixtures in `equity_feature_duckdb.ef1`. See
 [clock source API](../../docs/api/EF1_CLOCK_INPUTS.md). Clock readback checks are
 authored but unexecuted; status feed support and source qualification are not
 implied by this addition.
+
+The additive supplied current-state status conversion is documented in
+[EF1 status inputs](../../docs/api/EF1_STATUS_INPUTS.md). Its four explicit local
+slots retain missingness and original metadata; observed/synthetic provenance is
+caller-declared per role. The candidate includes labelled S01/S02/S03 fixtures and
+source-authored independent composition/readback tests, without executed
+qualification or any provider/N: dataset admission.
+
+Sampled gap/opening-drive: `equity_feature_duckdb.ef1.PathGapInputs`,
+`PathDriveInputs`, `make_path_prior_close`, and G01/G02/G03/D01 synthetic fixture
+and context helpers are additive source candidates. See
+[the path input contract](../../docs/api/EF1_PATH_INPUTS.md). Original knowledge,
+coverage and supplied invalid volume/OHLC are preserved; no acquisition or
+feature mathematics is added. Validation remains unexecuted during the study hold.
+
+Observable opening/seconds and physical status-history transport is documented in [EF1_OBSERVABLE_IO.md](../../docs/EF1_OBSERVABLE_IO.md). Fixed nullable `.slots` preserve absent source roles; the present-only `.batches` view is not pure observable input.

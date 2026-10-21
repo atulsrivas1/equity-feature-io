@@ -353,3 +353,1139 @@ __all__ = ["AnchorInputs", "anchor_definition_bytes", "make_anchor_provenance",
            "separate_output_path", "synthetic_anchor_fixture", "ClockInputs",
            "calendar_definition_bytes", "make_calendar_provenance", "synthetic_clock_calendar",
            "synthetic_clock_fixture"]
+
+# Status conversion is additive. Existing anchor/calendar source behavior above
+# deliberately remains unchanged.
+from base64 import urlsafe_b64decode, urlsafe_b64encode
+
+_STATUS_ROLES = ("calendar_provenance", "status_states", "status_prefix", "status_validity")
+_STATUS_DIMENSIONS = {"trading": ("t", ("active", "halted", "closed")),
+                      "quoting": ("q", ("enabled", "disabled")), "ssr": ("s", ("on", "off"))}
+
+
+def _status_label(value: object) -> str:
+    if type(value) is not str or not value.strip():
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Nonempty exact status identity required")
+    if (len(value) > 128 or len(value.encode("utf-8", errors="surrogatepass")) > 512
+            or any(ord(c) < 32 or ord(c) == 127 or 0xD800 <= ord(c) <= 0xDFFF for c in value)):
+        raise ContractError(ErrorCode.BOUNDS, "Unsafe or over-limit status identity")
+    return value
+
+
+def _status_b64(value: str) -> str:
+    return urlsafe_b64encode(_status_label(value).encode("utf-8")).decode("ascii").rstrip("=")
+
+
+def _status_unb64(token: str) -> str:
+    if not token or any(c not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_" for c in token):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Canonical unpadded base64url required")
+    try:
+        raw = urlsafe_b64decode(token + "=" * ((-len(token)) % 4))
+        value = raw.decode("utf-8")
+    except (ValueError, UnicodeError):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Invalid UTF8 base64url identity") from None
+    if urlsafe_b64encode(raw).decode("ascii").rstrip("=") != token:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Noncanonical base64url identity")
+    return _status_label(value)
+
+
+def _status_dimension(dimension: str) -> str:
+    if type(dimension) is not str or dimension not in _STATUS_DIMENSIONS:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed status dimension required")
+    return _STATUS_DIMENSIONS[dimension][0]
+
+
+@dataclass(frozen=True)
+class StatusState:
+    """One original publisher event; sequence and knowledge are never generated."""
+    sequence: int
+    event_id: str
+    effective_start_ns: int
+    effective_end_ns: int | None
+    text: str
+    known_at_ns: int | None
+
+
+@dataclass(frozen=True)
+class StatusCertificate:
+    """An actual supplied complete-prefix or validity declaration."""
+    certificate_id: str
+    effective_start_ns: int
+    effective_end_ns: int
+    known_at_ns: int | None
+
+
+def _status_reference(rows: tuple[tuple[Cell, ...], ...], *, metadata: BatchMetadata,
+                      instrument_id: str, session_id: str) -> CanonicalBatch:
+    _status_label(instrument_id)
+    _status_label(session_id)
+    names = ("reference_id", "fact_kind", "effective_start_ns", "effective_end_ns", "text", "known_at_ns")
+    count = len(rows)
+    if count > 4096:
+        raise ContractError(ErrorCode.BOUNDS, "Status REFERENCE row bound exceeded")
+    columns = (Column("instrument_id", (instrument_id,) * count),
+               Column("session_id", (session_id,) * count)) + tuple(
+        Column(name, tuple(row[i] for row in rows)) for i, name in enumerate(names))
+    batch = CanonicalBatch(DataKind.REFERENCE, columns, metadata)
+    validate_batch(batch)
+    return batch
+
+
+def make_status_states(rows: tuple[StatusState, ...], *, dimension: str, epoch: str,
+                       metadata: BatchMetadata, instrument_id: str, session_id: str) -> CanonicalBatch:
+    """Map supplied state events in original order with explicit caller coverage.
+
+    A sequence gap conveys no completeness. Unknown/future known-at survives.
+    This factory performs no selection, cutoff filtering or status mathematics.
+    """
+    code = _status_dimension(dimension)
+    encoded_epoch = _status_b64(epoch)
+    if type(rows) is not tuple or any(type(row) is not StatusState for row in rows):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Concrete original status events required")
+    mapped: list[tuple[Cell, ...]] = []
+    for row in rows:
+        if type(row.sequence) is not int or not 0 <= row.sequence <= I64_MAX:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact nonnegative int64 sequence required")
+        reference = _status_label(f"s1:{code}:{encoded_epoch}:{row.sequence:019d}:{_status_b64(row.event_id)}")
+        mapped.append((reference, "ef1.status." + dimension, row.effective_start_ns,
+                       row.effective_end_ns, row.text, row.known_at_ns))
+    batch = _status_reference(tuple(mapped), metadata=metadata,
+                              instrument_id=instrument_id, session_id=session_id)
+    _status_validate_role(batch, "status_states")
+    return batch
+
+
+def make_status_proof(rows: tuple[StatusCertificate, ...], *, role: str, dimension: str,
+                      epoch: str, target_input_id: str, metadata: BatchMetadata,
+                      instrument_id: str, session_id: str) -> CanonicalBatch:
+    """Map original dedicated proof declarations, never infer proof population."""
+    if role not in ("status_prefix", "status_validity"):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Dedicated status proof role required")
+    code = _status_dimension(dimension)
+    encoded_epoch, target = _status_b64(epoch), _status_b64(target_input_id)
+    if type(rows) is not tuple or any(type(row) is not StatusCertificate for row in rows):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Concrete original certificates required")
+    kind = "ef1.status." + ("prefix_complete" if role == "status_prefix" else "validity")
+    mapped: list[tuple[Cell, ...]] = []
+    for row in rows:
+        reference = _status_label(f"p1:{code}:{encoded_epoch}:{target}:{_status_b64(row.certificate_id)}")
+        mapped.append((reference, kind, row.effective_start_ns, row.effective_end_ns, code, row.known_at_ns))
+    batch = _status_reference(tuple(mapped), metadata=metadata,
+                              instrument_id=instrument_id, session_id=session_id)
+    _status_validate_role(batch, role)
+    return batch
+
+
+def _status_validate_role(batch: CanonicalBatch, role: str) -> tuple[set[tuple[str, str]], set[str]]:
+    """Validate conversion identity only; semantic certificate admission is pure-core work."""
+    if batch.row_count > 4096:
+        raise ContractError(ErrorCode.BOUNDS, "Status REFERENCE row bound exceeded")
+    if batch.metadata.coverage.observed != batch.row_count:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Actual observed count must match original rows")
+    validate_batch(batch)
+    if batch.kind != DataKind.REFERENCE:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Status slots require canonical REFERENCE")
+    source = batch.metadata.source
+    for value in (batch.metadata.namespace, source.source_id, source.snapshot_id, source.input_id):
+        _status_label(value)
+    if source.mapping_version != "ef1-reference-map1":
+        raise ContractError(ErrorCode.INCOMPATIBLE_VERSION, "Exact EF1 reference mapping required")
+    columns = {column.name: column.values for column in batch.columns}
+    if any(name in columns for name in ("price", "factor_num", "factor_den")):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Status references have no numerical payload")
+    identities: set[tuple[str, str]] = set()
+    targets: set[str] = set()
+    previous: int | None = None
+    previous_start: int | None = None
+    texts = columns.get("text", (None,) * batch.row_count)
+    ends = columns.get("effective_end_ns", (None,) * batch.row_count)
+    for i in range(batch.row_count):
+        for name in ("instrument_id", "session_id", "reference_id"):
+            _status_label(columns[name][i])
+        if role == "calendar_provenance":
+            if columns["fact_kind"][i] != "ef1.calendar.provenance" or texts[i] != "supplied_schedule":
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Calendar role vocabulary required")
+            continue
+        reference = cast(str, columns["reference_id"][i])
+        parts = reference.split(":")
+        if len(parts) != 5 or parts[1] not in ("t", "q", "s"):
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed status identity grammar required")
+        code, epoch = parts[1], _status_unb64(parts[2])
+        identities.add((code, epoch))
+        start = _ns(columns["effective_start_ns"][i])
+        end = ends[i]
+        if end is not None and _ns(end) <= start:
+            raise ContractError(ErrorCode.BOUNDS, "Positive supplied effective interval required")
+        if role == "status_states":
+            if parts[0] != "s1" or len(parts[3]) != 19 or any(c not in "0123456789" for c in parts[3]) or int(parts[3]) > I64_MAX:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact s1 seq19 identity required")
+            sequence = int(parts[3])
+            _status_unb64(parts[4])
+            if previous is not None and sequence <= previous:
+                raise ContractError(ErrorCode.DUPLICATE if sequence == previous else ErrorCode.INVALID_ORDER,
+                                    "Strict original publisher sequence required")
+            if previous_start is not None and start < previous_start:
+                raise ContractError(ErrorCode.INVALID_ORDER, "Original effective times must not descend")
+            previous, previous_start = sequence, start
+            dimension = next(name for name, spec in _STATUS_DIMENSIONS.items() if spec[0] == code)
+            if columns["fact_kind"][i] != "ef1.status." + dimension or texts[i] not in _STATUS_DIMENSIONS[dimension][1]:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed status state vocabulary required")
+        else:
+            if parts[0] != "p1":
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact p1 certificate identity required")
+            targets.add(_status_unb64(parts[3]))
+            _status_unb64(parts[4])
+            kind = "ef1.status." + ("prefix_complete" if role == "status_prefix" else "validity")
+            if columns["fact_kind"][i] != kind or texts[i] != code:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Dedicated proof vocabulary required")
+            if end is None:
+                raise ContractError(ErrorCode.BOUNDS, "Finite status proof interval required")
+    if len(identities) > 1 or len(targets) > 1:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "One supplied dimension/epoch/target required")
+    return identities, targets
+
+
+@dataclass(frozen=True)
+class StatusInputs:
+    """Exact role positions and actual originals; None is missing, empty is present."""
+    calendar_provenance: CanonicalBatch | None
+    status_states: CanonicalBatch | None
+    status_prefix: CanonicalBatch | None
+    status_validity: CanonicalBatch | None
+    provenance: tuple[str, str, str, str]
+
+    def __post_init__(self) -> None:
+        if type(self.provenance) is not tuple or len(self.provenance) != 4:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Four explicit provenance modes required")
+        identities: set[tuple[str, str]] = set()
+        relations: set[tuple[str, str, str]] = set()
+        namespaces: set[str] = set()
+        entities: set[tuple[Cell, Cell]] = set()
+        input_ids: set[str] = set()
+        status_modes: set[str] = set()
+        status_sources: set[tuple[str, str]] = set()
+        for role, batch, mode in zip(self.roles, self.slots, self.provenance, strict=True):
+            if type(mode) is not str or mode not in _MODES or (batch is None) != (mode == "unavailable"):
+                raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Explicit role source mode must match delivery")
+            if batch is None:
+                continue
+            if type(batch) is not CanonicalBatch:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Actual canonical batch or None required")
+            if role != "calendar_provenance":
+                status_modes.add(mode)
+            declared, targets = _status_validate_role(batch, role)
+            identities.update(declared)
+            source = batch.metadata.source
+            if role != "calendar_provenance":
+                status_sources.add((source.source_id, source.snapshot_id))
+            if source.input_id in input_ids:
+                raise ContractError(ErrorCode.DUPLICATE, "Distinct actual input bindings required")
+            input_ids.add(source.input_id)
+            namespaces.add(batch.metadata.namespace)
+            cols = {column.name: column.values for column in batch.columns}
+            entities.update(zip(cols["instrument_id"], cols["session_id"], strict=True))
+            if role == "status_states":
+                relations.add((source.input_id, source.source_id, source.snapshot_id))
+            elif role != "calendar_provenance":
+                relations.update((target, source.source_id, source.snapshot_id) for target in targets)
+        if (len(status_modes) > 1 or len(status_sources) > 1 or len(identities) > 1
+                or len(relations) > 1 or len(namespaces) > 1 or len(entities) > 1):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Coherent actual status target/source/revision required")
+        if sum(batch.row_count for batch in self.batches) > 4096:
+            raise ContractError(ErrorCode.BOUNDS, "Aggregate status REFERENCE row bound exceeded")
+
+    @property
+    def roles(self) -> tuple[str, str, str, str]:
+        return _STATUS_ROLES
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.status_states, self.status_prefix, self.status_validity)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+def synthetic_status_context(case: str = "S01") -> dict[str, object]:
+    """Original S01-S03 selection only; no acquired state/availability in context."""
+    if case not in ("S01", "S02", "S03"):
+        raise ContractError(ErrorCode.INVALID_CONFIG, "Unknown synthetic status fixture")
+    dimension, code = ("trading", "t") if case == "S01" else ("ssr", "s")
+    seed = "YQ" if case == "S03" else "c2VlZA"
+    return {"version": "ef1-context1", "producer": "status", "calendar": synthetic_clock_calendar(),
+            "selection": {"dimension": dimension, "epoch": "e", "max_age_ns": None,
+                          "seed_reference_id": f"s1:{code}:ZQ:0000000000000000000:{seed}"}}
+
+
+def synthetic_status_fixture(case: str = "S01") -> StatusInputs:
+    """Literal public source cases, distinct from expected numerical result fixtures."""
+    synthetic_status_context(case)  # Reject unknown case without inventing a default.
+    dimension = "trading" if case == "S01" else "ssr"
+    rows: tuple[StatusState, ...]
+    if case == "S01":
+        rows = (StatusState(0, "seed", 8, None, "active", 8),
+                StatusState(1, "halt", 12, None, "halted", 12),
+                StatusState(2, "resume", 16, None, "active", 16))
+        start, prefix_end, validity_end, known = 8, 20, 21, 8
+    elif case == "S02":
+        rows = (StatusState(0, "seed", 5, None, "on", 5),)
+        start, prefix_end, validity_end, known = 5, 16, 17, 5
+    else:
+        rows = (StatusState(0, "a", 5, None, "on", 5), StatusState(1, "b", 5, None, "off", 5))
+        start, prefix_end, validity_end, known = 5, 20, 21, 5
+    states = make_status_states(rows, dimension=dimension, epoch="e", instrument_id="X", session_id="S",
+        metadata=BatchMetadata("SYN", SourceBinding("F", "R1", "ef1-reference-map1", "st"),
+                               Coverage(len(rows), len(rows), True), None))
+    proofs = []
+    for role, certificate, end, input_id in (("status_prefix", "pref", prefix_end, "status-prefix"),
+                                              ("status_validity", "valid", validity_end, "status-validity")):
+        proofs.append(make_status_proof((StatusCertificate(certificate, start, end, known),),
+            role=role, dimension=dimension, epoch="e", target_input_id="st", instrument_id="X", session_id="S",
+            metadata=BatchMetadata("SYN", SourceBinding("F", "R1", "ef1-reference-map1", input_id),
+                                   Coverage(1, 1, True), None)))
+    return StatusInputs(synthetic_clock_fixture().calendar_provenance, states, proofs[0], proofs[1],
+                        ("synthetic", "synthetic", "synthetic", "synthetic"))
+
+__all__ += ["StatusState", "StatusCertificate", "StatusInputs", "make_status_states",
+            "make_status_proof", "synthetic_status_context", "synthetic_status_fixture"]
+
+# Sampled path conversion is additive; existing producers above are unchanged.
+def _validate_path_slots(slots: tuple[CanonicalBatch | None, ...],
+                         provenance: tuple[str, ...]) -> None:
+    if type(provenance) is not tuple or len(provenance) != len(slots):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact path provenance tuple required")
+    present: list[CanonicalBatch] = []
+    for index, (batch, mode) in enumerate(zip(slots, provenance)):
+        if type(mode) is not str or mode not in _MODES or (batch is None) != (mode == "unavailable"):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Path source mode must match actual delivery")
+        if batch is None:
+            continue
+        kinds = ((DataKind.REFERENCE,), (DataKind.TRADE, DataKind.BAR), (DataKind.DAILY,))[index]
+        if type(batch) is not CanonicalBatch or batch.kind not in kinds:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Canonical path role kind mismatch")
+        validate_batch(batch, required_fields=())
+        present.append(batch)
+    if (len({b.metadata.source.input_id for b in present}) != len(present)
+            or len({b.metadata.namespace for b in present}) > 1):
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Distinct actual path bindings in one namespace required")
+
+
+@dataclass(frozen=True)
+class PathGapInputs:
+    """Present-only role-ordered actual inputs; origins are caller declarations."""
+    calendar_provenance: CanonicalBatch | None = None
+    path: CanonicalBatch | None = None
+    prior_close: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable", "unavailable", "unavailable")
+
+    def __post_init__(self) -> None:
+        _validate_path_slots((self.calendar_provenance, self.path, self.prior_close), self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "path", "prior_close")
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(b for b in (self.calendar_provenance, self.path, self.prior_close) if b is not None)
+
+
+@dataclass(frozen=True)
+class PathDriveInputs:
+    """Calendar and sampled path, with omitted delivery preserved as omission."""
+    calendar_provenance: CanonicalBatch | None = None
+    path: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable", "unavailable")
+
+    def __post_init__(self) -> None:
+        _validate_path_slots((self.calendar_provenance, self.path), self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "path")
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(b for b in (self.calendar_provenance, self.path) if b is not None)
+
+
+def make_path_prior_close(row: Mapping[str, Cell], *, metadata: BatchMetadata,
+                          instrument_id: str, session_id: str) -> CanonicalBatch:
+    """Convert exactly one explicitly selected DAILY row without field dropping.
+
+    Times, optional operands and original known-at are supplied canonical cells.
+    This does not select a previous day, manufacture coverage, quantize prices,
+    infer auction flags or repair invalid original OHLC/volume.
+    """
+    fields = ("start_ns", "end_ns", "open", "high", "low", "close", "volume",
+              "actual_notional", "known_at_ns")
+    if (not isinstance(row, Mapping) or not {"start_ns", "end_ns"} <= set(row)
+            or set(row) - set(fields) or type(metadata) is not BatchMetadata):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Explicit canonical DAILY row required")
+    _label(instrument_id)
+    _label(session_id)
+    result = CanonicalBatch(DataKind.DAILY,
+        (Column("instrument_id", (instrument_id,)), Column("session_id", (session_id,)))
+        + tuple(Column(name, (row[name],)) for name in fields if name in row), metadata)
+    validate_batch(result, required_fields=())
+    return result
+
+
+def _synthetic_path_context(producer: str, sampling: str) -> dict[str, object]:
+    sessions: list[list[object]] = [["S", "2026-10-20", 10, 30]]
+    if producer == "path_gap":
+        sessions.insert(0, ["P", "2026-10-19", -10, 0])
+    selection: dict[str, object] = {"sampling": sampling}
+    if producer == "path_drive":
+        selection["duration_ns"] = 5
+    return {"version": "ef1-context1", "producer": producer,
+        "calendar": {"calendar_id": "SYN-CAL", "revision": "R1", "timezone": "UTC",
+            "target_date": "2026-10-20", "sessions": sessions,
+            "segments": [["regular", 10, 30]], "scheduled_close_ns": 30, "early_close": False},
+        "selection": selection}
+
+
+def synthetic_path_gap_context(case: str = "G01") -> dict[str, object]:
+    """Fresh literal reviewed G01/G02/G03 context; no implicit source discovery."""
+    if case not in ("G01", "G02", "G03"):
+        raise ContractError(ErrorCode.INVALID_CONFIG, "Unknown synthetic gap case")
+    return _synthetic_path_context("path_gap", "completed_bar_close" if case == "G02" else "eligible_trade")
+
+
+def synthetic_path_drive_context(case: str = "D01") -> dict[str, object]:
+    if case != "D01":
+        raise ContractError(ErrorCode.INVALID_CONFIG, "Unknown synthetic drive case")
+    return _synthetic_path_context("path_drive", "eligible_trade")
+
+
+def _synthetic_path_proof(context: Mapping[str, object], start: int) -> CanonicalBatch:
+    calendar = cast(Mapping[str, object], context["calendar"])
+    proof = make_calendar_provenance(calendar, namespace="SYN", instrument_id="X", session_id="S",
+        source_id="SYN-CALENDAR", input_id="calendar", known_at_ns=-10, start_ns=start, end_ns=30)
+    # Freeze the amendment's explicit source-column order; no result codec changes.
+    names = ("instrument_id", "session_id", "reference_id", "fact_kind", "effective_start_ns",
+             "effective_end_ns", "text", "known_at_ns")
+    return CanonicalBatch(proof.kind, tuple(c for name in names for c in proof.columns if c.name == name), proof.metadata)
+
+
+def _synthetic_path_batch(rows: tuple[tuple[Cell, ...], ...], *, bar: bool, end: int) -> CanonicalBatch:
+    names = (("start_ns", "end_ns", "open", "high", "low", "close", "volume", "known_at_ns") if bar else
+             ("event_ns", "order_key", "event_id", "eligible", "price", "size", "known_at_ns"))
+    count = len(rows)
+    columns = (Column("instrument_id", ("X",) * count), Column("session_id", ("S",) * count)) + tuple(
+        Column(name, tuple(row[i] for row in rows)) for i, name in enumerate(names))
+    metadata = BatchMetadata("SYN", SourceBinding("SYN-PATH", "R1", "ef1-path-map1", "path"),
+        Coverage(count, count, True), PriceUnit(0, "USD"), AdjustmentSpec(),
+        scope=InputScope(10, end, "supplied_path"))
+    return CanonicalBatch(DataKind.BAR if bar else DataKind.TRADE, columns, metadata)
+
+
+def synthetic_path_gap_fixture(case: str = "G01") -> PathGapInputs:
+    """Original literal reviewed source populations, separate from result goldens."""
+    context = synthetic_path_gap_context(case)
+    if case == "G02":
+        rows: tuple[tuple[Cell, ...], ...] = ((10, 12, 12, 13, 9, 11, 2, 12),)
+    elif case == "G03":
+        rows = ((10, 0, "a", True, 10, 1, 10), (11, 1, "b", True, 11, 1, 11), (12, 2, "c", True, 12, 1, 12))
+    else:
+        rows = ((10, 0, "a", True, 12, 1, 10), (11, 1, "b", True, 11, 1, 11), (12, 2, "c", True, 9, 1, 12))
+    prior = make_path_prior_close({"start_ns": -10, "end_ns": 0, "close": 12 if case == "G03" else 10,
+        "known_at_ns": 0}, metadata=BatchMetadata("SYN", SourceBinding("SYN-DAILY", "R1", "ef1-path-map1", "prior"),
+        Coverage(1, 1, True), PriceUnit(0, "USD"), AdjustmentSpec(), scope=InputScope(-10, 0, "supplied_path")),
+        instrument_id="X", session_id="P")
+    return PathGapInputs(_synthetic_path_proof(context, -10),
+        _synthetic_path_batch(rows, bar=case == "G02", end=12 if case == "G02" else 13), prior, ("synthetic",) * 3)
+
+
+def synthetic_path_drive_fixture(case: str = "D01") -> PathDriveInputs:
+    context = synthetic_path_drive_context(case)
+    rows: tuple[tuple[Cell, ...], ...] = ((10, 0, "a", True, 10, 1, 10),
+        (12, 1, "b", True, 12, 1, 12), (14, 2, "c", True, 11, 1, 14))
+    return PathDriveInputs(_synthetic_path_proof(context, -10),
+        _synthetic_path_batch(rows, bar=False, end=15), ("synthetic",) * 2)
+
+
+__all__ += ["PathGapInputs", "PathDriveInputs", "make_path_prior_close",
+            "synthetic_path_gap_context", "synthetic_path_drive_context",
+            "synthetic_path_gap_fixture", "synthetic_path_drive_fixture"]
+
+# Supplied REFERENCE conversion: no assessments, transformations or acquisition.
+_REFERENCE_CLASS_ROLES = ("classification_facts", "classification_history", "classification_projection")
+_REFERENCE_ACTION_ROLES = ("market", "action_facts", "action_history", "action_projection",
+                           "source_representation", "source_quantity_basis")
+_REFERENCE_KINDS = {"sector_membership": "s", "universe_membership": "u", "industry_membership": "i"}
+_REFERENCE_PROOFS = {
+    "classification_history": ("ef1.classification.history", ("historical", "current_only", "unknown")),
+    "classification_projection": ("ef1.reference.projection", ("complete", "partial", "unknown")),
+    "action_history": ("ef1.action.history", ("historical", "current_only", "unknown")),
+    "action_projection": ("ef1.reference.projection", ("complete", "partial", "unknown")),
+    "source_representation": ("ef1.action.representation", ("raw", "caller_transformed")),
+    "source_quantity_basis": ("ef1.action.quantity_basis", ("raw_shares", "split_shares")),
+}
+
+
+def _reference_text(value: Cell) -> None:
+    # EF1-REF-A2: body text is not an identity. Preserve blanks, null and spacing.
+    if value is None:
+        return
+    if (type(value) is not str or len(value) > 128
+            or any(ord(c) < 32 or ord(c) == 127 or 0xD800 <= ord(c) <= 0xDFFF for c in value)
+            or len(value.encode("utf-8")) > 512):
+        raise ContractError(ErrorCode.BOUNDS, "Bounded original reference text required")
+
+
+def _reference_role(batch: CanonicalBatch, role: str) -> tuple[set[str], set[tuple[str, str]]]:
+    validate_batch(batch, required_fields=())
+    if batch.kind != DataKind.REFERENCE:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Explicit EF1 REFERENCE mapping required")
+    if batch.metadata.source.mapping_version != "ef1-reference-map1":
+        raise ContractError(ErrorCode.INCOMPATIBLE_VERSION, "Unsupported reference mapping")
+    if batch.metadata.coverage.observed != batch.row_count:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Actual reference population mismatch")
+    if batch.metadata.ordering != "declared" or batch.metadata.duplicate_policy != "reject":
+        raise ContractError(ErrorCode.INVALID_ORDER, "Ordered unique reference population required")
+    for value in (batch.metadata.namespace, batch.metadata.source.source_id,
+                  batch.metadata.source.snapshot_id, batch.metadata.source.input_id):
+        _label(value)
+    cols = {c.name: c.values for c in batch.columns}
+    targets: set[str] = set()
+    declarations: set[tuple[str, str]] = set()
+    for i in range(batch.row_count):
+        for name in ("instrument_id", "session_id", "reference_id", "fact_kind"):
+            _label(cols[name][i])
+        reference = cast(str, cols["reference_id"][i])
+        kind = cols["fact_kind"][i]
+        text = cols.get("text", (None,) * batch.row_count)[i]
+        _reference_text(text)
+        for payload in ("price", "factor_num", "factor_den"):
+            if role != "action_facts" and cols.get(payload, (None,) * batch.row_count)[i] is not None:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Reference text/proof cannot carry numeric payload")
+        if role == "classification_facts":
+            if kind not in _REFERENCE_KINDS:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed classification kind required")
+            continue
+        if role == "action_facts":
+            if text is not None or cols.get("price", (None,) * batch.row_count)[i] is not None:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Action factor has no text/price payload")
+            if (kind not in ("split_factor", "dividend_factor")
+                    or cols.get("effective_end_ns", (None,) * batch.row_count)[i] is not None
+                    or any(type(cols.get(name, (None,) * batch.row_count)[i]) is not int
+                           or cast(int, cols.get(name, (None,) * batch.row_count)[i]) <= 0
+                           for name in ("factor_num", "factor_den"))):
+                raise ContractError(ErrorCode.UNSUPPORTED_ADJUSTMENT, "Exact supplied positive action factor required")
+            continue
+        expected_kind, vocabulary = _REFERENCE_PROOFS[role]
+        if kind != expected_kind or text not in vocabulary:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed supplied proof vocabulary required")
+        if cols.get("effective_end_ns", (None,) * batch.row_count)[i] is None:
+            raise ContractError(ErrorCode.BOUNDS, "Finite proof interval required")
+        parts = reference.split(":")
+        if role == "classification_history":
+            if len(parts) != 5 or parts[0] != "h1" or parts[1] not in ("s", "u", "i"):
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact classification history grammar required")
+            declarations.add((parts[1], _status_unb64(parts[2])))
+            targets.add(_status_unb64(parts[3]))
+            _status_unb64(parts[4])
+        elif role == "action_history":
+            if len(parts) != 4 or parts[0] != "a1":
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact action history grammar required")
+            declarations.add(("action", _status_unb64(parts[1])))
+            targets.add(_status_unb64(parts[2]))
+            _status_unb64(parts[3])
+        else:
+            prefix = "r1" if role.endswith("projection") else "q1"
+            if len(parts) != 3 or parts[0] != prefix:
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact bound proof grammar required")
+            targets.add(_status_unb64(parts[1]))
+            _status_unb64(parts[2])
+        if batch.metadata.source.input_id in targets:
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Proof cannot name itself")
+    if len(targets) > 1 or len(declarations) > 1:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "One declared proof target/scope required")
+    return targets, declarations
+
+
+def _validate_reference_slots(roles: tuple[str, ...], slots: tuple[CanonicalBatch | None, ...],
+                              provenance: tuple[str, ...]) -> None:
+    if type(provenance) is not tuple or len(provenance) != len(slots):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact reference provenance tuple required")
+    ids: set[str] = set()
+    namespaces: set[str] = set()
+    entities: set[tuple[Cell, Cell]] = set()
+    relations: dict[str, set[tuple[str, str, str]]] = {"facts": set(), "market": set()}
+    source_pairs: dict[str, set[tuple[str, str]]] = {"facts": set(), "market": set()}
+    population = 0
+    for role, batch, mode in zip(roles, slots, provenance, strict=True):
+        if type(mode) is not str or mode not in _MODES or (batch is None) != (mode == "unavailable"):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Actual delivery and provenance must agree")
+        if batch is None:
+            continue
+        if type(batch) is not CanonicalBatch:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Original CanonicalBatch or None required")
+        source = batch.metadata.source
+        if source.input_id in ids:
+            raise ContractError(ErrorCode.DUPLICATE, "Distinct actual input bindings required")
+        ids.add(source.input_id)
+        namespaces.add(batch.metadata.namespace)
+        cols = {c.name: c.values for c in batch.columns}
+        group = "market" if role in ("market", "source_representation", "source_quantity_basis") else "facts"
+        # Empty delivery still declares an actual publisher/revision. Bind that
+        # metadata independently of row-level target IDs; never invent a target.
+        source_pairs[group].add((source.source_id, source.snapshot_id))
+        if role == "market":
+            if batch.kind not in (DataKind.TRADE, DataKind.BAR, DataKind.DAILY):
+                raise ContractError(ErrorCode.INVALID_SCHEMA, "Action market must be TRADE/BAR/DAILY")
+            validate_batch(batch, required_fields=())
+            relations["market"].add((source.input_id, source.source_id, source.snapshot_id))
+        else:
+            targets, _ = _reference_role(batch, role)
+            population += batch.row_count
+            if role in ("classification_facts", "action_facts"):
+                targets = {source.input_id}
+            relations[group].update((target, source.source_id, source.snapshot_id) for target in targets)
+        entities.update(zip(cols["instrument_id"], cols["session_id"], strict=True))
+    if (len(namespaces) > 1 or len(entities) > 1 or any(len(v) > 1 for v in relations.values())
+            or any(len(v) > 1 for v in source_pairs.values())):
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Coherent actual target/entity/source/revision required")
+    if population > 4096:
+        raise ContractError(ErrorCode.BOUNDS, "Aggregate REFERENCE row bound exceeded")
+
+
+@dataclass(frozen=True)
+class ReferenceClassificationInputs:
+    """Exact nullable slots; incomplete/empty/late originals remain original."""
+    classification_facts: CanonicalBatch | None = None
+    classification_history: CanonicalBatch | None = None
+    classification_projection: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 3
+
+    def __post_init__(self) -> None:
+        _validate_reference_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return _REFERENCE_CLASS_ROLES
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.classification_facts, self.classification_history, self.classification_projection)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+@dataclass(frozen=True)
+class ReferenceActionInputs:
+    """Six fixed actual slots, mixed market kind and explicit per-role origins."""
+    market: CanonicalBatch | None = None
+    action_facts: CanonicalBatch | None = None
+    action_history: CanonicalBatch | None = None
+    action_projection: CanonicalBatch | None = None
+    source_representation: CanonicalBatch | None = None
+    source_quantity_basis: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 6
+
+    def __post_init__(self) -> None:
+        _validate_reference_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return _REFERENCE_ACTION_ROLES
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.market, self.action_facts, self.action_history, self.action_projection,
+                self.source_representation, self.source_quantity_basis)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+def make_reference_rows(rows: tuple[Mapping[str, Cell], ...], *, role: str,
+                        metadata: BatchMetadata, instrument_id: str, session_id: str) -> CanonicalBatch:
+    """Map explicit original canonical cells, retaining every supplied field.
+
+    Columns may be absent only when absent throughout the supplied population;
+    inconsistent row shapes reject instead of manufacturing null observations.
+    No sorting, filtering, date selection, knowledge repair or factor application.
+    """
+    if type(rows) is not tuple or len(rows) > 4096 or role not in _REFERENCE_CLASS_ROLES + _REFERENCE_ACTION_ROLES[1:]:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Bounded concrete reference rows and closed role required")
+    _label(instrument_id)
+    _label(session_id)
+    fields = ("reference_id", "fact_kind", "effective_start_ns", "effective_end_ns", "text",
+              "price", "factor_num", "factor_den", "known_at_ns")
+    required = {"reference_id", "fact_kind", "effective_start_ns"}
+    keys = set(rows[0]) if rows and isinstance(rows[0], Mapping) else (required | {"effective_end_ns", "text", "known_at_ns"})
+    if not required <= keys or keys - set(fields) or any(not isinstance(r, Mapping) or set(r) != keys for r in rows):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact consistent canonical reference row fields required")
+    batch = CanonicalBatch(DataKind.REFERENCE,
+        (Column("instrument_id", (instrument_id,) * len(rows)), Column("session_id", (session_id,) * len(rows)))
+        + tuple(Column(name, tuple(row[name] for row in rows)) for name in fields if name in keys), metadata)
+    _reference_role(batch, role)
+    return batch
+
+
+@dataclass(frozen=True)
+class ReferenceCertificate:
+    """Original publisher proof, never generated from observed membership/actions."""
+    certificate_id: str
+    effective_start_ns: int
+    effective_end_ns: int
+    text: str
+    known_at_ns: int | None
+
+
+def make_reference_proof(rows: tuple[ReferenceCertificate, ...], *, role: str,
+                         target_input_id: str, metadata: BatchMetadata, instrument_id: str,
+                         session_id: str, scope_id: str | None = None,
+                         fact_kind: str | None = None) -> CanonicalBatch:
+    if role not in _REFERENCE_PROOFS or type(rows) is not tuple or len(rows) > 4096:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Closed role and bounded actual proof tuple required")
+    target = _status_b64(target_input_id)
+    if role == "classification_history":
+        if fact_kind not in _REFERENCE_KINDS or scope_id is None:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Explicit classification kind/scope required")
+        prefix = "h1:" + _REFERENCE_KINDS[fact_kind] + ":" + _status_b64(scope_id) + ":" + target
+    elif role == "action_history":
+        if scope_id is None:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Explicit action scope required")
+        prefix = "a1:" + _status_b64(scope_id) + ":" + target
+    else:
+        prefix = ("r1:" if role.endswith("projection") else "q1:") + target
+    originals: list[Mapping[str, Cell]] = []
+    for row in rows:
+        if type(row) is not ReferenceCertificate:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Actual supplied certificate required")
+        originals.append({"reference_id": prefix + ":" + _status_b64(row.certificate_id),
+            "fact_kind": _REFERENCE_PROOFS[role][0], "effective_start_ns": row.effective_start_ns,
+            "effective_end_ns": row.effective_end_ns, "text": row.text, "known_at_ns": row.known_at_ns})
+    return make_reference_rows(tuple(originals), role=role, metadata=metadata,
+                               instrument_id=instrument_id, session_id=session_id)
+
+
+def _synthetic_reference_metadata(input_id: str, count: int) -> BatchMetadata:
+    return BatchMetadata("fixture", SourceBinding("synthetic", "R1", "ef1-reference-map1", input_id),
+                         Coverage(count, count, True), None)
+
+
+def synthetic_reference_classification_context(case: str = "R01", *, fact_kind: str = "sector_membership") -> dict[str, object]:
+    if case not in ("R01", "R02") or fact_kind not in _REFERENCE_KINDS:
+        raise ContractError(ErrorCode.INVALID_CONFIG, "Unknown explicit classification fixture")
+    return {"version": "ef1-context1", "producer": "reference_classification", "calendar": None,
+            "selection": {"fact_kind": fact_kind, "scope_id": "U", "effective_ns": 20}}
+
+
+def synthetic_reference_classification_fixture(case: str = "R01", *, fact_kind: str = "sector_membership") -> ReferenceClassificationInputs:
+    synthetic_reference_classification_context(case, fact_kind=fact_kind)
+    first: Mapping[str, Cell] = {"reference_id": "a", "fact_kind": fact_kind, "effective_start_ns": 0,
+         "effective_end_ns": 20, "text": "A", "known_at_ns": 5}
+    second: Mapping[str, Cell] = {"reference_id": "b", "fact_kind": fact_kind, "effective_start_ns": 20,
+         "effective_end_ns": 40, "text": "B", "known_at_ns": 5}
+    rows: tuple[Mapping[str, Cell], ...] = () if case == "R02" else (first, second)
+    facts = make_reference_rows(rows, role="classification_facts", metadata=_synthetic_reference_metadata("cl", len(rows)),
+        instrument_id="X", session_id="S")
+    history = make_reference_proof((ReferenceCertificate("h", 0, 40, "historical", 5),),
+        role="classification_history", target_input_id="cl", scope_id="U", fact_kind=fact_kind,
+        metadata=_synthetic_reference_metadata("ch", 1), instrument_id="X", session_id="S")
+    projection = make_reference_proof((ReferenceCertificate("p", 0, 40, "complete", 5),),
+        role="classification_projection", target_input_id="cl", metadata=_synthetic_reference_metadata("cp", 1),
+        instrument_id="X", session_id="S")
+    return ReferenceClassificationInputs(facts, history, projection, ("synthetic",) * 3)
+
+
+def synthetic_reference_action_context(case: str = "R03") -> dict[str, object]:
+    if case != "R03":
+        raise ContractError(ErrorCode.INVALID_CONFIG, "Unknown explicit action fixture")
+    return {"version": "ef1-context1", "producer": "reference_action", "calendar": None,
+        "selection": {"scope_id": "U", "scope_start_ns": 0, "scope_end_ns": 21,
+            "policy": {"adjustment": {"basis": "split", "anchor": "anchor20", "action_snapshot": "R1",
+                "policy_version": "split-factors-v1"}, "anchor_ns": 20, "dividend_convention": "none",
+                "quantity_basis": "split_shares", "representation": "apply_factors", "schema_version": "1"}}}
+
+
+def synthetic_reference_action_fixture(case: str = "R03") -> ReferenceActionInputs:
+    synthetic_reference_action_context(case)
+    market = CanonicalBatch(DataKind.TRADE, tuple(Column(name, (value,)) for name, value in (
+        ("instrument_id", "X"), ("session_id", "S"), ("event_ns", 10), ("order_key", 0),
+        ("event_id", "t"), ("eligible", True), ("price", 100), ("size", 10), ("known_at_ns", 10))),
+        BatchMetadata("fixture", SourceBinding("synthetic", "R1", "ef1-market-map1", "mk"),
+                      Coverage(1, 1, True), PriceUnit(0, "USD"), AdjustmentSpec(),
+                      scope=InputScope(10, 20, "supplied_action")))
+    facts = make_reference_rows(({"reference_id": "split", "fact_kind": "split_factor", "effective_start_ns": 20,
+        "effective_end_ns": None, "factor_num": 1, "factor_den": 2, "known_at_ns": 20},), role="action_facts",
+        metadata=_synthetic_reference_metadata("ac", 1), instrument_id="X", session_id="S")
+    proofs = []
+    for role, target, cert, text, input_id in (
+        ("action_history", "ac", "h", "historical", "ah"), ("action_projection", "ac", "p", "complete", "ap"),
+        ("source_representation", "mk", "r", "raw", "sr"), ("source_quantity_basis", "mk", "q", "raw_shares", "sq")):
+        proofs.append(make_reference_proof((ReferenceCertificate(cert, 0, 21, text, 20),), role=role,
+            target_input_id=target, scope_id="U" if role == "action_history" else None,
+            metadata=_synthetic_reference_metadata(input_id, 1), instrument_id="X", session_id="S"))
+    return ReferenceActionInputs(market, facts, proofs[0], proofs[1], proofs[2], proofs[3], ("synthetic",) * 6)
+
+
+__all__ += ["ReferenceClassificationInputs", "ReferenceActionInputs", "ReferenceCertificate",
+            "make_reference_rows", "make_reference_proof", "synthetic_reference_classification_context",
+            "synthetic_reference_classification_fixture", "synthetic_reference_action_context",
+            "synthetic_reference_action_fixture"]
+
+# Period/phase input transport preserves the actual supplied columns. Selection,
+# schedule admission, scope interpretation and every aggregate stay in features.
+def _validate_period_slots(roles: tuple[str, ...], slots: tuple[CanonicalBatch | None, ...],
+                           provenance: tuple[str, ...]) -> None:
+    if type(provenance) is not tuple or len(provenance) != 3:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact three-slot provenance tuple required")
+    namespaces: set[str] = set()
+    instruments: set[Cell] = set()
+    identities: set[str] = set()
+    for role, batch, origin in zip(roles, slots, provenance, strict=True):
+        if type(origin) is not str or origin not in _MODES or (batch is None) != (origin == "unavailable"):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Actual delivery and origin must agree")
+        if batch is None:
+            continue
+        expected = DataKind.REFERENCE if role == "calendar_provenance" else DataKind.BAR if role == "bars" else DataKind.DAILY
+        if type(batch) is not CanonicalBatch or batch.kind != expected:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact canonical period/phase role kind required")
+        # No regular SessionSpec here: legitimate phase bars and prior sessions
+        # lie outside that target regular interval. Do not drop unused fields.
+        validate_batch(batch, required_fields=())
+        if batch.metadata.source.input_id in identities:
+            raise ContractError(ErrorCode.DUPLICATE, "Distinct original input identities required")
+        identities.add(batch.metadata.source.input_id)
+        namespaces.add(batch.metadata.namespace)
+        instrument_column = batch.column("instrument_id")
+        if instrument_column is None:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Original instrument identities required")
+        instruments.update(instrument_column.values)
+    if len(namespaces) > 1 or len(instruments) > 1:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Coherent original namespace/instrument required")
+
+
+@dataclass(frozen=True)
+class PeriodInputs:
+    """Exact nullable period slots, with original per-slot provenance."""
+    calendar_provenance: CanonicalBatch | None = None
+    daily_history: CanonicalBatch | None = None
+    bars: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 3
+
+    def __post_init__(self) -> None:
+        _validate_period_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "daily_history", "bars")
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.daily_history, self.bars)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+@dataclass(frozen=True)
+class ExtendedInputs:
+    """BAR-only phase inputs; prior DAILY is an independent original role."""
+    calendar_provenance: CanonicalBatch | None = None
+    bars: CanonicalBatch | None = None
+    prior_close: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 3
+
+    def __post_init__(self) -> None:
+        _validate_period_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "bars", "prior_close")
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.bars, self.prior_close)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+def make_period_batch(kind: DataKind, column_order: tuple[str, ...],
+                      rows: tuple[tuple[Cell, ...], ...], *, metadata: BatchMetadata) -> CanonicalBatch:
+    """Lossless rectangular row-to-column conversion, including empty columns.
+
+    Never manufacture OHLC, notional, availability or calendar coverage. This
+    conversion cannot certify source rights, authenticity or phase membership.
+    """
+    if (kind not in (DataKind.REFERENCE, DataKind.DAILY, DataKind.BAR)
+            or type(column_order) is not tuple or type(rows) is not tuple
+            or any(type(row) is not tuple or len(row) != len(column_order) for row in rows)):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact concrete canonical rectangular rows required")
+    batch = CanonicalBatch(kind, tuple(Column(name, tuple(row[i] for row in rows))
+                                      for i, name in enumerate(column_order)), metadata)
+    validate_batch(batch, required_fields=())
+    return batch
+
+
+__all__ += ["PeriodInputs", "ExtendedInputs", "make_period_batch"]
+
+
+# Independent literal source examples copied from the frozen bounded proposal.
+from equity_feature_contracts import ConfigSpec, IntervalCoverage
+
+def synthetic_period_context() -> dict[str, object]:
+    """Frozen PERIOD_BASE mathematical context; no calendar discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["P","2026-10-19",0,10],["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"period","selection":{"count":1,"end_date_exclusive":"2026-11-01","inclusion":"current_to_cutoff","kind":"month","period_id":"M","start_date":"2026-10-01"},"version":"ef1-context1"}'))
+
+def synthetic_period_config() -> ConfigSpec:
+    """Frozen full config matching the independently authored base packet."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"v1","availability":{"evaluation_ns":20,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.period","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"P\\",\\"2026-10-19\\",0,10],[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"period\\",\\"selection\\":{\\"count\\":1,\\"end_date_exclusive\\":\\"2026-11-01\\",\\"inclusion\\":\\"current_to_cutoff\\",\\"kind\\":\\"month\\",\\"period_id\\":\\"M\\",\\"start_date\\":\\"2026-10-01\\"},\\"version\\":\\"ef1-context1\\"}"}],"price_unit":{"currency":"USD","scale":0},"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":2,"governed_sessions":["P","S"],"target_session_id":"S"}}')
+
+def synthetic_period_fixture() -> PeriodInputs:
+    """Literal PERIOD_BASE supplied inputs, all explicitly synthetic.
+
+    One preceding DAILY row and one target-session BAR prefix retain their
+    original calendar/source bindings. No private-data or legacy-parity claim.
+    """
+    calendar_provenance = make_period_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:003c4b31ea9adbd2016d12832e50a69368c85e629fd52668fb1942df9adb7afd', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 0),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-CALENDAR', snapshot_id='R1', mapping_version='ef1-reference-map1', input_id='calendar-period'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=None, adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=None, interval_coverage=()))
+    daily_history = make_period_batch(DataKind.DAILY, ('instrument_id', 'session_id', 'start_ns', 'end_ns', 'open', 'high', 'low', 'close', 'volume', 'actual_notional', 'known_at_ns'), (('X', 'P', 0, 10, 10, 12, 9, 11, 2, 21, 10),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-DAILY', snapshot_id='R1', mapping_version='ef1-period-map1', input_id='daily-period'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=PriceUnit(scale=0, currency='USD'), adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=InputScope(start_ns=0, end_ns=10, eligibility_policy='supplied_period', include_opening_auction=False, include_closing_auction=False), interval_coverage=(IntervalCoverage(name='P', start_ns=0, end_ns=10, coverage=Coverage(expected=1, observed=1, complete=True)),)))
+    bars = make_period_batch(DataKind.BAR, ('instrument_id', 'session_id', 'start_ns', 'end_ns', 'open', 'high', 'low', 'close', 'volume', 'actual_notional', 'known_at_ns'), (('X', 'S', 10, 20, 11, 14, 10, 13, 3, 36, 20),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-BARS', snapshot_id='R1', mapping_version='ef1-period-map1', input_id='bars-period'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=PriceUnit(scale=0, currency='USD'), adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=InputScope(start_ns=10, end_ns=20, eligibility_policy='supplied_period', include_opening_auction=False, include_closing_auction=False), interval_coverage=(IntervalCoverage(name='period_prefix', start_ns=10, end_ns=20, coverage=Coverage(expected=1, observed=1, complete=True)),)))
+    return PeriodInputs(calendar_provenance, daily_history, bars, ("synthetic",) * 3)
+
+def synthetic_extended_context() -> dict[str, object]:
+    """Frozen EXTENDED_BASE mathematical context; no calendar discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["premarket",0,10],["regular",10,30],["postmarket",30,40]],"sessions":[["P","2026-10-19",-10,0],["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"extended","selection":{"phase":"premarket"},"version":"ef1-context1"}'))
+
+def synthetic_extended_config() -> ConfigSpec:
+    """Frozen full config matching the independently authored base packet."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"v1","availability":{"evaluation_ns":10,"knowledge_cutoff_ns":10,"market_cutoff_ns":10,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.extended","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"premarket\\",0,10],[\\"regular\\",10,30],[\\"postmarket\\",30,40]],\\"sessions\\":[[\\"P\\",\\"2026-10-19\\",-10,0],[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"extended\\",\\"selection\\":{\\"phase\\":\\"premarket\\"},\\"version\\":\\"ef1-context1\\"}"}],"price_unit":{"currency":"USD","scale":0},"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":2,"governed_sessions":["P","S"],"target_session_id":"S"}}')
+
+def synthetic_extended_fixture() -> ExtendedInputs:
+    """Literal EXTENDED_BASE supplied inputs, all explicitly synthetic.
+
+    The extended base has two bars and prior close5; it is distinct from the
+    original one-bar E01 witness. No private-data or legacy-parity claim.
+    """
+    calendar_provenance = make_period_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:e618c133e6613780104e5cf5cedd1967bae0f99b0871e00b61f295f2030ede3b', 'ef1.calendar.provenance', -10, 40, 'supplied_schedule', -10),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-CALENDAR', snapshot_id='R1', mapping_version='ef1-reference-map1', input_id='calendar-phase'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=None, adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=None, interval_coverage=()))
+    bars = make_period_batch(DataKind.BAR, ('instrument_id', 'session_id', 'start_ns', 'end_ns', 'open', 'high', 'low', 'close', 'volume', 'actual_notional', 'known_at_ns'), (('X', 'S', 0, 5, 8, 10, 7, 9, 2, 17, 5), ('X', 'S', 5, 10, 9, 12, 8, 10, 3, 29, 10)),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-BARS', snapshot_id='R1', mapping_version='ef1-phase-map1', input_id='bars-phase'), coverage=Coverage(expected=2, observed=2, complete=True), price_unit=PriceUnit(scale=0, currency='USD'), adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=InputScope(start_ns=0, end_ns=10, eligibility_policy='supplied_phase', include_opening_auction=False, include_closing_auction=False), interval_coverage=(IntervalCoverage(name='phase_prefix', start_ns=0, end_ns=10, coverage=Coverage(expected=2, observed=2, complete=True)),)))
+    prior_close = make_period_batch(DataKind.DAILY, ('instrument_id', 'session_id', 'start_ns', 'end_ns', 'open', 'high', 'low', 'close', 'volume', 'actual_notional', 'known_at_ns'), (('X', 'P', -10, 0, 5, 5, 5, 5, 1, 5, 0),),
+        metadata=BatchMetadata(namespace='SYN', source=SourceBinding(source_id='SYN-DAILY', snapshot_id='R1', mapping_version='ef1-phase-map1', input_id='prior-phase'), coverage=Coverage(expected=1, observed=1, complete=True), price_unit=PriceUnit(scale=0, currency='USD'), adjustment=AdjustmentSpec(basis='raw', policy_version='raw-v1', action_snapshot='none', anchor='none'), sampling='none', quantity_unit='shares', ordering='declared', duplicate_policy='reject', scope=InputScope(start_ns=-10, end_ns=0, eligibility_policy='supplied_phase', include_opening_auction=False, include_closing_auction=False), interval_coverage=(IntervalCoverage(name='P', start_ns=-10, end_ns=0, coverage=Coverage(expected=1, observed=1, complete=True)),)))
+    return ExtendedInputs(calendar_provenance, bars, prior_close, ("synthetic",) * 3)
+
+__all__ += ["synthetic_period_context", "synthetic_extended_context", "synthetic_period_config",
+            "synthetic_extended_config", "synthetic_period_fixture", "synthetic_extended_fixture"]
+
+# Observable transport: preserve logical roles even when a source is absent.
+# Proof grammar remains opaque original representation; reducers live in features.
+def _validate_observable_slots(roles: tuple[str, ...], slots: tuple[CanonicalBatch | None, ...],
+                               provenance: tuple[str, ...]) -> None:
+    if type(provenance) is not tuple or len(provenance) != len(roles):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact observable per-slot provenance required")
+    identities: set[str] = set()
+    namespaces: set[str] = set()
+    instruments: set[Cell] = set()
+    for role, batch, origin in zip(roles, slots, provenance, strict=True):
+        if type(origin) is not str or origin not in _MODES or (batch is None) != (origin == "unavailable"):
+            raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Actual delivery and provenance must agree")
+        if batch is None:
+            continue
+        expected = DataKind.TRADE if role == "trades" else DataKind.REFERENCE
+        if type(batch) is not CanonicalBatch or batch.kind != expected:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Original canonical observable role kind required")
+        validate_batch(batch, required_fields=())
+        if batch.metadata.source.input_id in identities:
+            raise ContractError(ErrorCode.DUPLICATE, "Distinct original source input identities required")
+        identities.add(batch.metadata.source.input_id)
+        namespaces.add(batch.metadata.namespace)
+        column = batch.column("instrument_id")
+        if column is None:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "Original instrument column required")
+        instruments.update(column.values)
+    if len(namespaces) > 1 or len(instruments) > 1:
+        raise ContractError(ErrorCode.INCONSISTENT_IDENTITY, "Coherent namespace and instrument required")
+
+
+@dataclass(frozen=True)
+class OpeningTradeInputs:
+    """Four nullable opening/seconds slots; pass .slots to the pure API."""
+    calendar_provenance: CanonicalBatch | None = None
+    market_prefix: CanonicalBatch | None = None
+    source_capability: CanonicalBatch | None = None
+    trades: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 4
+
+    def __post_init__(self) -> None:
+        _validate_observable_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "market_prefix", "source_capability", "trades")
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.market_prefix, self.source_capability, self.trades)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        """Present originals for inspection/publication, never compressed pure input."""
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+@dataclass(frozen=True)
+class StatusHistoryInputs:
+    """Five nullable physical-record history slots; seed absence keeps its index."""
+    calendar_provenance: CanonicalBatch | None = None
+    history_events: CanonicalBatch | None = None
+    history_prefix: CanonicalBatch | None = None
+    history_seed: CanonicalBatch | None = None
+    source_capability: CanonicalBatch | None = None
+    provenance: tuple[str, ...] = ("unavailable",) * 5
+
+    def __post_init__(self) -> None:
+        _validate_observable_slots(self.roles, self.slots, self.provenance)
+
+    @property
+    def roles(self) -> tuple[str, ...]:
+        return ("calendar_provenance", "history_events", "history_prefix", "history_seed", "source_capability")
+
+    @property
+    def slots(self) -> tuple[CanonicalBatch | None, ...]:
+        return (self.calendar_provenance, self.history_events, self.history_prefix, self.history_seed, self.source_capability)
+
+    @property
+    def batches(self) -> tuple[CanonicalBatch, ...]:
+        """Present originals only; never use this property for pure dispatch."""
+        return tuple(batch for batch in self.slots if batch is not None)
+
+
+def make_observable_batch(kind: DataKind, column_order: tuple[str, ...],
+                          rows: tuple[tuple[Cell, ...], ...], *, metadata: BatchMetadata) -> CanonicalBatch:
+    """Lossless original rectangular cells, including raw closed reference grammar.
+
+    No event IDs/order, proofs, timestamps, capability, sorting or filtering are
+    inferred. An absent original identity is an unavailable capability, not an
+    invitation to fabricate an ordinal. Mathematical admission belongs in features.
+    """
+    if (kind not in (DataKind.TRADE, DataKind.REFERENCE) or type(column_order) is not tuple
+            or type(rows) is not tuple
+            or any(type(row) is not tuple or len(row) != len(column_order) for row in rows)):
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "Exact concrete observable rectangular rows required")
+    batch = CanonicalBatch(kind, tuple(Column(name, tuple(row[i] for row in rows))
+                                      for i, name in enumerate(column_order)), metadata)
+    validate_batch(batch, required_fields=())
+    return batch
+
+
+__all__ += ["OpeningTradeInputs", "StatusHistoryInputs", "make_observable_batch"]
+
+
+def synthetic_opening_trade_context() -> dict[str, object]:
+    """Detached literal synthetic O01-first context; no source discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"opening_trade","selection":{"action_map":[],"epoch":"E","flag_map":[],"include_opening_auction":false,"mapping_version":"ef1-observable-map2","population":"regular_half_open_v2","publisher":"P","source_id":"SYN-OBS","source_snapshot":"R1"},"version":"ef1-observable-context2"}'))
+
+
+def synthetic_opening_trade_config() -> ConfigSpec:
+    """Literal independently frozen O01-first config."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"observable-v2","availability":{"evaluation_ns":40,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.opening_trade","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"opening_trade\\",\\"selection\\":{\\"action_map\\":[],\\"epoch\\":\\"E\\",\\"flag_map\\":[],\\"include_opening_auction\\":false,\\"mapping_version\\":\\"ef1-observable-map2\\",\\"population\\":\\"regular_half_open_v2\\",\\"publisher\\":\\"P\\",\\"source_id\\":\\"SYN-OBS\\",\\"source_snapshot\\":\\"R1\\"},\\"version\\":\\"ef1-observable-context2\\"}"}],"price_unit":{"currency":"USD","scale":0},"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":1,"governed_sessions":["S"],"target_session_id":"S"}}')
+
+
+def synthetic_opening_trade_fixture() -> OpeningTradeInputs:
+    """Original synthetic O01-first cells; no private-data capability claim."""
+    calendar_provenance = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:97b10ecabd7dbe43ce93fb7db74b448720c5903638aca175494f6a893a761b58', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-CAL',snapshot_id='R1',mapping_version='ef1-reference-map1',input_id='calendar'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    market_prefix = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'op2~4bf38aab795237dde5f72714dcbd084df100de0d7118be10843d1192245dbead~PRE', 'ef1.observable.market_prefix', 10, 20, 'pv2~1~complete', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='prefix'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    source_capability = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oc2~4bf38aab795237dde5f72714dcbd084df100de0d7118be10843d1192245dbead~CAP', 'ef1.observable.capability', 0, 30, 'opening_ready', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='capability'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    trades = make_observable_batch(DataKind.TRADE, ('instrument_id', 'session_id', 'event_ns', 'order_key', 'event_id', 'eligible', 'price', 'size', 'condition', 'known_at_ns'), (('X', 'S', 13, 0, 'T1', True, 10, 1, 'regular', 13),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='trades'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=PriceUnit(scale=0,currency='USD'),adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=InputScope(start_ns=10,end_ns=20,eligibility_policy='observable_regular_v2',include_opening_auction=False,include_closing_auction=False),interval_coverage=()))
+    return OpeningTradeInputs(calendar_provenance, market_prefix, source_capability, trades, ('synthetic', 'synthetic', 'synthetic', 'synthetic'))
+
+
+__all__ += ["synthetic_opening_trade_context", "synthetic_opening_trade_config", "synthetic_opening_trade_fixture"]
+
+
+def synthetic_opening_trade_seconds_context() -> dict[str, object]:
+    """Detached literal synthetic O02-seconds context; no source discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"opening_trade_seconds","selection":{"action_map":[],"epoch":"E","flag_map":[],"include_opening_auction":false,"mapping_version":"ef1-observable-map2","population":"regular_half_open_v2","publisher":"P","source_id":"SYN-OBS","source_snapshot":"R1"},"version":"ef1-observable-context2"}'))
+
+
+def synthetic_opening_trade_seconds_config() -> ConfigSpec:
+    """Literal independently frozen O02-seconds config."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"observable-v2","availability":{"evaluation_ns":40,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.opening_trade_seconds","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"opening_trade_seconds\\",\\"selection\\":{\\"action_map\\":[],\\"epoch\\":\\"E\\",\\"flag_map\\":[],\\"include_opening_auction\\":false,\\"mapping_version\\":\\"ef1-observable-map2\\",\\"population\\":\\"regular_half_open_v2\\",\\"publisher\\":\\"P\\",\\"source_id\\":\\"SYN-OBS\\",\\"source_snapshot\\":\\"R1\\"},\\"version\\":\\"ef1-observable-context2\\"}"}],"price_unit":{"currency":"USD","scale":0},"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":1,"governed_sessions":["S"],"target_session_id":"S"}}')
+
+
+def synthetic_opening_trade_seconds_fixture() -> OpeningTradeInputs:
+    """Original synthetic O02-seconds cells; no private-data capability claim."""
+    calendar_provenance = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:97b10ecabd7dbe43ce93fb7db74b448720c5903638aca175494f6a893a761b58', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-CAL',snapshot_id='R1',mapping_version='ef1-reference-map1',input_id='calendar'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    market_prefix = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'op2~4bf38aab795237dde5f72714dcbd084df100de0d7118be10843d1192245dbead~PRE', 'ef1.observable.market_prefix', 10, 20, 'pv2~1~complete', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='prefix'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    source_capability = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oc2~4bf38aab795237dde5f72714dcbd084df100de0d7118be10843d1192245dbead~CAP', 'ef1.observable.capability', 0, 30, 'opening_ready', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='capability'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    trades = make_observable_batch(DataKind.TRADE, ('instrument_id', 'session_id', 'event_ns', 'order_key', 'event_id', 'eligible', 'price', 'size', 'condition', 'known_at_ns'), (('X', 'S', 13, 0, 'T1', True, 10, 1, 'regular', 13),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='trades'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=PriceUnit(scale=0,currency='USD'),adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=InputScope(start_ns=10,end_ns=20,eligibility_policy='observable_regular_v2',include_opening_auction=False,include_closing_auction=False),interval_coverage=()))
+    return OpeningTradeInputs(calendar_provenance, market_prefix, source_capability, trades, ('synthetic', 'synthetic', 'synthetic', 'synthetic'))
+
+
+__all__ += ["synthetic_opening_trade_seconds_context", "synthetic_opening_trade_seconds_config", "synthetic_opening_trade_seconds_fixture"]
+
+
+def synthetic_status_history_context() -> dict[str, object]:
+    """Detached literal synthetic H01-one-record-three-dimensions context; no source discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"status_history","selection":{"action_map":[[1,"halt"],[2,"active"],[3,"initial"],[4,"resume"],[5,"irrelevant"],[6,"unknown"]],"epoch":"E","flag_map":[["trading","59","4e"],["quoting","59","4e"],["ssr","59","4e"]],"include_opening_auction":false,"mapping_version":"ef1-observable-map2","population":"regular_half_open_v2","publisher":"P","source_id":"SYN-OBS","source_snapshot":"R1"},"version":"ef1-observable-context2"}'))
+
+
+def synthetic_status_history_config() -> ConfigSpec:
+    """Literal independently frozen H01-one-record-three-dimensions config."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"observable-v2","availability":{"evaluation_ns":40,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.status_history","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"status_history\\",\\"selection\\":{\\"action_map\\":[[1,\\"halt\\"],[2,\\"active\\"],[3,\\"initial\\"],[4,\\"resume\\"],[5,\\"irrelevant\\"],[6,\\"unknown\\"]],\\"epoch\\":\\"E\\",\\"flag_map\\":[[\\"trading\\",\\"59\\",\\"4e\\"],[\\"quoting\\",\\"59\\",\\"4e\\"],[\\"ssr\\",\\"59\\",\\"4e\\"]],\\"include_opening_auction\\":false,\\"mapping_version\\":\\"ef1-observable-map2\\",\\"population\\":\\"regular_half_open_v2\\",\\"publisher\\":\\"P\\",\\"source_id\\":\\"SYN-OBS\\",\\"source_snapshot\\":\\"R1\\"},\\"version\\":\\"ef1-observable-context2\\"}"}],"price_unit":null,"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":1,"governed_sessions":["S"],"target_session_id":"S"}}')
+
+
+def synthetic_status_history_fixture() -> StatusHistoryInputs:
+    """Original synthetic H01-one-record-three-dimensions cells; no private-data capability claim."""
+    calendar_provenance = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:97b10ecabd7dbe43ce93fb7db74b448720c5903638aca175494f6a893a761b58', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-CAL',snapshot_id='R1',mapping_version='ef1-reference-map1',input_id='calendar'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    history_events = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oe2~P~E~0000000000000000000~E1', 'ef1.observable.status_event', 12, None, 'ov2~00001~00000~00000~59~59~59~12', 12),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='history_events'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=InputScope(start_ns=10,end_ns=20,eligibility_policy='observable_status_v2',include_opening_auction=False,include_closing_auction=False),interval_coverage=()))
+    history_prefix = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'op2~89592a4925a97a373eed6b9c090d9df50ee68a323c4ab0bddfa5841863eefb0f~PRE', 'ef1.observable.history_prefix', 10, 20, 'pv2~1~complete', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='prefix'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    history_seed = None
+    source_capability = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oc2~89592a4925a97a373eed6b9c090d9df50ee68a323c4ab0bddfa5841863eefb0f~CAP', 'ef1.observable.capability', 0, 30, 'history_ready', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='capability'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    return StatusHistoryInputs(calendar_provenance, history_events, history_prefix, history_seed, source_capability, ('synthetic', 'synthetic', 'synthetic', 'unavailable', 'synthetic'))
+
+
+__all__ += ["synthetic_status_history_context", "synthetic_status_history_config", "synthetic_status_history_fixture"]
+
+
+def synthetic_status_history_missing_capability_context() -> dict[str, object]:
+    """Detached literal synthetic H11-missing-source-identity context; no source discovery."""
+    return cast(dict[str, object], json.loads('{"calendar":{"calendar_id":"SYN-CAL","early_close":false,"revision":"R1","scheduled_close_ns":30,"segments":[["regular",10,30]],"sessions":[["S","2026-10-20",10,30]],"target_date":"2026-10-20","timezone":"UTC"},"producer":"status_history","selection":{"action_map":[[1,"halt"],[2,"active"],[3,"initial"],[4,"resume"],[5,"irrelevant"],[6,"unknown"]],"epoch":"E","flag_map":[["trading","59","4e"],["quoting","59","4e"],["ssr","59","4e"]],"include_opening_auction":false,"mapping_version":"ef1-observable-map2","population":"regular_half_open_v2","publisher":"P","source_id":"SYN-OBS","source_snapshot":"R1"},"version":"ef1-observable-context2"}'))
+
+
+def synthetic_status_history_missing_capability_config() -> ConfigSpec:
+    """Literal independently frozen H11-missing-source-identity config."""
+    return ConfigSpec.from_json('{"adjustment":{"action_snapshot":"none","anchor":"none","basis":"raw","policy_version":"raw-v1"},"algorithm_version":"observable-v2","availability":{"evaluation_ns":40,"knowledge_cutoff_ns":20,"market_cutoff_ns":20,"mode":"known_at","reconstruction_reason":null},"identity":"ef1.status_history","parameters":[{"name":"ef1_context_json","value":"{\\"calendar\\":{\\"calendar_id\\":\\"SYN-CAL\\",\\"early_close\\":false,\\"revision\\":\\"R1\\",\\"scheduled_close_ns\\":30,\\"segments\\":[[\\"regular\\",10,30]],\\"sessions\\":[[\\"S\\",\\"2026-10-20\\",10,30]],\\"target_date\\":\\"2026-10-20\\",\\"timezone\\":\\"UTC\\"},\\"producer\\":\\"status_history\\",\\"selection\\":{\\"action_map\\":[[1,\\"halt\\"],[2,\\"active\\"],[3,\\"initial\\"],[4,\\"resume\\"],[5,\\"irrelevant\\"],[6,\\"unknown\\"]],\\"epoch\\":\\"E\\",\\"flag_map\\":[[\\"trading\\",\\"59\\",\\"4e\\"],[\\"quoting\\",\\"59\\",\\"4e\\"],[\\"ssr\\",\\"59\\",\\"4e\\"]],\\"include_opening_auction\\":false,\\"mapping_version\\":\\"ef1-observable-map2\\",\\"population\\":\\"regular_half_open_v2\\",\\"publisher\\":\\"P\\",\\"source_id\\":\\"SYN-OBS\\",\\"source_snapshot\\":\\"R1\\"},\\"version\\":\\"ef1-observable-context2\\"}"}],"price_unit":null,"schema_version":"1","session":{"close_ns":30,"early_close":false,"include_closing_auction":false,"include_opening_auction":false,"intervals":[],"namespace":"SYN","open_ns":10,"scheduled_close_ns":30,"session_id":"S","timezone_label":"UTC"},"window":{"anchor":"completed_eod","count":1,"governed_sessions":["S"],"target_session_id":"S"}}')
+
+
+def synthetic_status_history_missing_capability_fixture() -> StatusHistoryInputs:
+    """Original synthetic H11-missing-source-identity cells; no private-data capability claim."""
+    calendar_provenance = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'c1:97b10ecabd7dbe43ce93fb7db74b448720c5903638aca175494f6a893a761b58', 'ef1.calendar.provenance', 0, 30, 'supplied_schedule', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-CAL',snapshot_id='R1',mapping_version='ef1-reference-map1',input_id='calendar'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    history_events = None
+    history_prefix = None
+    history_seed = None
+    source_capability = make_observable_batch(DataKind.REFERENCE, ('instrument_id', 'session_id', 'reference_id', 'fact_kind', 'effective_start_ns', 'effective_end_ns', 'text', 'known_at_ns'), (('X', 'S', 'oc2~89592a4925a97a373eed6b9c090d9df50ee68a323c4ab0bddfa5841863eefb0f~CAP', 'ef1.observable.capability', 0, 30, 'missing_identity', 1),),
+        metadata=BatchMetadata(namespace='SYN',source=SourceBinding(source_id='SYN-OBS',snapshot_id='R1',mapping_version='ef1-observable-map2',input_id='capability'),coverage=Coverage(expected=1,observed=1,complete=True),price_unit=None,adjustment=AdjustmentSpec(basis='raw',policy_version='raw-v1',action_snapshot='none',anchor='none'),sampling='none',quantity_unit='shares',ordering='declared',duplicate_policy='reject',scope=None,interval_coverage=()))
+    return StatusHistoryInputs(calendar_provenance, history_events, history_prefix, history_seed, source_capability, ('synthetic', 'unavailable', 'unavailable', 'unavailable', 'synthetic'))
+
+
+__all__ += ["synthetic_status_history_missing_capability_context", "synthetic_status_history_missing_capability_config", "synthetic_status_history_missing_capability_fixture"]

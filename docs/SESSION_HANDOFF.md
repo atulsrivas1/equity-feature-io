@@ -1,3 +1,15 @@
+## EF1 cumulative io source checkpoint - October 21, 2026
+
+[Current qualification and limits](EF1_CUMULATIVE_QUALIFICATION.md) records the exact frozen runtime cohort: all four installed forms passed on Windows and Linux, with 665 methods per form, zero skips and 200 verified-readback demos across both platforms. Coordinator artifact audit and fresh independent final review passed. Later documentation integration commits are not executed runtime source identities. Actual browser inspection, full original audit/source-version/consumer bindings, suitable N-drive input qualification and EF1 release gates remain open. Earlier source-authoring, pending and resource-hold entries below retain their original historical scope; no whole-story completion or package publication is claimed.
+
+# Observable EQ165 source authoring — October21,2026
+
+Uncommitted additive adapter implementation on codex/ef1-observable-io, base89bc3d0d. See EF1_OBSERVABLE_IO.md for exact public freeze, fixed slots,58 full-packet/31 error inventory and boundaries. Reviewed additive publication amendment06841dc4 adopted: separate exact646e402e fixture, originald0fb retained; algorithms/context/mapv2 unchanged, global policyv1, genericSDK/sink/codec untouched. All18 new methods PASS126.263s on source-selected Windows Python3.12.10:58 complete calculated results and58 realDuckDB publish/read/identicalretry/close/reopen fullreadbacks,29canonical/pureerrors,2explicitworker-stage inventory controls. All85 old/new input methods, strictmypy7 and extraction19 also PASS. Failed original fixture NameError log retained. No installed/package/release acceptance. Coordinator and fresh independent review before commit/push; original19 extraction inventory remains immutable.
+
+## EF1 period/extended I/O source authoring — October21,2026
+
+Bounded EQ166/supporting570 parallel authoring adds PeriodInputs/ExtendedInputs and exact literal base source/config/context helpers; docs/EF1_PERIOD_PHASE_IO.md records frozen contracts, API, provenance,13+4 authored methods and actual source validation.All17 new source-selected methods PASS on Windows in73.242s, covering42fullresults/20typederrors and42actualsinkreadback subcases; strict typing7files and original19file extraction guard PASS. Inherited reference ConfigSpec.digest property typo corrected without changing its assertion. No commit/push yet; coordinator review and fresh independent PR review plus immutable integration/build/install remain required. Original full-scope/audit/release gates remain open. This heading supersedes no older accepted evidence.
+
 ## EQ098 corrected candidate qualified; final publication gates — October15,2026
 
 Corrected source e414f517/89a8a41f passed separate review0b1c4dae, findings[]. Shared fixed-registry admission now rejects both unknown mathematical policy and stripped-empty eligibility policy before export/read/replay; original P2/rework/earlier approval scopes remain preserved. Fresh author Windows qualification completed eight repeat archives/79source pins/four fresh light/replay wheel/sdist forms/29methods/typing/actual fixed producer, raw logSHAf72820d2b230c81c23cd9a8a2fd18d5957cc9b58d693b74b313d6adbba562e51.
@@ -513,3 +525,94 @@ Original19 legacy hashes/guards unchanged. Twelve clock methods now authored,
 all unexecuted. No local imports/tests/builds/DB/N:scans, commit or push; frozen
 anchor F20 checkout untouched. Fresh reviewer recheck and actual qualification
 remain pending. This correction is not evidence of an executed reproduction.
+
+## EF1 status conversion source authored — October20,2026
+
+Worker /root/ef1_status_io authored additive supplied current-state status mapping
+and exact local four-slot packet in codex/ef1-status-io, based on8b84ddd. Canonical
+status-state/certificate identities, caller-supplied metadata/coverage and original
+availability are retained. Per-role provenance permits independent calendar origin
+while all present status facts/proofs share their observed/synthetic origin.
+`.slots` is the direct pure-library boundary; `.batches` is present-only transport.
+Explicit seed IDs and actual C01 proofs accompany original S01/S02/S03 helpers.
+See [API and mathematical/source semantics](api/EF1_STATUS_INPUTS.md).
+
+Independent source-authored tests cover literal conversion, malformed identity,
+partial missing and covered-empty facts, exact library quality/witness semantics,
+S01-S03 and full canonical existing-sink readback/replay. These checks have not run.
+No local import/syntax/test/build/benchmark/DB/N: operation during EQ142; no commit
+or push before coordinator review. Original anchor/clock source prefix and19
+extraction guards remain; additive ef1.py evolution hash refreshed only. Versions,
+CI/pins/build census and sink format unchanged. Coordinator owns cross-repository
+integration/current status/public evidence and release gates. Full EF1 audit,
+status-history/open diagnostics and other producer families remain incomplete.
+
+Resume: coordinator inspect actual source diff and independently reviewed slot
+receipt; resolve review findings before authorizing push. Qualify compatible core
+status source and unchanged worker/sink boundaries through current-head remote CI,
+installed forms, actual numerical/readback integration and browser demo. Source
+completion is not tested/released/Done status.
+
+## EF1 sampled path I/O source authoring — October 20, 2026
+
+Branch codex/ef1-path-io; source base22de254d6cd0ad79bbe746e9484ba4f64dc616a1.
+EQ212 supports original EQ167 with frozen path amendment reviewed by
+/root/ef1_status_worker_review. Added PathGapInputs/PathDriveInputs present-only
+role packets, explicit make_path_prior_close preserving all supplied canonical
+cells and source metadata, G01/G02/G03/D01 literal synthetic fixture/context
+helpers, API/README/changelog and 26 authored test methods (15 conversion,
+11 composition). Existing canonical/sink/schema/version/old baseline receipts
+remain unchanged. Inherited status fixture tuple annotation correction carried
+forward under coordinator direction; no status values changed.
+
+Actual checks: source/Git/text/hash inspection only. No Python/runtime/import,
+syntax/type check, tests, builds, benchmarks, DB operation or N: access during
+protected EQ142 study reservation. No commit/push or runtime validation claimed.
+Resume: coordinator review actual diff; fresh independent source review; when
+study hold is explicitly lifted from actual evidence, execute exact-commit
+local input/composition/type/extraction checks, build/install and integrated
+worker/full-sink checks with qualified core dependency pins. Root owns final
+pins/helper/census. Full EQ164 audit and EF1/release/browser-demo gates remain.
+
+## EF1 supplied reference source candidate — October20,2026
+
+Added exact nullable classification/action input containers and explicit supplied
+REFERENCE row/proof conversion in the existing additive ef1.py. Industry is EF1
+local; legacy reader/utility APIs stay unchanged. Synthetic R01/R02/R03 sources,
+55 independent full packet oracles and full generic sink roundtrip cases are
+source-authored. See EF1_REFERENCE_IO.md. No local runtime/import/syntax/type/test/
+build/install/database validation was executed under the protected reservation.
+Coordinator review and fresh independent review are pending; no merge, release,
+publication or full EQ168 completion is claimed. Original19-source inventory is
+unchanged; only the additive helper evolution hash is refreshed. Current versions
+remain unchanged. Next: coordinator source review, independent exact-diff review,
+then admitted exact-head local numerical/artifact/composition checks.
+Independent source review correction: an actual empty proof batch previously
+escaped publisher/revision comparison because it had no decoded target row. The
+adapter now compares actual source/snapshot metadata for every present batch in
+each facts/market relationship group, independently of row target IDs. Empty
+proofs cannot bypass an actual target or conflict with another supplied proof even
+when the target is missing. No target ID is manufactured. Original decoded-target
+checks remain unchanged. Three new source-authored methods cover wrong publisher,
+wrong revision and missing-target proof conflicts across classification/action
+facts and market proof groups. Current count27methods=22inputs+5composition;
+no runtime check was executed. Fresh independent recheck remains required.
+October21 local typing correction: actual installed strict mypy at source7ad9d858
+reported a redundant narrowed fact_kind cast and ternary literal dictionary
+inference mismatch. Removed only that redundant cast and declared the two original
+R01 row dictionaries as Mapping[str,Cell] before constructing the same tuple.
+Canonical cells/order, R02 empty selection, fixtures/contracts/provenance and
+27 authored tests are unchanged. The additive helper hash is refreshed. Original
+failed log remains retained at local-qualification-20261021/io-mypy-run1.log;
+source-selected strict recheck and full fresh installed qualification are separate
+scopes. The stale EQ142 reservation was explicitly released by coordinator after
+actual-state reconciliation; this is no assertion of any official study success.
+Targeted local source correction check: shared fresh driver Windows Python3.12.10,
+`python -I -B -m mypy --strict --cache-dir ../local-qualification-20261021/io-correction-mypy-cache packages/duckdb/src/equity_feature_duckdb`
+completed exit0, `Success: no issues found in 7 source files`. A separate -I/-B
+origin probe explicitly selected this checkout's I/O source, asserted the actual
+ef1.__file__, and confirmed SHA c9749175bc2e8cc5c68aac9204d3e009a102c612322ce09eb306a11e9661e7b2.
+This checks uncommitted source atop7ad9d858, not a fresh installed artifact. No
+27-test rerun, DB/N-drive operation, environment install or benchmark was performed
+by this author. Coordinator owns fresh installed four-form qualification after
+reviewed commits; original installed mypy failure evidence remains retained.

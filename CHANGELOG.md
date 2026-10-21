@@ -31,3 +31,29 @@ EQ098 corrected candidate qualification: both OS current artifacts/four fresh fo
   explicit existing-sink publication example. No source DB acquisition, feature
   math or sink codec changes are claimed. New source candidate0.1.0a9 is distinct
   from accepted a8 artifacts; coordinated build/CI and qualification remain pending.
+
+## Unreleased — EF1 supplied current-state status source authoring
+
+- Adds exact canonical state/certificate conversion, explicit four-position
+  StatusInputs with per-role provenance and original S01/S02/S03 synthetic helpers.
+  Unknown/future knowledge, partial missingness and covered-empty populations stay
+  explicit; no status inference, source acquisition or adapter calculations.
+- Authors independent direct library composition, literal quality/witness fixtures
+  and existing-sink full canonical readback/replay checks. Source only: no local
+  execution under EQ142, no numerical/artifact/release acceptance claimed.
+- Existing anchor/clock behavior, versions, original19 guards and sink codecs are
+  preserved. See docs/api/EF1_STATUS_INPUTS.md; full EF1 audit/residual gates remain.
+
+### EF1 sampled path source authoring — unreleased
+
+- Add present-only gap/drive input packets, explicit DAILY prior converter and
+  original public synthetic G01/G02/G03/D01 fixtures/context against the reviewed
+  frozen amendment. Supplied fields, coverage and knowledge remain original.
+- Author independent literal result and full-result existing-sink readback tests;
+  no local execution under the protected EQ142 study reservation.
+- Carry forward the coordinator's inherited status-fixture tuple type annotation
+  correction; no status source values or numerical behavior changed.
+- No schema/version/codec change, private-source qualification, legacy numerical
+  parity, completed full EF1 audit or release claim.
+
+EF1 source candidate (unreleased): exact nullable supplied classification/action input roles, retained original reference proof conversion, synthetic R01/R02/R03 fixtures and prospective full-result sink cases. Runtime qualification pending; package versions unchanged.

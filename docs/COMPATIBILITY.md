@@ -1,3 +1,7 @@
+## EF1 cumulative io source checkpoint - October 21, 2026
+
+[Current qualification and limits](EF1_CUMULATIVE_QUALIFICATION.md) records the exact frozen runtime cohort: all four installed forms passed on Windows and Linux, with 665 methods per form, zero skips and 200 verified-readback demos across both platforms. Coordinator artifact audit and fresh independent final review passed. Later documentation integration commits are not executed runtime source identities. Actual browser inspection, full original audit/source-version/consumer bindings, suitable N-drive input qualification and EF1 release gates remain open. Earlier source-authoring, pending and resource-hold entries below retain their original historical scope; no whole-story completion or package publication is claimed.
+
 ## EQ098 bundles candidate
 
 New optional bundles0.1.0a1 pins contracts0.0.4a4/evidence0.1.0a2 and explicit replay extra features0.0.4a4 on CPython3.12 Windows/Linux. Root read/write does not import features or install/fetch missing inputs. Existing I/O package versions/sources remain unchanged. Unknown versions refuse; EQ099 or a future format/dependency extension requires explicit versioning and renewed bundle compatibility qualification. Source candidate is not fresh installed/actual-main acceptance.
