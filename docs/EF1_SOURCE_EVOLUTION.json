@@ -27,7 +27,7 @@
   },
   "additive_package_files": {
     "packages/duckdb/src/equity_feature_duckdb/ef1.py": {
-      "sha256": "189928c37ca1cce04b12c55b92d64b44d113a21b0a4a44ed5f2f483c07b291e4",
+      "sha256": "418ac41536522feed784a9c83ecfcf852a9a6bdcc81c88b234260ee933d3083c",
       "reason": "Additive anchor/calendar/status/path conversion, explicit slot provenance and literal anchor/C01/S01-S03/G01-G03/D01 fixtures; inherited status tuple annotation only; supplied reference classification/action conversion and literal R01-R03 fixtures; period/extended exact nullable slots and literal base transport; no legacy reader mathematics changed; additive observable fixed nullable transport and literal O01/O02/H01/H11 examples, no inferred identities or mathematics; exact six-role daily REFERENCE transport and three literal synthetic daily examples"
     }
   },
