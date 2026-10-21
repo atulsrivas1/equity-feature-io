@@ -72,3 +72,5 @@ coverage and supplied invalid volume/OHLC are preserved; no acquisition or
 feature mathematics is added. Validation remains unexecuted during the study hold.
 
 Observable opening/seconds and physical status-history transport is documented in [EF1_OBSERVABLE_IO.md](../../docs/EF1_OBSERVABLE_IO.md). Fixed nullable `.slots` preserve absent source roles; the present-only `.batches` view is not pure observable input.
+
+Daily observation variants add fixed six nullable REFERENCE roles and lossless supplied-schema conversion with explicit provenance. See [daily observations](../../docs/EF1_DAILY_OBSERVATIONS_IO.md) for the supported exact-integer profile, original synthetic252/current-week/prior-week examples and remaining source/release gates.

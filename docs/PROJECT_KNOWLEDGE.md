@@ -201,3 +201,22 @@ readiness rather than disappear in conversion. Independent literal goldens and
 existing full-result sink readback were authored, not executed under the EQ142
 hold. Original baseline receipts/old producer behavior remain protected; full
 EF1 audit, independent review and integration/release evidence are still needed.
+
+## Daily supplied-observation conversion lesson — October21,2026
+
+EQ212 supporting EQ166 preserves raw OHLC/volume as exact supplied REFERENCE JSON
+so the pure daily producer owns admission without weakening existing DAILY/BAR
+zero-volume validation. Nullable six-role slots and present-only generic batches
+are distinct transport interfaces: a present empty role is neither absent nor an
+invented proof. Literal synthetic packet equality checks conversion fidelity;
+it cannot establish producer mathematics, source authenticity or installed/release
+acceptance. See EF1_DAILY_OBSERVATIONS_IO.md and SESSION_HANDOFF.md for executed
+source checks, initial author harness/type failures and remaining composition gates.
+
+V3A1 daily stage correction: malformed pure packets must be sent as original
+canonical DTOs directly to the pure API to establish its refusal. A matching
+adapter error code proves adapter admission only. Actual direct-stage probe exposed
+X212's earlier retained duplicate-reference validation; corrected tests independently
+cover direct pure duplicate and actual adapter guard. The generic worker has its
+separate earlier row-count metadata refusal. Retain all boundaries and original
+failed probe evidence; do not weaken one layer to make error codes coincide.

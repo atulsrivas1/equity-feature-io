@@ -1,6 +1,14 @@
+## Daily source-integrity declaration: canonical Git bytes — October 21, 2026
+
+Coordinator found that the additive source manifest hashed local mixed-line-ending bytes 189928c37ca1cce04b12c55b92d64b44d113a21b0a4a44ed5f2f483c07b291e4, while Git stores the reviewed file as canonical LF bytes 418ac41536522feed784a9c83ecfcf852a9a6bdcc81c88b234260ee933d3083c. The local copy contained55CRLF pairs; replacing only CRLF withLF equals the existing committed blob exactly, and parsed Python ASTs are identical. The public declaration now identifies those existing Git bytes. No production Git blob, API, mathematical result, fixture or extraction guard changes. Historical author runs retain their local-byte identity; final clean-checkout installed qualification remains pending. A bounded extraction-source recheck and independent declaration review follow; this correction itself does not establish numerical/platform/release acceptance.
+
 ## EF1 cumulative io source checkpoint - October 21, 2026
 
 [Current qualification and limits](EF1_CUMULATIVE_QUALIFICATION.md) records the exact frozen runtime cohort: all four installed forms passed on Windows and Linux, with 665 methods per form, zero skips and 200 verified-readback demos across both platforms. Coordinator artifact audit and fresh independent final review passed. Later documentation integration commits are not executed runtime source identities. Actual browser inspection, full original audit/source-version/consumer bindings, suitable N-drive input qualification and EF1 release gates remain open. Earlier source-authoring, pending and resource-hold entries below retain their original historical scope; no whole-story completion or package publication is claimed.
+
+## EF1 cumulative io source checkpoint - October 21, 2026
+
+Current source, completed earlier-cohort validation and pending final qualification are recorded in [EF1 cumulative io source checkpoint - October 21, 2026](EF1_CUMULATIVE_QUALIFICATION.md). Earlier source-authoring, uncommitted, pending-pins, unexecuted and resource-hold entries below are historical snapshots; they do not override the current checkpoint. Final installed/platform/browser and full original-audit release gates remain open.
 
 # Observable EQ165 source authoring — October21,2026
 
@@ -616,3 +624,208 @@ This checks uncommitted source atop7ad9d858, not a fresh installed artifact. No
 27-test rerun, DB/N-drive operation, environment install or benchmark was performed
 by this author. Coordinator owns fresh installed four-form qualification after
 reviewed commits; original installed mypy failure evidence remains retained.
+
+## EF1 supplied reference source candidate — October20,2026
+
+Added exact nullable classification/action input containers and explicit supplied
+REFERENCE row/proof conversion in the existing additive ef1.py. Industry is EF1
+local; legacy reader/utility APIs stay unchanged. Synthetic R01/R02/R03 sources,
+55 independent full packet oracles and full generic sink roundtrip cases are
+source-authored. See EF1_REFERENCE_IO.md. No local runtime/import/syntax/type/test/
+build/install/database validation was executed under the protected reservation.
+Coordinator review and fresh independent review are pending; no merge, release,
+publication or full EQ168 completion is claimed. Original19-source inventory is
+unchanged; only the additive helper evolution hash is refreshed. Current versions
+remain unchanged. Next: coordinator source review, independent exact-diff review,
+then admitted exact-head local numerical/artifact/composition checks.
+Independent source review correction: an actual empty proof batch previously
+escaped publisher/revision comparison because it had no decoded target row. The
+adapter now compares actual source/snapshot metadata for every present batch in
+each facts/market relationship group, independently of row target IDs. Empty
+proofs cannot bypass an actual target or conflict with another supplied proof even
+when the target is missing. No target ID is manufactured. Original decoded-target
+checks remain unchanged. Three new source-authored methods cover wrong publisher,
+wrong revision and missing-target proof conflicts across classification/action
+facts and market proof groups. Current count27methods=22inputs+5composition;
+no runtime check was executed. Fresh independent recheck remains required.
+October21 local typing correction: actual installed strict mypy at source7ad9d858
+reported a redundant narrowed fact_kind cast and ternary literal dictionary
+inference mismatch. Removed only that redundant cast and declared the two original
+R01 row dictionaries as Mapping[str,Cell] before constructing the same tuple.
+Canonical cells/order, R02 empty selection, fixtures/contracts/provenance and
+27 authored tests are unchanged. The additive helper hash is refreshed. Original
+failed log remains retained at local-qualification-20261021/io-mypy-run1.log;
+source-selected strict recheck and full fresh installed qualification are separate
+scopes. The stale EQ142 reservation was explicitly released by coordinator after
+actual-state reconciliation; this is no assertion of any official study success.
+Targeted local source correction check: shared fresh driver Windows Python3.12.10,
+`python -I -B -m mypy --strict --cache-dir ../local-qualification-20261021/io-correction-mypy-cache packages/duckdb/src/equity_feature_duckdb`
+completed exit0, `Success: no issues found in 7 source files`. A separate -I/-B
+origin probe explicitly selected this checkout's I/O source, asserted the actual
+ef1.__file__, and confirmed SHA c9749175bc2e8cc5c68aac9204d3e009a102c612322ce09eb306a11e9661e7b2.
+This checks uncommitted source atop7ad9d858, not a fresh installed artifact. No
+27-test rerun, DB/N-drive operation, environment install or benchmark was performed
+by this author. Coordinator owns fresh installed four-form qualification after
+reviewed commits; original installed mypy failure evidence remains retained.## EF1 daily observations I/O source preparation — October21,2026
+
+Fresh author /root/ef1_daily_io_implementation, branch codex/ef1-daily-io,
+base2d9bab14f54046e771c0b20e92889d9286a8a36b. EQ212#570 supports original
+EQ166#506, epic569/milestone34. Coordinator froze daily context2/map2/algorithmv2
+and the public synthetic whitelist6d95adc130aa00dbc0e7475186eca5e66579a78858acd9e9ce5a340d54d37b67.
+No private source receipts/joins/narrative were copied. Source helpers and test
+packets contain original synthetic literal values only. No public tracker writes,
+commit, push, merge, build/install, package/release publication or N-drive query.
+
+Added DailyObservationsInputs exact six named nullable roles with frozen per-slot
+provenance, nullable .slots and present-only .batches. Added supplied eight-column
+REFERENCE converter preserving all original cells/order/metadata; no acquisition,
+calendar inference, selection/admission math or availability repair. Explicit
+synthetic helpers reproduce fixedN252, current-week and latest-populated-prior-week
+literal packets/configs. Documentation: EF1_DAILY_OBSERVATIONS_IO.md, package
+README/changelog and actual pure-API example. Original19 retained source/fixture
+hashes and versions/SDK/sink/codec remain unchanged; only additive ef1.py source
+hash189928c37ca1cce04b12c55b92d64b44d113a21b0a4a44ed5f2f483c07b291e4 updated.
+
+Actual bounded Windows source checks, Python3.12.10 shared read-only qualification
+runtime, OMP/OPENBLAS/MKL/NUMEXPR threads1, -I/-B, explicit owned module origins:
+
+- `python -I -B tools/check_daily_source.py --core-root <selected-core>`:
+  run3 exit0,8methods including full91successful packet cell/metadata equality.
+- Same command `--pattern 'test_*_inputs.py'`: exit0,93methods old+new inputs.
+- `python -I -B -m mypy --strict --cache-dir .daily-mypy-cache packages/duckdb/src/equity_feature_duckdb`:
+  run2 exit0,7source files; MYPYPATH explicitly selects current core contracts and
+  owned io-contracts/io-sdk sources. This is source typing, not installed proof.
+- `python -I -B tools/check_extraction.py --core-root <selected-core>`:
+  exit0, original19 retained files plus exact additive declaration/package census.
+
+First converter run failed2author harness cases (expected_result key absent on
+error packets; malformed kind constructed outside refusal context); corrected.
+First strict mypy run failed5author typing annotations; corrected. Original logs
+retained under ignored work/daily-local-evidence. Initial successful input run2
+preceded final annotation-only changes; run3 and93method run cover final source.
+No failed run is relabelled passed. Core source is selected read-only ef1-contracts
+worktree based877f8aea0489da4e3d41e7f04bf551a2e8e4a470 with numerical authoring
+still in progress. These converter checks execute no new numerical producer.
+
+Full119-packet real-stage composition and91actual fresh DuckDB publish/retry/
+close-reopen/fullstoredreadback tests are authored but UNEXECUTED. Coordinator
+reported core88/91 and3quality/refusal issues; V318 raw None may require independent
+frozen-contract disposition. No contract amendment or golden weakening was made.
+A separate legacy tests/duckdb regression was started; its completion must be
+read from retained log before any pass claim. No daily composition credit yet.
+
+Resume: coordinator reviews all actual source/docs/fixtures; independent contract
+recheck and corrected actual core producer; reactivate this author for actual119
+semantic cases/full91DuckDBreadbacks and example. Fresh independent PR review,
+exact-commit checks, current installed four forms on Windows/Linux and integrated
+worker/browser/release gates remain. FullEQ164 source audit and original numerical/
+source/right obligations are open; no EF1/EQ166 Done or source parity claim.
+
+Legacy DuckDB regression completion read from actual process: exit0,
+94methods in35.631s, command `python -I -B tools/check_daily_source.py --core-root
+<selected-core> --test-root tests/duckdb --pattern 'test_*.py'`. This includes the
+unchanged zero-volume/malformed-OHLC guard. Supersedes the pending completion
+sentence above only; daily numerical composition remains unexecuted. Final
+EOF-whitespace cleanup after checks changed no executable tokens; fresh extraction
+check below binds final additive source. `git diff --check` exit0.
+
+### Daily observations V3A1 source and stage correction — October21,2026
+
+Coordinator resumed this author under exact V3A1 freeze9351467a. Replaced only
+new daily test corpus with approved public synthetic
+479948037cd6d2fca3901cdb9cf3fcbba6256acbbcb9440bcd68e0362d7688c5 and bound its
+loader/API documentation. The source fixture/config helpers contain unchanged
+inputs/configs and require no source change. Earlier V3 evidence/failed harness
+runs remain preserved. V318 raw-role absence now uses the normative whole-fence
+quality expected3/observed3; no kernel workaround or mathematical change.
+
+Actual direct-stage audit found the converter's retained generic validate_batch
+already refuses X212 duplicate canonical reference identities before the pure
+call. The initial full119 method verified the same error code but did not prove
+that one pure invocation. A separate direct-stage probe failed at adapter
+validation, correctly exposing the distinction. Corrected semantic tests build
+original canonical DTOs without adapter/container validation for malformed pure
+cases, then invoke compute_ef1 explicitly. All91 successful packets still use
+actual adapter conversion and container. Added explicit adapter duplicate guard
+check; no validator was weakened. The generic worker also retains its documented
+earlier RESULT_IDENTITY_MISMATCH metadata guard independently.
+
+Current source189928c37ca1cce04b12c55b92d64b44d113a21b0a4a44ed5f2f483c07b291e4
+is unchanged. Actual selected numerical modules: ef1/_daily.py
+4699635c51c3ddecf710acd5886f482855feac90f029ec5f080f8e2c78b89556 and
+_daily_context.py fed5d08ee9bf11005e4ecf01529490fc391ffbe61154e957de2a565ccba55f0f;
+module origins checked to selected source roots. Windows Python3.12.10 -I/-B,
+OMP/OPENBLAS/MKL/NUMEXPR threads1; no install/shared environment mutation.
+
+Actual commands through tools/check_daily_source.py with selected --core-root:
+`--test-name test_daily_observations_composition.DailyObservationsCompositionTests.test_all_119_packets_with_28_direct_pure_refusals`
+exit0:1method, all91 full FeatureResults and28 actual direct pure refusal codes.
+Default new-input pattern run4 exit0:9methods including all91literal conversions,
+three public helper equalities and retained duplicate guard. Actual public fixed252
+example executed exit0 through explicit selected module origins; output retained
+in ignored local evidence. Source strict typing7files,93input/94legacy regressions
+and19-file extraction evidence above remain applicable; no executable source
+changed since those checks. Full91DuckDB lifecycle run still pending completion
+at the time of this paragraph; read its final receipt below before claiming pass.
+
+Actual V3A1 composition completion: process exit0,10methods in185.403s.
+`python -I -B tools/check_daily_source.py --core-root <selected-core> --pattern 'test_daily_observations_*.py'`
+computed all91 full results equal to original corrected literal goldens, passed
+unchanged prepare_publication/encode_result/publish into91 fresh temporary output
+DuckDB databases, verified identical retries, closed/reopened every database and
+compared complete stored canonical results to goldens. Actual DB method bytes
+were unchanged by the separate semantic-stage test correction during this run.
+The running process loaded the earlier119-code/8input methods; final semantic
+method and final9input methods were executed separately with exit0 as recorded
+above. This precisely scopes both runs without treating mutable source tests as
+an exact-commit qualification. The final directpure method establishes all28 real
+pure invocations, rather than the earlier adapter-code equivalence alone.
+
+No runtime failure occurred in either corrected run. Local evidence:
+daily-composition-v3a1-run1.log, daily-direct-semantic-v3a1-run2.log,
+daily-inputs-v3a1-run4.log, daily-example-v3a1-run1.log under ignored
+work/daily-local-evidence; original failed directpure stage probe retained.
+These are bounded author Windows source checks, not independent review or
+installed artifact/other-platform proof. Coordinator must inspect actual final
+diff, obtain fresh independent review and exact reviewed-commit validation,
+integrate worker/runtime forms and browser demo; fullEQ164/original source/
+rights/release gates remain open. No commit/push/public tracker mutation occurred.
+
+### Daily observations corrected-core source epoch rebind — October21,2026
+
+Coordinator requested one bounded rebind after core review corrections, with no
+I/O production, golden, helper, test or generic boundary changes. Actual Windows
+Python3.12.10 -I/-B run used the same read-only runtime, thread variables1 and
+explicit module-origin checks. The private wrapper ran the existing
+`tools/check_daily_source.py --core-root <selected-core> --pattern 'test_daily_observations_*.py'`
+and took complete contracts/features source-tree SHA256 maps before and after.
+Actual exit0:11 unittest methods in180.596s. Actual loader inventory is9 input
+methods plus2 composition methods; packet subcases are not counted as methods.
+The earlier185.403s10-method run was8 inputs plus2 composition methods, as already
+recorded above, and remains evidence for its earlier source epoch only.
+
+This run computed all91 complete FeatureResults against the V3A1 goldens and
+executed all28 malformed canonical DTO cases through actual direct pure calls.
+It also passed91 distinct fresh output DuckDB publication lifecycles through
+unchanged SDK/sink, identical retry, close/reopen and complete canonical stored
+readback. Full before/after source maps were identical. Key full hashes:
+
+- ef1/_daily.py:67c805ff5114773454806ecb14a0594970bbef9f3c71d23bef1234c7cb3596f0
+- ef1/_daily_context.py:17f3e6d6262e5f95c4d853bb0852b193492bc16fd1a1354746f36cca31cd9115
+- I/O ef1.py:189928c37ca1cce04b12c55b92d64b44d113a21b0a4a44ed5f2f483c07b291e4
+- public fixture:479948037cd6d2fca3901cdb9cf3fcbba6256acbbcb9440bcd68e0362d7688c5
+
+Private immutable evidence is CORE_67C805FF_REBIND_REPORT.json and
+ daily-final-core67c805ff-11methods-run1.log under work/daily-local-evidence.
+Before refreshing the author summary, the earlier report was copied to
+SOURCE_EPOCH_4699635C_AUTHOR_REPORT.json with SHA256
+9c64cfd021057d9ed683b2e737e375f21704aad1d26f28a52524a8cde4c6ff89;
+all earlier logs/reports and initial failed probes remain preserved.
+
+This is source67c805ff/17f3e6d epoch evidence, not acceptance of a later kernel.
+Coordinator reports additional mathematical review rework pending and owns
+final source review, exact-cohort installed four-form bothOS qualification and
+integration/browser/release gates. Do not repeat91DB cycles on changing author
+sources automatically. No broad93/94 regressions repeated, source acquisition,
+N-drive query, install, commit, push or public tracker write. Next: coordinator
+final mathematical recheck, reviewed cohort/pins and actual acceptance gates.
