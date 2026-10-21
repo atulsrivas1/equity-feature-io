@@ -27,8 +27,8 @@
   },
   "additive_package_files": {
     "packages/duckdb/src/equity_feature_duckdb/ef1.py": {
-      "sha256": "22794c54d0bd17abc76b3bc6cd922be95d69807ec8441d52b02c74e4dd5ac790",
-      "reason": "Additive anchor/calendar/status/path conversion, explicit slot provenance and literal anchor/C01/S01-S03/G01-G03/D01 fixtures; inherited status tuple annotation only; supplied reference classification/action conversion and literal R01-R03 fixtures; period/extended exact nullable slots and literal base transport; no legacy reader mathematics changed; additive observable fixed nullable transport and literal O01/O02/H01/H11 examples, no inferred identities or mathematics"
+      "sha256": "189928c37ca1cce04b12c55b92d64b44d113a21b0a4a44ed5f2f483c07b291e4",
+      "reason": "Additive anchor/calendar/status/path conversion, explicit slot provenance and literal anchor/C01/S01-S03/G01-G03/D01 fixtures; inherited status tuple annotation only; supplied reference classification/action conversion and literal R01-R03 fixtures; period/extended exact nullable slots and literal base transport; no legacy reader mathematics changed; additive observable fixed nullable transport and literal O01/O02/H01/H11 examples, no inferred identities or mathematics; exact six-role daily REFERENCE transport and three literal synthetic daily examples"
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."
