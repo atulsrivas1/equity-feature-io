@@ -319,3 +319,135 @@ Separate initial review found P2 untracked core source provenance and P3 missing
 Corrected source final review/native bothOSCI and local bothforms pass; [source receipt](EQ121_DELIVERY.md) inventories actual source-producer bytes. Renewed documentation-head review/CI and actual main publication/archive/report equality/expiry/readback remain. Workers stays skeleton.
 
 EQ121 is accepted Closed/ProjectDone. EQ122 now owns compatible DuckDB extraction under published core pre-code0a77d24/PR292. Canonical issue279 Inprogress, one active story. a8 stamps only/source algorithms preserved; standalone native/fresh artifacts/old-new parity/private binding/review/publication gates remain. Core active source stays until standalone qualification/publication.
+
+## EF1 / EQ212 anchor slice — source authoring, October20,2026
+
+Owner-authorized reviewed-subset implementation; canonical EQ212#570 In progress,
+EF1epic569/milestone34. Frozen ledger02940da0c4663bbced050ac551e7fbafe2a1da1534e4c6fa5c87eaf90d420076,
+contractef1-contract1. Branchcodex/ef1-io based18d86761aa3eebb7414e51e8fa2aba089717b5eb.
+Added explicit public module equity_feature_duckdb.ef1: caller-supplied a1 anchor
+proof CanonicalBatch mapping, original A01/A02/missing-notional fixtures, A03
+zero-scope refusal, immutable explicit per-slot provenance/missing-delivery packet
+and input/output alias guard. Added authored mapping and prospective feature/
+DuckDB-sink full-result readback/replay conformance, plus a separately invoked
+bounded SDK-result publication example. No feature mathematics, new DataKind,
+codec, generic table reader or source acquisition behavior changed.
+
+No runtime/test/typecheck/build/benchmark, N: database query, output database
+creation, commit or push performed. Local EQ142 qualification window remains
+reserved. No acceptance or performance evidence inferred from authored assertions.
+Planned source distribution0.1.0a9; package/version/build pins still at accepteda8
+pending coordinator review and coordinated version changes. SDK/contracts.a2,
+canonical contracts.a4 and sink.a0 preserved. Actual feature candidate needs
+features.a5 and its compatibility qualification; no new feature import enters
+this source module.
+
+Resume: coordinator review actual local diff; resolve findings; align exact
+library/worker fixtures and version/pins; grant independent resource window;
+execute authored targeted mapping/composition tests and typing, expand source
+path/alias and B01 controls as warranted, then normal independent PR/native bothOS
+installed-artifact and source/publication/readback gates. Remaining EF1 source
+families and source/rights/path qualification are incomplete; EQ164 full inventory
+and EQ169 integrated validation/browser demo remain release gates. Public API
+and limitations are docs/api/EF1_ANCHOR_INPUTS.md. No private hardcoded data paths.
+
+### EQ212 coordinator review corrections — October20,2026
+
+Separate dirty-tree reviewer /root/ef1_io_review reported IO-01 invalid publication
+limits, IO-02 zero-capacity composition test limits and IO-03 an incorrect trade
+result binding-order assertion. Corrected example/test preparation to explicit
+max_results1, max_chunk_bytes1048576, max_total_bytes1048576,
+max_result_cells3 and max_evidence_rows128. Example uses the same bounded sink
+limits. Added two authored example-level checks: nonempty result publication and
+full readback; oversized input refuses before sink construction. Result assertions
+now expect actual canonical role sorting, preserving source packet transport order
+and unchanged library metadata. These16 authored methods have not executed.
+
+Applied coordinator-approved PACKAGING_AMENDMENT source package0.1.0a9 in
+packages/duckdb/pyproject.toml and package __version__; canonical contracts.a4,
+SDK.a2 and sink.a0 unchanged. Package README/API/changelog reflect actual new
+candidate metadata, superseding prior planned-only bump wording above. Existing
+historical build runner's a8 assertions and current historical receipt adapter
+stamp were identified and reported for coordinator version-identity reconciliation;
+the historical pipeline is not EF1 coverage. Coordinator owns new cross-repository
+CI/commit pins. Preserve historical receipts and avoid broad version replacement.
+
+No tests/imports/typecheck/builds/DB reads/output writes/benchmarks executed; no
+commit or push. Official EQ142 resource window still reserved. Remaining: decide
+current acquisition receipt version stamp, independent recheck corrected source,
+new exact EF1 qualification pipeline, admitted runtime window and actual targeted/
+legacy/installed bothOS evidence. These corrections are source changes, not review
+approval, validation or release completion.
+
+### EQ212 current receipt-stamp reconciliation
+
+Coordinator explicitly approved updating current AcquisitionReceipt.adapter_version
+from0.1.0a8 to0.1.0a9 and its current evidence assertion, alongside actual package
+metadata/public version. Current tools/build_duckdb.py assertion/report and its
+check_compatibility.py current-side package/receipt version expectations now use
+a9. The old-side a7 baseline and all historical documents/receipts are preserved.
+The compatibility helper still excludes only package version, adapter receipt stamp
+and consequent receipt identity digest from its existing exact comparison. These
+are authored expectations, not executed compatibility evidence. Existing historical
+builder core pin/contracts.a4 remains unchanged; it is not EF1 qualification.
+Source acquisition algorithm/schema1 is unchanged, but new a9 receipt bytes and
+digest differ by the explicit adapter-version identity. Prior paragraph's pending
+stamp decision is resolved. Root owns new EF1 CI/source pins and actual acceptance.
+No runtime checks, build, database operations, commits or push performed.
+
+### EQ212 first remote CI failures and current declaration corrections — October20,2026
+
+Coordinator reported actual PR18/head3ea6ed6 remote failures: optional DuckDB
+Windows/Linux run39528486935 failed check_extraction.py line27 because its retained
+extraction transform still expecteda8; compatibility-matrix run39528486824 failed
+build_matrix.py line92 because its current VERSIONS entry still expecteda8.
+Original failed evidence remains:
+https://github.com/atulsrivas1/equity-feature-io/actions/runs/39528486935
+https://github.com/atulsrivas1/equity-feature-io/actions/runs/39528486824
+This worker inspected current source, not remote logs independently. No failed run
+is relabelled green; successors require independent review and actual CI.
+
+Corrected current extraction guard via new docs/EF1_SOURCE_EVOLUTION.json; original
+docs/EQ122_EXTRACTION_INVENTORY.json and every canonical baseline Git hash remain
+unchanged. Permit only exact one-occurrence a7->a9 markers in current package root,
+receipt adapter_version and test_evidence assertion. Hash-bind additive ef1.py
+0ac6643951e374db27c551a61926ef248b65c6af67ec0e05497ad1694076d05e;
+retain all19 previous source/fixture comparisons and require exact complete package
+file set (excluding generated __pycache__). New extraction-source-check2 output
+records declaration hash, baseline/current checks and additions. Source builder
+now freezes both declaration files, checks hashes before/after and records them in
+its build manifest. No legacy source/hash guard disabled.
+
+Matrix exact current DuckDB expectation changeda8->a9 in builder and installed
+consumer. Identified predictable follow-on: accepted archive equality table has
+a8 filenames/hashes, so newa9 is explicitly declared changed distribution with
+reason and exclusion, preserving all historical hashes and exact accepted equality
+for unchanged packages. Repeat archive equality, source guards, dependency checks,
+installed compositions and resolver-conflict checks remain intact. Other matrix
+package versions, source/dependency pins and engines unchanged; this historical
+matrix still does not establish EF1 numerical coverage. Root owns separate EF1
+feature-a5 integration lane. Compatibility helper description now says currenta9;
+its exact version/receipt assertions were already updated.
+
+Changes are source-only and uncommitted. No local tests/imports/builds/benchmarks,
+source database reads or output database operations while official R18 owns the
+resource window. Independent current-diff review and coordinator authorization
+required before commit/push; then actual successor CI/native/artifact/EF1 evidence
+remains outstanding. Preserve these failures and original source receipts.
+
+### EQ212 actual successor strict-typing failure — October20,2026
+
+Coordinator reported actual PR18/headeddd0d35 strict-mypy failures in jobs
+118989878750 and118989878503. ef1.py line143 assigns the nine bar field names to
+`names`, which mypy inferred as a seven-element tuple from the trade branch.
+The previous independent source approval did not establish CI typing success.
+Added only `names: tuple[str, ...]` before the existing mode branches. Row data,
+field order, calculation behavior and contracts remain unchanged.
+
+Updated the additive ef1.py hash in docs/EF1_SOURCE_EVOLUTION.json from
+0ac6643951e374db27c551a61926ef248b65c6af67ec0e05497ad1694076d05e to
+30a842957a4c393631902bebad0bcdc4bc94b915e31598bffa9c3b4038256abb.
+All original19 source/fixture hashes and exact comparison rules remain unchanged.
+The prior hash/CI failure remains historical evidence above. No local imports,
+mypy/tests/builds/benchmarks/DB operations executed while R18 remains reserved;
+no commit/push. Fresh independent recheck and actual successor CI are still needed.

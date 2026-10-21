@@ -19,9 +19,10 @@ WORKER='8ee8719eda773efef838805475173f2b474488df'
 OLD_WORKER='b2f13c9a167cf099b080408bb35147cefdefb87a'
 OLD_IO='8461ee52a2631ac8aa1be52f6cf222ac7a14b87b'
 IO_A1='8f3208d53da095bcf730cdf95f65a749028af2d6'
-SCOPED=('packages','examples/third_party','examples/duckdb_conformance.py','tests','tools','requirements-dev.txt','.github/workflows/matrix.yml')
+SCOPED=('packages','examples/third_party','examples/duckdb_conformance.py','tests','tools','requirements-dev.txt','.github/workflows/matrix.yml',
+        'docs/EQ122_EXTRACTION_INVENTORY.json','docs/EF1_SOURCE_EVOLUTION.json')
 VERSIONS={'equity-feature-contracts':'0.0.4a4','equity-features':'0.0.4a4','equity-feature-io-contracts':'0.1.0a2',
-          'equity-feature-io-sdk':'0.1.0a2','equity-feature-duckdb':'0.1.0a8','equity-feature-parquet':'0.1.0a1',
+          'equity-feature-io-sdk':'0.1.0a2','equity-feature-duckdb':'0.1.0a9','equity-feature-parquet':'0.1.0a1',
           'equity-feature-duckdb-sink':'0.1.0a0','equity-feature-example-extensions':'0.1.0a0','equity-feature-workers':'0.1.0a1'}
 
 def run_result(*args,cwd):
@@ -113,7 +114,7 @@ def main():
             for extra,deps in project.get('optional-dependencies',{}).items():
                 requirements.extend(f'{dep}; extra == "{extra}"' for dep in deps)
             foundation.inspect(path,name,requirements)
-            if name not in ('equity-feature-workers','equity-feature-parquet'):
+            if name not in ('equity-feature-workers','equity-feature-parquet','equity-feature-duckdb'):
                 assert foundation.sha(path)==accepted[path.name],path.name
         old=foundation.snapshot(roots['worker'],OLD_WORKER,location/'old-worker',('packages',))
         oldio=foundation.snapshot(ROOT,OLD_IO,location/'old-io',('packages/io-contracts','packages/io-sdk'))
@@ -132,8 +133,9 @@ def main():
                 'historical_commits':{'workers.a0':OLD_WORKER,'SDK.a0':OLD_IO,'contracts.a1':IO_A1},'versions':VERSIONS,
                 'artifacts':{p.name:foundation.sha(p) for p in archives},'historical_artifacts':{p.name:foundation.sha(p) for p in oldarchives},
                 'source_sha256':tracked,'forms':forms,'accepted_unchanged_archive_equality':True,
-                'changed_distributions':['equity-feature-parquet'],
-                'accepted_archive_equality_exclusions':['equity-feature-workers','equity-feature-parquet']}
+                'changed_distributions':['equity-feature-parquet','equity-feature-duckdb'],
+                'changed_distribution_reasons':{'equity-feature-duckdb':'EQ212 additive EF1 source module and exact a9 package/receipt stamp; original accepted a8 archive hashes retained historically'},
+                'accepted_archive_equality_exclusions':['equity-feature-workers','equity-feature-parquet','equity-feature-duckdb']}
         (output/'manifest.json').write_text(json.dumps(record,sort_keys=True,indent=2)+'\n',encoding='utf-8')
     print('Nine packages/18 repeat archives/two fresh forms/core-light-full/compositions/conflicts/typing/source guards PASS')
 if __name__=='__main__':

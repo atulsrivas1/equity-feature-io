@@ -17,6 +17,7 @@ from build_foundation import snapshot
 
 ROOT = Path(__file__).resolve().parents[1]
 CORE_COMMIT = "2cd51cd35c0a3081f88e1752c7c1c41ffe0e62af"
+QUALIFICATION_DECLARATIONS = ('docs/EQ122_EXTRACTION_INVENTORY.json', 'docs/EF1_SOURCE_EVOLUTION.json')
 
 
 def run(*args, cwd=ROOT, **kwargs):
@@ -84,7 +85,7 @@ def qualify(output, form, source_commit):
         compatibility.update(system=platform.system(),form=form,core_source_commit=CORE_COMMIT,
             old_adapter_artifact={old_adapter.name:digest(old_adapter)},new_artifacts={p.name:digest(p) for p in [*paths,adapter]})
         compatibility_path.write_text(json.dumps(compatibility,sort_keys=True,indent=2)+'\n',encoding='utf-8')
-        run(str(py),'-I','-c',"from pathlib import Path; import equity_feature_duckdb as d,duckdb,numpy; assert 'site-packages' in Path(d.__file__).parts; assert d.__version__=='0.1.0a8'; assert duckdb.__version__=='1.5.6'; assert numpy.__version__=='2.2.6'",cwd=env)
+        run(str(py),'-I','-c',"from pathlib import Path; import equity_feature_duckdb as d,duckdb,numpy; assert 'site-packages' in Path(d.__file__).parts; assert d.__version__=='0.1.0a9'; assert duckdb.__version__=='1.5.6'; assert numpy.__version__=='2.2.6'",cwd=env)
         result=subprocess.run([str(py),'-I','-m','unittest','discover','-s',str(ROOT/'tests/duckdb')],cwd=env,text=True,capture_output=True)
         print(result.stdout+result.stderr)
         result.check_returncode()
@@ -117,7 +118,7 @@ print('Pure core registry executes with DuckDB forbidden')
         assert before==after,'adapter execution changed installed core'
         fingerprint = lambda x: hashlib.sha256(json.dumps(x,sort_keys=True).encode()).hexdigest()
         report = dict(schema='duckdb-install1',source_commit=source_commit,
-                      form=form,system=platform.system(),python=platform.python_version(),duckdb='1.5.6',numpy='2.2.6',adapter='0.1.0a8',
+                      form=form,system=platform.system(),python=platform.python_version(),duckdb='1.5.6',numpy='2.2.6',adapter='0.1.0a9',
                       artifacts={p.name:digest(p) for p in [*paths,adapter]},synthetic_tests=count,
                       test_suite_sha256=hashlib.sha256(b''.join(p.read_bytes() for p in sorted((ROOT/'tests/duckdb').glob('test_*.py')))).hexdigest(),
                       before_core_sha256=fingerprint(before),after_core_sha256=fingerprint(after),
@@ -129,7 +130,8 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--core-root',type=Path,required=True)
     args=parser.parse_args()
-    assert not subprocess.check_output(['git','status','--porcelain','--','packages','tools','tests','examples','benchmarks','requirements-duckdb.txt'],cwd=ROOT,text=True).strip(), 'Freeze extraction sources before qualification'
+    assert not subprocess.check_output(['git','status','--porcelain','--','packages','tools','tests','examples','benchmarks','requirements-duckdb.txt',*QUALIFICATION_DECLARATIONS],cwd=ROOT,text=True).strip(), 'Freeze extraction sources before qualification'
+    declaration_hashes = {name: digest(ROOT / name) for name in QUALIFICATION_DECLARATIONS}
     work=ROOT/'work';work.mkdir(exist_ok=True)
     staging=tempfile.TemporaryDirectory(prefix='source-',dir=work)
     source_root=Path(staging.name)
@@ -163,11 +165,13 @@ def main():
         (inspect_adapter if path.name.startswith('equity_feature_duckdb-') else inspect)(path)
     qualify(output,'whl',component_commit);qualify(output,'gz',component_commit)
     assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==component_commit, 'Source head changed during qualification'
-    assert not subprocess.check_output(['git','status','--porcelain','--','packages','tools','tests','examples','benchmarks','requirements-duckdb.txt'],cwd=ROOT,text=True).strip(), 'Sources changed during qualification'
+    assert not subprocess.check_output(['git','status','--porcelain','--','packages','tools','tests','examples','benchmarks','requirements-duckdb.txt',*QUALIFICATION_DECLARATIONS],cwd=ROOT,text=True).strip(), 'Sources changed during qualification'
+    assert all(digest(ROOT / name) == expected for name, expected in declaration_hashes.items()), 'Qualification declaration changed'
     manifest=dict(schema='duckdb-build1',commit=component_commit,
-                  source_dirty=bool(subprocess.check_output(['git','status','--porcelain','--','packages','tools/build_duckdb.py','tests/duckdb','benchmarks/duckdb_read.py','examples/duckdb_conformance.py'],cwd=ROOT,text=True).strip()),
+                  source_dirty=bool(subprocess.check_output(['git','status','--porcelain','--','packages','tools/build_duckdb.py','tests/duckdb','benchmarks/duckdb_read.py','examples/duckdb_conformance.py',*QUALIFICATION_DECLARATIONS],cwd=ROOT,text=True).strip()),
                   system=platform.system(),python=platform.python_version(),epoch=EPOCH,
                   core_source_commit=CORE_COMMIT,
+                  qualification_declaration_sha256=declaration_hashes,
                   artifacts={p.name:digest(p) for p in paths})
     (output/'manifest.json').write_text(json.dumps(manifest,sort_keys=True,indent=2)+'\n',encoding='utf-8')
     staging.cleanup()
