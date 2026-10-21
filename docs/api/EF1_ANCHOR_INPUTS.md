@@ -113,3 +113,16 @@ sink construction. Authored example checks cover nonempty publication/readback
 and oversized input refusal before sink creation. IO-03 asserts canonical
 ResultMetadata role sorting independently of source packet transport order.
 All checks remain unexecuted while the official R18 study owns its resource window.
+
+Current qualification declarations use `docs/EF1_SOURCE_EVOLUTION.json` alongside
+the unchanged original EQ122 inventory. The retained19 extraction comparisons
+still verify original canonical Git hashes and exact current bytes, permitting
+only three declared one-occurrence a7-to-a9 markers (package, receipt and its
+current test). The new EF1 source module is separately hash-bound; the complete
+package file-set check rejects undeclared additions. The source builder retains
+both declaration digests and checks them before/after qualification. The matrix
+expects exact a9 and records DuckDB as a changed distribution, retaining accepted
+a8 archive hashes historically and exact accepted hash equality for unchanged
+packages. All new archives still require repeat-build equality and actual installed
+composition checks. These declarations do not establish that CI passed or that
+the historical matrix covers new EF1 mathematics.

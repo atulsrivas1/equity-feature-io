@@ -394,3 +394,43 @@ Source acquisition algorithm/schema1 is unchanged, but new a9 receipt bytes and
 digest differ by the explicit adapter-version identity. Prior paragraph's pending
 stamp decision is resolved. Root owns new EF1 CI/source pins and actual acceptance.
 No runtime checks, build, database operations, commits or push performed.
+
+### EQ212 first remote CI failures and current declaration corrections — October20,2026
+
+Coordinator reported actual PR18/head3ea6ed6 remote failures: optional DuckDB
+Windows/Linux run39528486935 failed check_extraction.py line27 because its retained
+extraction transform still expecteda8; compatibility-matrix run39528486824 failed
+build_matrix.py line92 because its current VERSIONS entry still expecteda8.
+Original failed evidence remains:
+https://github.com/atulsrivas1/equity-feature-io/actions/runs/39528486935
+https://github.com/atulsrivas1/equity-feature-io/actions/runs/39528486824
+This worker inspected current source, not remote logs independently. No failed run
+is relabelled green; successors require independent review and actual CI.
+
+Corrected current extraction guard via new docs/EF1_SOURCE_EVOLUTION.json; original
+docs/EQ122_EXTRACTION_INVENTORY.json and every canonical baseline Git hash remain
+unchanged. Permit only exact one-occurrence a7->a9 markers in current package root,
+receipt adapter_version and test_evidence assertion. Hash-bind additive ef1.py
+0ac6643951e374db27c551a61926ef248b65c6af67ec0e05497ad1694076d05e;
+retain all19 previous source/fixture comparisons and require exact complete package
+file set (excluding generated __pycache__). New extraction-source-check2 output
+records declaration hash, baseline/current checks and additions. Source builder
+now freezes both declaration files, checks hashes before/after and records them in
+its build manifest. No legacy source/hash guard disabled.
+
+Matrix exact current DuckDB expectation changeda8->a9 in builder and installed
+consumer. Identified predictable follow-on: accepted archive equality table has
+a8 filenames/hashes, so newa9 is explicitly declared changed distribution with
+reason and exclusion, preserving all historical hashes and exact accepted equality
+for unchanged packages. Repeat archive equality, source guards, dependency checks,
+installed compositions and resolver-conflict checks remain intact. Other matrix
+package versions, source/dependency pins and engines unchanged; this historical
+matrix still does not establish EF1 numerical coverage. Root owns separate EF1
+feature-a5 integration lane. Compatibility helper description now says currenta9;
+its exact version/receipt assertions were already updated.
+
+Changes are source-only and uncommitted. No local tests/imports/builds/benchmarks,
+source database reads or output database operations while official R18 owns the
+resource window. Independent current-diff review and coordinator authorization
+required before commit/push; then actual successor CI/native/artifact/EF1 evidence
+remains outstanding. Preserve these failures and original source receipts.

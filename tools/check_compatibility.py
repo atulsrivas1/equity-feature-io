@@ -1,4 +1,4 @@
-"""Compare a7/a8 installed readers against the very same synthetic files."""
+"""Compare historical a7/current a9 readers against the same synthetic files."""
 import argparse
 from dataclasses import asdict
 import hashlib
