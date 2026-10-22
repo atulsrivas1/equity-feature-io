@@ -45,6 +45,10 @@
     "packages/duckdb/src/equity_feature_duckdb/reference_close.py": {
       "sha256": "fcaf407624be99a50b743b380b259c32aa57946ae18db377dd19cc48a69fc8da",
       "reason": "Additive supplied close-reconciliation conversion, exact four nullable roles and config builder; original synthetic C01 to C03 facts only, no BPS, tolerance or close mathematics."
+    },
+    "packages/duckdb/src/equity_feature_duckdb/venue_status.py": {
+      "sha256": "b93e3821c60b7df8e3b8d0d92ff12f94bae9fae99adae5d71cb08ea5bbedab73",
+      "reason": "Additive supplied multi-venue status conversion, exact five nullable roles, id encoders and config builder; original synthetic MV01 to MV44 facts only, no population, precedence, count or clock mathematics."
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."
