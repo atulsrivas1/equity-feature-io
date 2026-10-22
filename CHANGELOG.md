@@ -16,6 +16,10 @@ Correct completion/reservation observation during cooperating first-publication 
 
 # Changelog
 
+## Unreleased - EF1 supplied close-reconciliation I/O
+
+Adds exact four nullable roles, lossless authoritative-close conversion, the reference-id encoder, config builder and original synthetic C01 to C03 requests under EQ212#570 for EQ168#508. See [API](docs/api/EF1_REFERENCE_CLOSE_INPUTS.md) and [source checkpoint](docs/EF1_CLOSE_RECONCILIATION_IO.md). No BPS or comparison mathematics, sink/SDK/schema/version change or release acceptance.
+
 ## 0.1.0a0 — EQ121, unreleased foundations
 
 Typed independently buildable foundation packages, inward metadata dependencies, canonical issue authority and repeat-build/fresh-form checks. Version markers only; no formulas, acquisition, sink publication, factory registration or worker commands. Actual delivery acceptance is linked from canonical EQ121 after publication.
