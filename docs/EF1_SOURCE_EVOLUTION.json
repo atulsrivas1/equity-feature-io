@@ -47,7 +47,7 @@
       "reason": "Additive supplied close-reconciliation conversion, exact four nullable roles and config builder; original synthetic C01 to C03 facts only, no BPS, tolerance or close mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/venue_status.py": {
-      "sha256": "b93e3821c60b7df8e3b8d0d92ff12f94bae9fae99adae5d71cb08ea5bbedab73",
+      "sha256": "21720c8f72832068c861034168494d2ec86c92d4118afd94e0c0a84f03f7f718",
       "reason": "Additive supplied multi-venue status conversion, exact five nullable roles, id encoders and config builder; original synthetic MV01 to MV44 facts only, no population, precedence, count or clock mathematics."
     }
   },
