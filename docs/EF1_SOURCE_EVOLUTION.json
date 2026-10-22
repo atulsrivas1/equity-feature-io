@@ -41,6 +41,10 @@
     "packages/duckdb/src/equity_feature_duckdb/regular_first_trade_price.py": {
       "sha256": "b69e90ef7178c1d0d07491abb461e5743465c09e9f5776a2ee5af05ac93210ec",
       "reason": "Additive supplied regular first-trade conversion and exact three nullable roles; original synthetic R001/R019 facts only, no firstness, proof generation or price mathematics."
+    },
+    "packages/duckdb/src/equity_feature_duckdb/reference_close.py": {
+      "sha256": "fcaf407624be99a50b743b380b259c32aa57946ae18db377dd19cc48a69fc8da",
+      "reason": "Additive supplied close-reconciliation conversion, exact four nullable roles and config builder; original synthetic C01 to C03 facts only, no BPS, tolerance or close mathematics."
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."

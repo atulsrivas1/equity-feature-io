@@ -44,6 +44,7 @@ def main():
         'packages/duckdb/src/equity_feature_duckdb/gap_endpoint.py',
         'packages/duckdb/src/equity_feature_duckdb/regular_bar_prices.py',
         'packages/duckdb/src/equity_feature_duckdb/regular_first_trade_price.py',
+        'packages/duckdb/src/equity_feature_duckdb/reference_close.py',
     }
     additive_checked = {}
     for name, declaration in additions.items():
