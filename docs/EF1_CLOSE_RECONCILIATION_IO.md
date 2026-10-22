@@ -10,18 +10,17 @@ nullable container, lossless conversion, the `k1:` reference-id encoder, the con
 builder and three original synthetic requests. No fetching, source-specific schema,
 BPS or tolerance mathematics, close selection or sink/SDK/version change.
 
-What was actually checked (Python 3.12, core `main` packages on the path, library
-producer absent): the module imports; the three synthetic fixtures construct and pass
-generic canonical validation; the config builder output equals the synthetic config
-byte for byte; the synthetic calendar `c1:` id equals the core `calendar_proof_id`
-for the reference-close context. The synthetic population digest was computed once
-with the core membership projection and embedded as a literal.
+Actually executed (Python 3.12, core main c754e5d with the merged library producer
+on the path): C01/C02/C03 run through compute_ef1 giving within_tolerance (BPS 0.0,
+supplied 1250), outside_tolerance (BPS 79.36507936507937, supplied 1260) and
+reference_unavailable (all numeric outputs null). The library build_ef1_config
+reproduces each synthetic config byte for byte, so make_reference_close_config
+matches it too. The public example ran. Each result published to a new scratch
+DuckDB sink and read back identical (decimal128 coefficient, float64 hex-exact,
+bool, string, the bps unit), also after close/reopen. tools/check_extraction.py with
+the core root exited 0. Expected results are deliberately absent from the fixtures.
 
-NOT executed: `compute_ef1` on these inputs, the worker, any DuckDB write or readback,
-the example, mypy. Expected results are deliberately absent. Unverified assumptions:
-the library reuses the regular-BAR population proof unchanged (producer text
-`regular_bar_prices`), and accepts a bar whose end equals the actual close as the
-complete regular prefix.
+NOT executed: the worker, mypy, independent oracle comparison.
 
 Remaining gates: library availability and manual run of the example, cross-layer
 fixtures (compact contract fixtures expanded to canonical packets), worker and
