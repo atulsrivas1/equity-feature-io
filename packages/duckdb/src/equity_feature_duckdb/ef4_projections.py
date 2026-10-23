@@ -2,37 +2,42 @@
 relative excess and rate projection, mapped from SUPPLIED inputs.
 
 Maps supplied daily closes, epoch bars, leg witnesses, sector membership facts and tape-window aggregates into canonical
-batches (one batch per role; REFERENCE facts in the contract expansion order), builds the four core configurations with
-the core builders (`ef4-proj1`, `ef4-rel1`, `ef4-rate1`) and runs the core computation. Rulings pinned here (core
-`docs/ef4/PATH_PROJECTIONS_IMPLEMENTATION.md`): one BAR batch per role with per-slot coverage named `bar:<i>` (session
-projection: `slot:<i>`), declared aggregate coverage on every batch, `core_benchmark_ids` passed to the builder as a tuple
-(the builder encodes it as canonical JSON text), REFERENCE evidence boundary `ordinary` (library), and the daily-role
-DUPLICATE check (library).
+batches (one batch per role; REFERENCE facts in the contract expansion order), and builds the four `ConfigSpec`
+envelopes by hand (the same parameter layout as the core builders, with the supplied parameters passed through
+unvalidated, so the core closed-envelope decoder refuses bad or unknown parameters). Pinned rulings (core
+`docs/ef4/PATH_PROJECTIONS_IMPLEMENTATION.md`): one BAR batch per role; the epoch bars arrive as one flat list, and each
+bar is one slot with coverage `bar:<i>` (session projection: `slot:<i>`); declared aggregate coverage on every batch;
+`core_benchmark_ids` is canonical compact JSON text.
 
-Nothing is derived, filled, bridged, rescaled, sorted by value, inferred from a sector name or computed here. Every
-identity, cutoff, unit, admission, refusal and value is the library's; the only checks made here are the shared
-canonical-batch rules (`validate_batch`) that run while a batch is built, plus the delivery-mode check. Identities are
-supplied by the caller through `ProjectionIds`; no entity, instrument, benchmark, session, grid or source id is fixed here.
+This module imports only `equity_feature_contracts` and the EF3 daily grid codec of this package. It does not import the
+core library: the caller builds the core grid objects from the codecs, checks the envelopes against the core builders if
+it wishes, and runs the core computation. Nothing is derived, filled, bridged, rescaled, sorted by value, inferred from a
+sector name or computed here; the shared canonical-batch rules (`validate_batch`) run while batches are built. Identities
+are supplied through `ProjectionIds`; no entity, instrument, benchmark, session, grid or source id is fixed here.
 """
 from __future__ import annotations
 
 import base64
+import hashlib
+import json
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, field, replace
-from pathlib import Path
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from equity_feature_contracts import (
     AdjustmentSpec, AvailabilitySpec, BatchMetadata, CanonicalBatch, Column, ConfigSpec, ContractError, Coverage,
-    DataKind, EntityKey, ErrorCode, FeatureResult, InputScope, IntervalCoverage, Parameter, PriceUnit, SessionSpec,
-    SourceBinding, validate_batch,
+    DataKind, EntityKey, ErrorCode, InputScope, IntervalCoverage, Parameter, PriceUnit, SessionSpec, SourceBinding,
+    WindowSpec, validate_batch,
 )
-from equity_features.ef3 import DailyGrid
-from equity_features.ef4 import (
-    BarGrid, build_bar_projection_config, build_rate_projection_config, build_relative_excess_config,
-    build_session_projection_config, compute_bar_projection, compute_rate_projection, compute_relative_excess,
-    compute_session_projection, encode_core_ids, require_ef4_path_projections_capability,
-)
+
+from .relative_rv import DailyGrid as DailyGridCodec, GRID_SCHEMA as DAILY_GRID_SCHEMA
+
+# Identities, algorithms and schemas of the frozen contract (core `equity_features.ef4`, checked by the driver).
+SESSION_IDENTITY, SESSION_ALGORITHM = "ef4.session_projection", "ef4-session-projection-v1"
+BAR_IDENTITY, BAR_ALGORITHM = "ef4.bar_projection", "ef4-bar-projection-v1"
+BAR_GRID_SCHEMA = "equity-features.ef4-bar-grid.v1"
+RELATIVE_IDENTITY, RELATIVE_ALGORITHM = "ef4.relative_excess", "ef4-relative-excess-v1"
+RATE_IDENTITY, RATE_ALGORITHM = "ef4.rate_projection", "ef4-rate-projection-v1"
 
 MAPPING_VERSION = "ef4-proj-map1"
 SOURCE_ID = "SYN-SRC"
@@ -40,8 +45,7 @@ SNAPSHOT_ID = "snap-1"
 SCOPE_POLICY = "ef4-supplied-input"
 EPOCH_NS = 1_700_000_000_000_000_000  # origin of the compact slot clock (wire_expansion of the contract)
 BAR_NS = 60 * 10**9                   # epoch bar spacing of the compact clock
-DAY_NS = 86_400 * 10**9               # daily slot spacing of the compact clock
-DAY_SESSION_NS = DAY_NS               # one whole day per governed daily slot of the compact clock
+DAY_NS = 86_400 * 10**9               # daily slot spacing of the compact clock; one whole day per daily slot
 SECOND_NS = 10**9
 KNOWN_DEFAULT = 50                    # default compact known_at token (ka)
 PLACEHOLDER_CLOSE = 1                 # close of an unknown-availability slot: never READY, never used
@@ -49,13 +53,40 @@ DELIVERY_MODE = "batch"
 
 
 class ProjectionStageError(Exception):
-    """A refusal tagged with the layer that raised it: `io` (this adapter and the shared batch rules) or `library`."""
+    """A refusal tagged with the layer that raised it: `io` (supplied-input mapping and the shared batch rules) or
+    `library` (envelope and computation tier, which the core library decides)."""
 
     def __init__(self, stage: str, error: BaseException) -> None:
         super().__init__(f"{stage}: {error}")
         self.stage = stage
         self.error = error
         self.code = getattr(error, "code", None)
+
+
+@dataclass(frozen=True)
+class BarGridCodec:
+    """Local codec of the core reset-epoch bar grid: same fields, schema and digest (checked by the driver)."""
+
+    instrument_id: str
+    calendar_id: str
+    grid_id: str
+    revision: str
+    session: SessionSpec
+    bar_ns: int
+    bar_count: int
+    target_index: int
+
+    def to_json(self) -> str:
+        return json.dumps({"schema": BAR_GRID_SCHEMA, **asdict(self)}, sort_keys=True, separators=(",", ":"),
+                          ensure_ascii=True, allow_nan=False)
+
+    @property
+    def digest(self) -> str:
+        return hashlib.sha256(self.to_json().encode("ascii")).hexdigest()
+
+    @property
+    def target_end_ns(self) -> int:
+        return self.session.open_ns + (self.target_index + 1) * self.bar_ns
 
 
 @dataclass(frozen=True)
@@ -77,6 +108,19 @@ class ProjectionIds:
         return self.names.get(name, name) if isinstance(name, str) else name
 
 
+@dataclass(frozen=True)
+class ProjectionRequest:
+    """Everything the core computation needs, as plain contract objects and codecs."""
+
+    producer: str
+    grid: Any                      # DailyGridCodec or BarGridCodec (None for relative excess and rate projection)
+    batches: tuple[CanonicalBatch | None, ...]
+    config: ConfigSpec
+    features: tuple[str, ...]
+    capability: str
+    entity: EntityKey | None
+
+
 def _source(input_id: str) -> SourceBinding:
     return SourceBinding(SOURCE_ID, SNAPSHOT_ID, MAPPING_VERSION, input_id)
 
@@ -95,9 +139,9 @@ def _availability(market_ns: int, knowledge_ns: int) -> AvailabilitySpec:
     return AvailabilitySpec(market_ns, knowledge_ns, max(knowledge_ns, market_ns), "known_at")
 
 
-def _known(token: Any, knowledge_ns: int, compact_k: int) -> int | None:
-    """Compact known_at token: `None` is unknown availability; otherwise the instant `token` ns (or the compact
-    offset from the cutoff when `compact_k` is given: token t maps to knowledge_ns - (compact_k - t) seconds)."""
+def _known(token: Any, knowledge_ns: int | None, compact_k: int | None) -> int | None:
+    """Compact known_at token: `None` is unknown availability. With `compact_k` (session and bar notation) token t maps to
+    knowledge_ns - (compact_k - t) seconds; without it (relative and rate notation) the token is the instant itself."""
     if token is None:
         return None
     if compact_k is None:
@@ -134,14 +178,14 @@ def _checked(batch: CanonicalBatch, availability: AvailabilitySpec | None) -> Ca
 
 # ------------------------------------------------------------------------------------------ session projection
 def session_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: ProjectionIds, *,
-                              input_id: str = "daily") -> tuple[CanonicalBatch, DailyGrid, AvailabilitySpec]:
-    """Daily close-only BAR role on the governed daily grid (one slot per supplied close, target slot explicit)."""
+                              input_id: str = "daily") -> tuple[CanonicalBatch, DailyGridCodec, AvailabilitySpec]:
+    """Daily close-only BAR role on the governed daily grid: one slot per supplied close, target slot explicit."""
     closes = fx["closes"]
     count = len(closes)
     target = fx["target"] if "target" in fx else count - 1
     sessions = tuple(SessionSpec(ids.namespace, f"{ids.day_session_prefix}{i}", EPOCH_NS + i * DAY_NS,
-                                 EPOCH_NS + i * DAY_NS + DAY_SESSION_NS, "UTC") for i in range(count))
-    grid = DailyGrid(ids.instrument_id, ids.calendar_id, ids.grid_id, ids.revision, sessions, target)
+                                 EPOCH_NS + (i + 1) * DAY_NS, "UTC") for i in range(count))
+    grid = DailyGridCodec(ids.instrument_id, ids.calendar_id, ids.grid_id, ids.revision, sessions, target)
     market = sessions[-1].close_ns
     knowledge = market + fx["K"] * SECOND_NS
     availability = _availability(market, knowledge)
@@ -160,34 +204,32 @@ def session_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids
         if state == "gap":
             intervals.append(IntervalCoverage(name, session.open_ns, session.close_ns, Coverage(1, 0, False)))
             continue
-        if state == "null":
-            close, known = None, _known(token, knowledge, fx["K"])
-        else:
-            close = PLACEHOLDER_CLOSE if payload is None else payload
-            known = _known(token, knowledge, fx["K"])
-        rows.append((instrument, session_id, start, end, close, known))
+        close = None if state == "null" else (PLACEHOLDER_CLOSE if payload is None else payload)
+        rows.append((instrument, session_id, start, end, close, _known(token, knowledge, fx["K"])))
         intervals.append(IntervalCoverage(name, session.open_ns, session.close_ns, Coverage(1, 1, True)))
     names = ("instrument_id", "session_id", "start_ns", "end_ns", "close", "known_at_ns")
-    batch = _bar_batch(names, rows, intervals, count, InputScope(sessions[0].open_ns, sessions[-1].close_ns,
-                                                              SCOPE_POLICY), ids.namespace, input_id,
-                       _unit(ctx["batch"]["unit"]), _adjustment(ctx["batch"]["adjustment"]))
-    return _checked(batch, availability), grid, availability
+    columns = tuple(Column(name, tuple(row[i] for row in rows)) for i, name in enumerate(names))
+    metadata = BatchMetadata(ids.namespace, _source(input_id), _aggregate(count, len(rows)),
+                             _unit(ctx["batch"]["unit"]), _adjustment(ctx["batch"]["adjustment"]), "none", "shares",
+                             "declared", "reject", InputScope(sessions[0].open_ns, sessions[-1].close_ns, SCOPE_POLICY),
+                             tuple(intervals))
+    return _checked(CanonicalBatch(DataKind.BAR, columns, metadata), availability), grid, availability
 
 
 # ------------------------------------------------------------------------------------------ bar projection
 def bar_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: ProjectionIds, *,
-                          input_id: str = "bars") -> tuple[CanonicalBatch, BarGrid, AvailabilitySpec]:
-    """Reset-epoch R17-style BAR delivery as ONE batch per role: chunks are concatenated here, coverage is `bar:<i>`."""
+                          input_id: str = "bars") -> tuple[CanonicalBatch, BarGridCodec, AvailabilitySpec]:
+    """The reset-epoch bars of one supplied flat list (one entry per bar slot) as ONE batch for the role; per-slot
+    coverage is named `bar:<i>`. The chunked R17 delivery is not modelled here: the caller supplies one list."""
     bars = fx["bars"]
     count = len(bars)
     target = fx["target"] if "target" in fx else count - 1
     session = SessionSpec(ids.namespace, ids.bar_session_id, EPOCH_NS, EPOCH_NS + count * BAR_NS, "UTC")
-    grid = BarGrid(ids.instrument_id, ids.calendar_id, ids.grid_id, ids.revision, session, BAR_NS, count, target)
+    grid = BarGridCodec(ids.instrument_id, ids.calendar_id, ids.grid_id, ids.revision, session, BAR_NS, count, target)
     market = session.close_ns
     knowledge = market + fx["K"] * SECOND_NS
     availability = _availability(market, knowledge)
-    notional_column = fx["notional_column"]
-    rows: list[list[Any]] = []
+    rows: list[dict[str, Any]] = []
     intervals: list[IntervalCoverage] = []
     for index, slot in enumerate(bars):
         state, payload, token, wire = _unpack(slot)
@@ -204,40 +246,25 @@ def bar_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: Pr
         elif state == "null":
             ohlc, volume, notional = [None] * 4, None, None
         else:
-            ohlc, volume, notional = list(payload[:4]), payload[4], payload[5] if len(payload) > 5 else None
+            ohlc, volume = list(payload[:4]), payload[4]
+            notional = payload[5] if len(payload) > 5 else None
         instrument = ids.bind(wire["inst"]) if "inst" in wire else ids.instrument_id
         session_id = ids.bind(wire["ss"]) if "ss" in wire else ids.bar_session_id
-        rows.append([instrument, session_id, wire.get("start", start), wire.get("end", end), *ohlc, volume,
-                     notional, _known(token, knowledge, fx["K"])])
+        rows.append({"instrument_id": instrument, "session_id": session_id, "start_ns": wire.get("start", start),
+                     "end_ns": wire.get("end", end), "open": ohlc[0], "high": ohlc[1], "low": ohlc[2],
+                     "close": ohlc[3], "volume": volume, "actual_notional": notional,
+                     "known_at_ns": _known(token, knowledge, fx["K"])})
         intervals.append(IntervalCoverage(name, start, end, Coverage(1, 1, True)))
     names = ["instrument_id", "session_id", "start_ns", "end_ns", "open", "high", "low", "close", "volume"]
-    if notional_column:
+    if fx["notional_column"]:
         names.append("actual_notional")
     names.append("known_at_ns")
-    columns = []
-    for position, column in enumerate(names):
-        if column == "known_at_ns":
-            values = [row[-1] for row in rows]
-        elif column == "actual_notional":
-            values = [row[9] for row in rows]
-        else:
-            values = [row[position] for row in rows]
-        columns.append(Column(column, tuple(values)))
-    scope = InputScope(session.open_ns, session.close_ns, SCOPE_POLICY)
+    columns = [Column(name, tuple(row[name] for row in rows)) for name in names]
     metadata = BatchMetadata(ids.namespace, _source(input_id), _aggregate(count, len(rows)),
                              _unit(ctx["batch"]["unit"]), _adjustment(ctx["batch"]["adjustment"]), "none", "shares",
-                             "declared", "reject", scope, tuple(intervals))
-    batch = CanonicalBatch(DataKind.BAR, tuple(columns), metadata)
-    return _checked(batch, availability), grid, availability
-
-
-def _bar_batch(names: Sequence[str], rows: Sequence[tuple[Any, ...]], intervals: Sequence[IntervalCoverage],
-               count: int, scope: InputScope, namespace: str, input_id: str, unit: PriceUnit | None,
-               adjustment: AdjustmentSpec) -> CanonicalBatch:
-    columns = tuple(Column(name, tuple(row[i] for row in rows)) for i, name in enumerate(names))
-    metadata = BatchMetadata(namespace, _source(input_id), _aggregate(count, len(rows)), unit, adjustment, "none",
-                             "shares", "declared", "reject", scope, tuple(intervals))
-    return CanonicalBatch(DataKind.BAR, columns, metadata)
+                             "declared", "reject", InputScope(session.open_ns, session.close_ns, SCOPE_POLICY),
+                             tuple(intervals))
+    return _checked(CanonicalBatch(DataKind.BAR, tuple(columns), metadata), availability), grid, availability
 
 
 # ------------------------------------------------------------------------------------------ REFERENCE facts
@@ -270,15 +297,14 @@ def _sorted_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(rows, key=lambda row: (row["effective_start_ns"], row["reference_id"]))
 
 
-def _leg_rows(facts: Sequence[Mapping[str, Any]], ids: ProjectionIds, *,
-              default_profile: str | None) -> list[dict[str, Any]]:
+def _leg_rows(facts: Sequence[Mapping[str, Any]], ids: ProjectionIds, *, default_profile: str | None) -> list[dict[str, Any]]:
     """Leg witnesses as REFERENCE rows; a start without `pf` takes `default_profile` (window_start for rate legs)."""
     rows = []
     for fact in facts:
         instrument = ids.bind(fact["inst"])
         session = ids.bind(fact["ss"])
         slot = fact.get("slot", "A")
-        known = _known(fact.get("ka"), 0, None)
+        known = _known(fact.get("ka"), None, None)
         if fact["kind"] == "start":
             kind = "ef4.leg.start"
             profile = fact.get("pf", default_profile)
@@ -299,27 +325,24 @@ def relative_excess_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: P
     facts = fx["facts"]
     end = next((f for f in facts if f["kind"] == "end" and f["inst"] == fx["instrument"]), None)
     session_id = ids.bind(end["ss"]) if end is not None else ids.target_session_id
-    knowledge = fx["K"]
-    legs = _leg_rows(facts, ids, default_profile=None)
     unit = _unit(ctx["batch"]["unit"])
     adjustment = _adjustment(ctx["batch"]["adjustment"])
+    legs = _leg_rows(facts, ids, default_profile=None)
     legs_batch = _checked(_reference_batch(legs, namespace=ids.namespace, input_id=legs_input_id, unit=unit,
                                            adjustment=adjustment), None) if legs else None
     members = []
     for member in fx["membership"]:
         instrument = ids.bind(member["inst"])
-        bound = ids.bind(member["bound"])
         members.append(_fact_row("ef4.sector.membership", instrument, session_id,
                                  _reference_id(f"{instrument}#membership"), member["eff"], None,
-                                 _known(member.get("ka"), knowledge, None), None, bound))
+                                 _known(member.get("ka"), None, None), None, ids.bind(member["bound"])))
     membership_batch = _checked(_reference_batch(_sorted_rows(members), namespace=ids.namespace,
                                                  input_id=membership_input_id, unit=None,
                                                  adjustment=adjustment), None) if members else None
     times = [f["t"] for f in facts] + [fx["C"]]
     session = SessionSpec(ids.namespace, session_id, min(times) - 1, max(times) + 1, "UTC")
-    availability = _availability(fx["C"], fx["K"])
-    return {"legs": legs_batch, "membership": membership_batch, "session": session, "availability": availability,
-            "entity": EntityKey(target, session_id)}
+    return {"batches": (legs_batch, membership_batch), "session": session,
+            "availability": _availability(fx["C"], fx["K"]), "entity": EntityKey(target, session_id)}
 
 
 def rate_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: ProjectionIds, *,
@@ -329,7 +352,6 @@ def rate_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: P
     facts = fx["legs"]
     end = next((f for f in facts if f["kind"] == "end"), None)
     session_id = ids.bind(end["ss"]) if end is not None else ids.target_session_id
-    knowledge = fx["K"]
     unit = _unit(ctx["batch"]["unit"])
     adjustment = _adjustment(ctx["batch"]["adjustment"])
     tape_rows = []
@@ -337,7 +359,7 @@ def rate_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: P
         kind = fact["kind"]
         text = fact["v"] if isinstance(fact["v"], str) else str(fact["v"])
         tape_rows.append(_fact_row(f"ef4.tape.{kind}", target, session_id, _reference_id(f"window#{kind}"), fact["s"],
-                                   fact["e"], _known(fact.get("ka"), knowledge, None), None, text))
+                                   fact["e"], _known(fact.get("ka"), None, None), None, text))
     has_notional = any(f["kind"] == "notional" for f in fx["tape"])
     tape_batch = _checked(_reference_batch(_sorted_rows(tape_rows), namespace=ids.namespace, input_id=tape_input_id,
                                            unit=unit if has_notional else None, adjustment=adjustment),
@@ -347,122 +369,123 @@ def rate_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: P
                                            adjustment=adjustment), None) if legs else None
     times = [f["s"] for f in fx["tape"]] + [f["e"] for f in fx["tape"]] + [f["t"] for f in facts] + [fx["C"]]
     session = SessionSpec(ids.namespace, session_id, min(times) - 1, max(times) + 1, "UTC")
-    availability = _availability(fx["C"], fx["K"])
-    return {"tape": tape_batch, "legs": legs_batch, "session": session, "availability": availability,
-            "entity": EntityKey(target, session_id)}
+    return {"batches": (tape_batch, legs_batch), "session": session,
+            "availability": _availability(fx["C"], fx["K"]), "entity": EntityKey(target, session_id)}
 
 
-# ------------------------------------------------------------------------------------------ producers
-def _library(stage_error: Exception) -> ProjectionStageError:
-    return ProjectionStageError("library", stage_error)
-
-
-_KNOWN_PARAMETERS = {
-    "session_projection": frozenset({"policy_version", "window", "evidence_limit"}),
-    "bar_projection": frozenset({"policy_version", "evidence_limit"}),
-    "relative_excess": frozenset({"policy_version", "alignment_tolerance_ns", "max_endpoint_age_ns", "evidence_limit",
-                                  "primary_benchmark_id", "secondary_benchmark_id", "sector_benchmark_id", "window_ns",
-                                  "core_benchmark_ids", "core_profile"}),
-    "rate_projection": frozenset({"policy_version", "window_ns", "max_endpoint_age_ns", "evidence_limit",
-                                  "alignment_tolerance_ns", "adjacency"}),
+# ------------------------------------------------------------------------------------------ envelopes by hand
+_ENVELOPE_KEYS = {
+    "session_projection": ("policy_version", "window", "evidence_limit"),
+    "bar_projection": ("policy_version", "evidence_limit"),
+    "relative_excess": ("policy_version", "alignment_tolerance_ns", "max_endpoint_age_ns", "evidence_limit",
+                        "primary_benchmark_id", "secondary_benchmark_id", "sector_benchmark_id", "window_ns",
+                        "core_profile", "core_benchmark_ids"),
+    "rate_projection": ("policy_version", "window_ns", "max_endpoint_age_ns", "evidence_limit",
+                        "alignment_tolerance_ns", "adjacency"),
 }
+_BOUND_KEYS = frozenset({"primary_benchmark_id", "secondary_benchmark_id", "sector_benchmark_id"})
 
 
-def _with_supplied_extras(config: ConfigSpec, producer: str, parameters: Mapping[str, Any]) -> ConfigSpec:
-    """Supplied parameters the producer does not define are appended unchanged, so the library's closed envelope
-    decoder (not this layer) refuses them."""
-    extra = tuple(Parameter(name, value if not isinstance(value, (list, tuple)) else encode_core_ids(value))
-                  for name, value in parameters.items() if name not in _KNOWN_PARAMETERS[producer])
-    return replace(config, parameters=config.parameters + extra) if extra else config
+def _scalar(value: Any) -> Any:
+    """Canonical compact JSON text for a supplied list of ids (as the core `encode_core_ids`); other values unchanged."""
+    if isinstance(value, (list, tuple)):
+        return json.dumps(list(value), separators=(",", ":"), ensure_ascii=True)
+    return value
 
 
-def compute_projection(producer: str, fx: Mapping[str, Any], ctx: Mapping[str, Any],
-                       ids: ProjectionIds) -> FeatureResult:
-    """Supplied inputs (I/O tier), core configuration (core builders) and core computation (library tier).
+def _parameters(producer: str, p: Mapping[str, Any], ids: ProjectionIds) -> list[Parameter]:
+    """Supplied parameters in the producer's envelope order, bound where they name instruments or benchmarks; a key
+    the supplied fixture omits is omitted here, so the core decoder refuses it. Unknown keys are appended unchanged."""
+    out = []
+    for key in _ENVELOPE_KEYS[producer]:
+        if key not in p:
+            continue
+        value = ids.bind(p[key]) if key in _BOUND_KEYS else p[key]
+        if key == "core_benchmark_ids" and isinstance(value, (list, tuple)):
+            value = [ids.bind(x) for x in value]
+        out.append(Parameter(key, _scalar(value)))
+    for key, value in p.items():
+        if key not in _ENVELOPE_KEYS[producer]:
+            out.append(Parameter(key, _scalar(value)))
+    return out
+
+
+def _grid_parameters(schema: str, digest: str) -> tuple[Parameter, Parameter]:
+    return Parameter("grid_schema", schema), Parameter("grid_sha256", digest)
+
+
+def _config(producer: str, fx: Mapping[str, Any], ids: ProjectionIds, grid: Any, batches_session: SessionSpec | None,
+            availability: AvailabilitySpec, adjustment: AdjustmentSpec, unit: PriceUnit | None) -> ConfigSpec:
+    p = fx["params"]
+    if unit is None:
+        raise ProjectionStageError("library", ContractError(ErrorCode.INVALID_UNIT, "an explicit PriceUnit is required"))
+    parameters = _parameters(producer, p, ids)
+    if producer == "session_projection":
+        target = grid.target
+        return ConfigSpec(SESSION_IDENTITY, SESSION_ALGORITHM,
+                          tuple(parameters) + _grid_parameters(DAILY_GRID_SCHEMA, grid.digest), target,
+                          WindowSpec(len(grid.sessions), target.session_id,
+                                     tuple(s.session_id for s in grid.sessions), "completed_eod"),
+                          availability, adjustment, unit)
+    if producer == "bar_projection":
+        session = grid.session
+        return ConfigSpec(BAR_IDENTITY, BAR_ALGORITHM,
+                          tuple(parameters) + _grid_parameters(BAR_GRID_SCHEMA, grid.digest), session,
+                          WindowSpec(grid.bar_count, session.session_id, (session.session_id,), "completed_eod"),
+                          availability, adjustment, unit)
+    identity, algorithm = ((RELATIVE_IDENTITY, RELATIVE_ALGORITHM) if producer == "relative_excess"
+                           else (RATE_IDENTITY, RATE_ALGORITHM))
+    return ConfigSpec(identity, algorithm, tuple(parameters), batches_session,
+                      WindowSpec(1, batches_session.session_id, (batches_session.session_id,), "prior_only"),
+                      availability, adjustment, unit)
+
+
+def build_request(producer: str, fx: Mapping[str, Any], ctx: Mapping[str, Any],
+                  ids: ProjectionIds) -> ProjectionRequest:
+    """Supplied inputs (I/O tier) and the core configuration envelope (hand-built). Computation and the delivery
+    capability check belong to the caller (the core library).
 
     `ctx` carries config_unit, batch unit and adjustment, config_adjustment, capability and features exactly as the
-    harness default context does. The delivery capability and feature checks are the library's
-    (`require_ef4_path_projections_capability`), not this layer's."""
+    harness default context does."""
     features = tuple(ctx["features"])
-    p = fx["params"]
     config_unit = _unit(ctx["config_unit"])
     try:
         config_adjustment = _adjustment(ctx["config_adjustment"])
         if producer == "session_projection":
             batch, grid, availability = session_projection_inputs(fx, ctx, ids)
-            batches = (batch,)
+            batches: tuple[CanonicalBatch | None, ...] = (batch,)
+            entity = None
+            session = None
         elif producer == "bar_projection":
             batch, grid, availability = bar_projection_inputs(fx, ctx, ids)
             batches = (batch,)
+            entity = None
+            session = None
         elif producer == "relative_excess":
             inputs = relative_excess_inputs(fx, ctx, ids)
-            batches = (inputs["legs"], inputs["membership"])
+            batches, grid = inputs["batches"], None
+            availability, session, entity = inputs["availability"], inputs["session"], inputs["entity"]
         elif producer == "rate_projection":
             inputs = rate_projection_inputs(fx, ctx, ids)
-            batches = (inputs["tape"], inputs["legs"])
+            batches, grid = inputs["batches"], None
+            availability, session, entity = inputs["availability"], inputs["session"], inputs["entity"]
         else:
             raise ContractError(ErrorCode.INVALID_CONFIG, "unknown producer")
     except ContractError as error:
         raise ProjectionStageError("io", error) from error
     except (KeyError, TypeError, ValueError, IndexError) as error:
-        raise ProjectionStageError("io", ContractError(ErrorCode.INVALID_SCHEMA, f"unreadable supplied input: {error}")) \
-            from error
+        raise ProjectionStageError("io", ContractError(ErrorCode.INVALID_SCHEMA,
+                                                       f"unreadable supplied input: {error}")) from error
     try:
-        for feature in features:
-            require_ef4_path_projections_capability(feature, ctx["capability"])
-        if producer == "session_projection":
-            config = build_session_projection_config(
-                grid, policy_version=p.get("policy_version"), window=p.get("window"), availability=availability,
-                adjustment=config_adjustment, price_unit=config_unit, evidence_limit=p.get("evidence_limit"))
-            config = _with_supplied_extras(config, producer, p)
-            return compute_session_projection(batches, grid, config, features=features)
-        if producer == "bar_projection":
-            config = build_bar_projection_config(
-                grid, policy_version=p.get("policy_version"), availability=availability,
-                adjustment=config_adjustment, price_unit=config_unit, evidence_limit=p.get("evidence_limit"))
-            config = _with_supplied_extras(config, producer, p)
-            return compute_bar_projection(batches, grid, config, features=features)
-        if producer == "relative_excess":
-            core = p.get("core_benchmark_ids")
-            config = build_relative_excess_config(
-                policy_version=p.get("policy_version"),
-                primary_benchmark_id=ids.bind(p["primary_benchmark_id"]) if "primary_benchmark_id" in p else None,
-                secondary_benchmark_id=ids.bind(p["secondary_benchmark_id"]) if "secondary_benchmark_id" in p else None,
-                sector_benchmark_id=ids.bind(p["sector_benchmark_id"]) if "sector_benchmark_id" in p else None,
-                alignment_tolerance_ns=p.get("alignment_tolerance_ns"), max_endpoint_age_ns=p.get("max_endpoint_age_ns"),
-                window_ns=p.get("window_ns"),
-                core_benchmark_ids=tuple(ids.bind(x) for x in core) if isinstance(core, (list, tuple)) else core,
-                core_profile=p.get("core_profile"), session=inputs["session"], availability=inputs["availability"],
-                adjustment=config_adjustment, price_unit=config_unit, evidence_limit=p.get("evidence_limit"))
-            config = _with_supplied_extras(config, producer, p)
-            return compute_relative_excess(batches, config, entity=inputs["entity"], features=features)
-        config = build_rate_projection_config(
-            policy_version=p.get("policy_version"), window_ns=p.get("window_ns"),
-            max_endpoint_age_ns=p.get("max_endpoint_age_ns"), alignment_tolerance_ns=p.get("alignment_tolerance_ns"),
-            adjacency=p.get("adjacency"), session=inputs["session"], availability=inputs["availability"],
-            adjustment=config_adjustment, price_unit=config_unit, evidence_limit=p.get("evidence_limit"))
-        config = _with_supplied_extras(config, producer, p)
-        return compute_rate_projection(batches, config, entity=inputs["entity"], features=features)
+        config = _config(producer, fx, ids, grid, session, availability, config_adjustment, config_unit)
     except ContractError as error:
-        raise _library(error) from error
+        raise ProjectionStageError("library", error) from error
+    except (KeyError, TypeError, ValueError, IndexError) as error:
+        raise ProjectionStageError("library", ContractError(ErrorCode.INVALID_CONFIG,
+                                                            f"unreadable supplied parameters: {error}")) from error
+    return ProjectionRequest(producer, grid, batches, config, features, ctx["capability"], entity)
 
 
-def publish_results(results: Sequence[FeatureResult], output_path: Any, *, destination_scope: str,
-                    generation_id: str, job_id: str, partition_id: str) -> Any:
-    """Publish one complete result per generation to a local DuckDB sink (existing core SDK path) and return the
-    receipt. The caller reads it back with `DuckDBSink.read(receipt)`; this function does no computation."""
-    from equity_feature_duckdb_sink import DuckDBSink
-    from equity_feature_io_contracts import SinkRequirements
-    from equity_feature_io_sdk import prepare_publication, publish
-
-    limits = SinkRequirements(max_results=len(results), max_chunk_bytes=1048576, max_total_bytes=10485760,
-                              max_result_cells=100000, max_evidence_rows=100000)
-    envelope = prepare_publication(tuple(results), destination_scope=destination_scope, generation_id=generation_id,
-                                   job_id=job_id, partition_id=partition_id, limits=limits)
-    with DuckDBSink(Path(output_path), destination_scope, limits=limits) as sink:
-        return publish(sink, envelope, tuple(results))
-
-
-__all__ = ["ProjectionIds", "ProjectionStageError", "bar_projection_inputs", "compute_projection",
-           "publish_results", "rate_projection_inputs", "relative_excess_inputs", "session_projection_inputs",
+__all__ = ["BarGridCodec", "ProjectionIds", "ProjectionRequest", "ProjectionStageError", "bar_projection_inputs",
+           "build_request", "rate_projection_inputs", "relative_excess_inputs", "session_projection_inputs",
            "DELIVERY_MODE", "MAPPING_VERSION"]
