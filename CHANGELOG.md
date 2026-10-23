@@ -16,6 +16,10 @@ Correct completion/reservation observation during cooperating first-publication 
 
 # Changelog
 
+## Unreleased - EF3 supplied relative-statistics, daily log-volatility and realized-variance I/O
+
+Adds the close-only daily roles (`instrument`, `benchmark`, `daily`) and the regular-session OHLCV `bars` role on a local governed grid, and the configuration envelopes for `ef3.relative_stats` (`ef3-rel1`), `ef3.daily_log_volatility` (`ef3-dlv1`) and `ef3.intraday_realized_variance` (`ef3-rv1`) under EF3-IO #611. Original fixture-derived requests cover all 62 result, 3 prefix and 48 refusal contract fixture ids through a scratch harness. See [API](docs/api/EF3_RELATIVE_RV_INPUTS.md) and [source checkpoint](docs/EF3_RELATIVE_RV_IO.md). No return, beta, correlation, logarithm, variance or annualization mathematics, observed-source admission, sink/SDK/version change or release acceptance.
+
 ## Unreleased - EF2 supplied Ichimoku and price-channel I/O
 
 Adds the nullable `bars` role (OHLCV, one chunk per governed session), config builder for `ef2.<producer>` (`ef2-channels-v1`) and original synthetic requests keyed by all 74 contract result fixture ids (including ICH-17 and the prefix fixtures) under EF2-IO #609. See [API](docs/api/EF2_CHANNELS_INPUTS.md) and [source checkpoint](docs/EF2_CHANNELS_IO.md). No indicator mathematics, observed-source admission, sink/SDK/version change or release acceptance.
