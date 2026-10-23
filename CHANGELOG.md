@@ -24,6 +24,10 @@ Correct completion/reservation observation during cooperating first-publication 
 
 # Changelog
 
+## Unreleased - EF4 supplied path-efficiency and choppiness I/O
+
+Adds the nullable `bars` role (OHLCV or close-only, one chunk per actual session), a closed `ef4.path_efficiency` configuration builder over the R17 context (`ef4-path1`, `ef4-path-efficiency-v1`) with the N <= 63 cap of `governed_history` and the reset/carry mode pairing, and an example. See [API](docs/api/EF4_PATH_EFFICIENCY_INPUTS.md) and [source checkpoint](docs/EF4_PATH_EFFICIENCY_IO.md). No efficiency, log, true-range or choppiness mathematics, observed-source admission, sink/SDK/version change or release acceptance.
+
 ## Unreleased - EF3 supplied relative-statistics, daily log-volatility and realized-variance I/O
 
 Adds the close-only daily roles (`instrument`, `benchmark`, `daily`) and the regular-session OHLCV `bars` role on a local governed grid, and the configuration envelopes for `ef3.relative_stats` (`ef3-rel1`), `ef3.daily_log_volatility` (`ef3-dlv1`) and `ef3.intraday_realized_variance` (`ef3-rv1`) under EF3-IO #611. Original fixture-derived requests cover all 62 result, 3 prefix and 48 refusal contract fixture ids through a scratch harness. See [API](docs/api/EF3_RELATIVE_RV_INPUTS.md) and [source checkpoint](docs/EF3_RELATIVE_RV_IO.md). No return, beta, correlation, logarithm, variance or annualization mathematics, observed-source admission, sink/SDK/version change or release acceptance.

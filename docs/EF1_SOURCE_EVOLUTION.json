@@ -78,6 +78,10 @@
       "sha256": "e23a0261b64002a6e76abc9ec9e03c87ff9767bc53e210b951ac27960d3a17ef",
       "reason": "Additive EF3 supplied declared-breadth, observed-breadth and adaptive-volume conversion, population, roster and observation reference facts and producer config envelopes; original fixture-derived facts only, no count, ratio, proximity, rate, rank or float mathematics."
     },
+    "packages/duckdb/src/equity_feature_duckdb/path_efficiency.py": {
+      "sha256": "ed9b9249aefe0e0244a586617ca6a37d82fa9a905a772c7ccb2d5762bca7648c",
+      "reason": "Additive EF4 supplied path-efficiency and choppiness conversion, nullable bars role per session chunk, R17 context-based ef4.path_efficiency config envelope; original fixture-derived facts only, no efficiency ratio, logarithm, true-range, window-range or choppiness mathematics."
+    },
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {
       "sha256": "d9eaa5ac3d45280aed8c632137c697bdcd8b3aa93a692e25c36429793509f371",
       "reason": "Additive EF2 supplied prior-extrema REFERENCE conversion, exact two nullable roles, id encoder and config builder; original synthetic T01 to T32 facts only, no level or extremum mathematics."
