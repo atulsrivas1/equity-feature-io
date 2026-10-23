@@ -25,3 +25,12 @@ result = compute_tape_window(case.slots, case.config(), entity=case.entity, feat
 ```
 
 Limits: no sorting, rounding, filling, rescaling or inference of supplied values. Reference identities use the shared `x1:` grammar only. Windows publish the result-wide evidence bound of the library (`evidence_limit * 9`).
+
+## Adjustment, known refusals and known limits
+
+- Adjustment: `AdjustmentSpec(label)` carries only the basis label; it cannot carry a snapshot or anchor. A non-raw supplied basis therefore raises `UNSUPPORTED_ADJUSTMENT` at I/O (or in the library, for the partition and merge cases) and the config adjustment is fixed to `raw`. This is the reason for RF14, RF62 and RF71.
+- RF18 (`batch_kind = quote`): the shared batch validator refuses first with `UNSUPPORTED_SAMPLING` (the quote kind carries the trade sampling label). The contract expects `INVALID_SCHEMA`; the refusal is at I/O and the input is still refused.
+- RF35 (`seed.count = 2`, two identical `ef4.tick.seed` facts): the shared REFERENCE validator refuses first with `DUPLICATE`. The contract expects `INVALID_SCHEMA` ("exactly one seed fact"); the refusal is at I/O.
+- RF69 (a supplied partial whose rows arrive in the delivered order): the adapter has no supplied-partial input. The runner reorders a computed partial's cell rows to the delivered order and the library's merge refuses with `INVALID_ORDER`. This is exercised by the runner, not through the adapter.
+- Known limit: the `bundles` package decoder (`equity_feature_bundles/_typed.py`) rebuilds `TopKTrades` through the constructor and will refuse EF4 notional-ordered cells. The Parquet and bundles round trip is not covered by this change.
+- Codec: the io-sdk decoder reads a notional-ordered cell only for a `tape.top_k_notional` column (checked by feature id); all other top-K cells keep the shared size-order constructor.

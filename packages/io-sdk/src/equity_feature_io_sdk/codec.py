@@ -11,7 +11,7 @@ import re
 from typing import Any, TypeAlias
 from types import MappingProxyType
 
-from equity_feature_contracts import ContractError, ErrorCode, inputs as i, results as r, specs as s
+from equity_feature_contracts import inputs as i, results as r, specs as s
 from equity_feature_io_contracts.publication import (
     ArtifactReference, CompletionReceipt, FeatureHeader, PublicationEnvelope, PublicationIdentity,
     ResultDescriptor, SinkError, SinkErrorCode,
@@ -81,7 +81,7 @@ def canonical_json(value: Wire) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
 
 
-def _decode(value: Wire) -> object:
+def _decode(value: Wire, notional: bool = False) -> object:
     if value is None or type(value) is bool:
         return value
     if type(value) is str:
@@ -89,7 +89,7 @@ def _decode(value: Wire) -> object:
         return _string(value)
     if type(value) is list:
         assert isinstance(value, list)
-        return tuple(_decode(v) for v in value)
+        return tuple(_decode(v, notional) for v in value)
     if type(value) is not dict:
         raise SinkError(SinkErrorCode.INVALID_CONTENT)
     assert isinstance(value, dict)
@@ -119,28 +119,34 @@ def _decode(value: Wire) -> object:
         cls = RECORDS[name]
         if set(data) != {f.name for f in fields(cls)}:
             raise SinkError(SinkErrorCode.INVALID_CONTENT)
-        decoded = {key: _decode(v) for key, v in data.items()}
+        if cls is r.FeatureColumn:
+            # The feature id is decoded first: only tape.top_k_notional cells are notional-ordered.
+            feature = _decode(data["feature_id"])
+            decoded = {key: _decode(v, feature == NOTIONAL_FEATURE) for key, v in data.items()}
+        else:
+            decoded = {key: _decode(v, notional) for key, v in data.items()}
         if cls is r.TopKTrades:
-            return _top_k_cell(decoded)
+            return _notional_cell(decoded) if notional else cls(**decoded)
         return cls(**decoded)
     raise SinkError(SinkErrorCode.INVALID_CONTENT)
 
 
-def _top_k_cell(fields_: dict[str, Any]) -> r.TopKTrades:
-    """A stored top-K cell: the shared constructor when it accepts the rows, otherwise the stored fields.
+NOTIONAL_FEATURE = "tape.top_k_notional"
 
-    The shared constructor ranks rows by size, so a notional-ranked cell (EF4 `tape.top_k_notional`) raises INVALID_ORDER.
-    The fallback keeps every other check (bounds, row types, duplicate source/event identity) and assembles the cell in the
-    stored order; it never reorders or rebuilds the rows."""
-    try:
-        return r.TopKTrades(**fields_)
-    except ContractError as error:
-        if error.code != ErrorCode.INVALID_ORDER:
-            raise
+
+def _notional_cell(fields_: dict[str, Any]) -> r.TopKTrades:
+    """A stored notional-ordered top-K cell of `tape.top_k_notional` only.
+
+    The shared size-ranked constructor refuses these cells (INVALID_ORDER), so they are assembled from their stored fields
+    after the same bounds, row-type and duplicate checks, and the rows must follow the notional rank
+    (-price * size, event_ns, order_key, event_id). Every other feature keeps the shared constructor and its size order."""
     k, rows = fields_["k"], fields_["rows"]
     if type(k) is not int or not 1 <= k <= 10000 or type(rows) is not tuple or len(rows) > k:
         raise SinkError(SinkErrorCode.INVALID_CONTENT)
     if any(type(x) is not r.TopKTradeRow for x in rows) or len({(x.input_id, x.event_id) for x in rows}) != len(rows):
+        raise SinkError(SinkErrorCode.INVALID_CONTENT)
+    keys = [(-x.price * x.size, x.event_ns, x.order_key, x.event_id) for x in rows]
+    if keys != sorted(keys):
         raise SinkError(SinkErrorCode.INVALID_CONTENT)
     cell = object.__new__(r.TopKTrades)
     object.__setattr__(cell, "k", k)
