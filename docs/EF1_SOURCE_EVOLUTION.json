@@ -93,6 +93,10 @@
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {
       "sha256": "d9eaa5ac3d45280aed8c632137c697bdcd8b3aa93a692e25c36429793509f371",
       "reason": "Additive EF2 supplied prior-extrema REFERENCE conversion, exact two nullable roles, id encoder and config builder; original synthetic T01 to T32 facts only, no level or extremum mathematics."
+    },
+    "packages/duckdb/src/equity_feature_duckdb/ef4_projections.py": {
+      "sha256": "dba3439a44518bf3a1a7bfb9fabad18e1cee8b7999af4262c108b511c09d6c27",
+      "reason": "Additive EF4-I2 supplied session, bar, relative-excess and rate projection conversion, leg/membership/tape reference facts and core envelope builds; no projection mathematics, no sink or package change."
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."

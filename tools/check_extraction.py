@@ -57,6 +57,7 @@ def main():
         'packages/duckdb/src/equity_feature_duckdb/path_efficiency.py',
         'packages/duckdb/src/equity_feature_duckdb/quote_vwap.py',
         'packages/duckdb/src/equity_feature_duckdb/tape.py',
+        'packages/duckdb/src/equity_feature_duckdb/ef4_projections.py',
     }
     additive_checked = {}
     for name, declaration in additions.items():

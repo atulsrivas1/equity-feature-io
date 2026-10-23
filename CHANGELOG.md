@@ -4,6 +4,9 @@ Adds the quote, trade, bar, declared-gap, grid, prepared-proof and bounds roles 
 ## Unreleased - EF4-G supplied tape trades and notional top-K I/O
 
 Adds the TRADE, optional `ef4.tick.seed` REFERENCE and notional top-K partition roles and the configuration envelopes for `ef4.tape_window_sign` (`ef4-tape1`) and `ef4.trade_top_k_notional` (`ef4-notional1`) under EQ-158 and EQ-162. The io-sdk codec reads a stored notional-ordered top-K cell from its fields when the size-ranked constructor refuses it (`INVALID_ORDER`); other cells keep the constructor path. All 82 result fixtures under two identity bindings and G01 to G03 round-trip through the DuckDB sink (227 of 227 results); 73 of 75 refusal recipes raise the contract code. See [API](docs/api/EF4_TAPE_INPUTS.md) and [source checkpoint](docs/EF4_TAPE_IO.md). No tick, window, notional or rank mathematics, no worker, no release acceptance and no package version change.
+## Unreleased - EF4 supplied projections I/O (EQ-172)
+
+Adds the supplied-input adapter for the EF4 I2 projections (`ef4-proj1`, `ef4-rel1`, `ef4-rate1`): session and bar projections, relative excess and rate projection, mapped to canonical batches and the core builders under EF4-IO #613. All 111 result fixtures round trip through the DuckDB sink; all 114 refusal recipes raise the recorded code. See [source checkpoint](docs/EF4_PROJECTIONS_IO.md). No mathematics or version change.
 
 ## Unreleased - EF3 supplied breadth and adaptive volume I/O
 
