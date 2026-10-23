@@ -87,6 +87,8 @@ Ichimoku and price channels (Ichimoku, Keltner, Donchian, pivots, band-width per
 
 Relative statistics, daily log volatility and realized variance use `equity_feature_duckdb.relative_rv`: close-only daily roles and an OHLCV `bars` role on a local governed grid, and the three producer configuration envelopes. See [API](../../docs/api/EF3_RELATIVE_RV_INPUTS.md) and [source checkpoint](../../docs/EF3_RELATIVE_RV_IO.md). All mathematics remains outside the adapter.
 
+Path efficiency and choppiness use `equity_feature_duckdb.path_efficiency`: a nullable OHLCV `bars` role per session chunk, the closed `ef4.path_efficiency` config builder over the R17 context and the seven output ids. See [API](../../docs/api/EF4_PATH_EFFICIENCY_INPUTS.md) and [source checkpoint](../../docs/EF4_PATH_EFFICIENCY_IO.md). All mathematics remains outside the adapter.
+
 Multi-venue status uses `equity_feature_duckdb.venue_status`: five nullable population/seed/states/prefix/validity slots, lossless supplied rows, the `vp1`/`vs1`/`v1`/`vc1` id encoders, a config builder and original MV01 to MV44 synthetic requests. See [API](../../docs/api/EF1_VENUE_STATUS_INPUTS.md) and [source checkpoint](../../docs/EF1_VENUE_STATUS_IO.md). Population, precedence, counts and clocks remain outside the adapter.
 
 Close reconciliation uses `equity_feature_duckdb.reference_close`: four nullable calendar/bars/population-proof/authoritative-close slots, lossless supplied cells, the `k1:` id encoder, a config builder and original C01 to C03 synthetic requests. See [API](../../docs/api/EF1_REFERENCE_CLOSE_INPUTS.md) and [source checkpoint](../../docs/EF1_CLOSE_RECONCILIATION_IO.md). BPS, tolerance and close selection remain outside the adapter.
