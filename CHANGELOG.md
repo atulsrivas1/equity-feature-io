@@ -1,3 +1,7 @@
+## Unreleased - EF4-H supplied quote dynamics and VWAP path I/O
+
+Adds the quote, trade, bar, declared-gap, grid, prepared-proof and bounds roles with explicit coverage declarations, and request assembly for ef4.quote_dynamics (ef4-quote1) and ef4.vwap_path (ef4-vwap1) under EQ-159 and EQ-160. Original fixture-derived requests cover all 69 result and 80 refusal contract fixture ids through a scratch runner; the 69 joint results round-trip through the DuckDB sink. See [API](docs/api/EF4_QUOTE_VWAP_INPUTS.md) and [source checkpoint](docs/EF4_QUOTE_VWAP_IO.md). No quote, spread, microprice, VWAP, slope or extremum mathematics, observed-source admission, sink/SDK/version change or release acceptance.
+
 ## Unreleased - EF3 supplied breadth and adaptive volume I/O
 
 Adds the nine declared, four observed and one adaptive nullable REFERENCE roles and the configuration envelopes for `ef3.session_breadth` (`ef3-breadth1`), `ef3.observed_breadth` (`ef3-obsbreadth1`) and `ef3.adaptive_volume` (`ef3-adaptive1`) under EF3-IO #611. Original fixture-derived requests cover all 99 result, 7 prefix and 62 refusal contract fixture ids through a scratch harness. See [API](docs/api/EF3_BREADTH_ADAPTIVE_INPUTS.md) and [source checkpoint](docs/EF3_BREADTH_ADAPTIVE_IO.md). No count, ratio, proximity, rate, rank or float mathematics, observed-source admission, sink/SDK/version change or release acceptance.
