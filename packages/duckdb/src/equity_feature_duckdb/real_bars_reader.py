@@ -51,6 +51,7 @@ def _refuse(message: str) -> ContractError:
 
 
 def _ns(stamp: str) -> int:
+    # Second-precision text with trailing Z only; fractional-second rows refuse (coverage narrows).
     if _TS.fullmatch(stamp) is None:
         raise _refuse("Unsupported stored timestamp text")
     moment = datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
@@ -82,7 +83,7 @@ class RealRegularBarSource:
 
 def read_real_regular_bars(database: Path, table: str, symbol: str, date: str, row_cap: int, *,
                            session_open_utc: str = "13:30", session_close_utc: str = "20:00",
-                           price_scale: int = 2, currency: str = "USD") -> RealRegularBarSource:
+                           price_scale: int = 3, currency: str = "USD") -> RealRegularBarSource:
     """Read one symbol/date slice of stored 1-minute bars, read-only and bounded.
 
     ``session_open_utc`` / ``session_close_utc`` define the SYNTHETIC calendar window;
@@ -172,7 +173,7 @@ def read_real_regular_bars(database: Path, table: str, symbol: str, date: str, r
     projection = hashlib.sha256(_json({
         "version": "ef1-gap-membership-projection1", "kind": "bar",
         "membership_columns": ["instrument_id", "session_id", "start_ns", "end_ns", "volume_present", "volume_class"],
-        "rows": [[symbol, _SESSION, row[2], row[3], True, "unknown" if row[8] is None else "positive" if row[8] > 0 else "zero"]
+        "rows": [[symbol, _SESSION, row[2], row[3], True, "positive" if row[8] > 0 else "zero"]
                  for row in rows]}).encode("ascii")).hexdigest()
     proof_text = _json({
         "adjustment": _ADJ, "complete": True, "eligibility_policy": "supplied_path", "end_ns": close_ns,

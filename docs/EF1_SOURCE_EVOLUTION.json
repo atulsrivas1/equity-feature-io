@@ -38,6 +38,10 @@
       "sha256": "805045fac14cbcc1f8f757fa517f0cda7b375e86c142584ef7aac57689f54ed5",
       "reason": "Additive lossless supplied regular BAR/proof conversion and fixed three-role provenance; original R01/R08 synthetic requests, no endpoint mathematics."
     },
+    "packages/duckdb/src/equity_feature_duckdb/real_bars_reader.py": {
+      "sha256": "1a1ce6e17b5e9b17fcc0b5f29a5b1bbe4a80e8b0daaf556f06db7c2dd6a140f9",
+      "reason": "Additive bounded read-only real-source bars demonstration adapter; BAR role observed, calendar/proof/known-at synthetic."
+    },
     "packages/duckdb/src/equity_feature_duckdb/regular_first_trade_price.py": {
       "sha256": "b69e90ef7178c1d0d07491abb461e5743465c09e9f5776a2ee5af05ac93210ec",
       "reason": "Additive supplied regular first-trade conversion and exact three nullable roles; original synthetic R001/R019 facts only, no firstness, proof generation or price mathematics."
