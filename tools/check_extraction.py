@@ -52,6 +52,7 @@ def main():
         'packages/duckdb/src/equity_feature_duckdb/momentum.py',
         'packages/duckdb/src/equity_feature_duckdb/channels.py',
         'packages/duckdb/src/equity_feature_duckdb/relative_rv.py',
+        'packages/duckdb/src/equity_feature_duckdb/robust_pace.py',
     }
     additive_checked = {}
     for name, declaration in additions.items():
