@@ -11,7 +11,7 @@ import re
 from typing import Any, TypeAlias
 from types import MappingProxyType
 
-from equity_feature_contracts import inputs as i, results as r, specs as s
+from equity_feature_contracts import ContractError, ErrorCode, inputs as i, results as r, specs as s
 from equity_feature_io_contracts.publication import (
     ArtifactReference, CompletionReceipt, FeatureHeader, PublicationEnvelope, PublicationIdentity,
     ResultDescriptor, SinkError, SinkErrorCode,
@@ -119,8 +119,33 @@ def _decode(value: Wire) -> object:
         cls = RECORDS[name]
         if set(data) != {f.name for f in fields(cls)}:
             raise SinkError(SinkErrorCode.INVALID_CONTENT)
-        return cls(**{key: _decode(v) for key, v in data.items()})
+        decoded = {key: _decode(v) for key, v in data.items()}
+        if cls is r.TopKTrades:
+            return _top_k_cell(decoded)
+        return cls(**decoded)
     raise SinkError(SinkErrorCode.INVALID_CONTENT)
+
+
+def _top_k_cell(fields_: dict[str, Any]) -> r.TopKTrades:
+    """A stored top-K cell: the shared constructor when it accepts the rows, otherwise the stored fields.
+
+    The shared constructor ranks rows by size, so a notional-ranked cell (EF4 `tape.top_k_notional`) raises INVALID_ORDER.
+    The fallback keeps every other check (bounds, row types, duplicate source/event identity) and assembles the cell in the
+    stored order; it never reorders or rebuilds the rows."""
+    try:
+        return r.TopKTrades(**fields_)
+    except ContractError as error:
+        if error.code != ErrorCode.INVALID_ORDER:
+            raise
+    k, rows = fields_["k"], fields_["rows"]
+    if type(k) is not int or not 1 <= k <= 10000 or type(rows) is not tuple or len(rows) > k:
+        raise SinkError(SinkErrorCode.INVALID_CONTENT)
+    if any(type(x) is not r.TopKTradeRow for x in rows) or len({(x.input_id, x.event_id) for x in rows}) != len(rows):
+        raise SinkError(SinkErrorCode.INVALID_CONTENT)
+    cell = object.__new__(r.TopKTrades)
+    object.__setattr__(cell, "k", k)
+    object.__setattr__(cell, "rows", rows)
+    return cell
 
 
 def _pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:

@@ -56,6 +56,7 @@ def main():
         'packages/duckdb/src/equity_feature_duckdb/breadth_adaptive.py',
         'packages/duckdb/src/equity_feature_duckdb/path_efficiency.py',
         'packages/duckdb/src/equity_feature_duckdb/quote_vwap.py',
+        'packages/duckdb/src/equity_feature_duckdb/tape.py',
     }
     additive_checked = {}
     for name, declaration in additions.items():
