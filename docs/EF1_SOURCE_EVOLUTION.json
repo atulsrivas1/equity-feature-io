@@ -53,6 +53,14 @@
     "packages/duckdb/src/equity_feature_duckdb/venue_status.py": {
       "sha256": "21720c8f72832068c861034168494d2ec86c92d4118afd94e0c0a84f03f7f718",
       "reason": "Additive supplied multi-venue status conversion, exact five nullable roles, id encoders and config builder; original synthetic MV01 to MV44 facts only, no population, precedence, count or clock mathematics."
+    },
+    "packages/duckdb/src/equity_feature_duckdb/money_flow.py": {
+      "sha256": "b56e49f1b2624789792cba3f037117cd277b79129821f4d3bffb8915c753aecb",
+      "reason": "Additive EF2 supplied money-flow bars conversion, nullable bars role and config builder; original synthetic M01 to M36 facts only, no multiplier, OBV, A/D or CMF mathematics."
+    },
+    "packages/duckdb/src/equity_feature_duckdb/retracement.py": {
+      "sha256": "d9eaa5ac3d45280aed8c632137c697bdcd8b3aa93a692e25c36429793509f371",
+      "reason": "Additive EF2 supplied prior-extrema REFERENCE conversion, exact two nullable roles, id encoder and config builder; original synthetic T01 to T32 facts only, no level or extremum mathematics."
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."

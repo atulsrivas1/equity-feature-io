@@ -47,6 +47,8 @@ def main():
         'packages/duckdb/src/equity_feature_duckdb/regular_first_trade_price.py',
         'packages/duckdb/src/equity_feature_duckdb/reference_close.py',
         'packages/duckdb/src/equity_feature_duckdb/venue_status.py',
+        'packages/duckdb/src/equity_feature_duckdb/money_flow.py',
+        'packages/duckdb/src/equity_feature_duckdb/retracement.py',
     }
     additive_checked = {}
     for name, declaration in additions.items():

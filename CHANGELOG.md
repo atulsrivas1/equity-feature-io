@@ -16,6 +16,10 @@ Correct completion/reservation observation during cooperating first-publication 
 
 # Changelog
 
+## Unreleased - EF2 supplied money-flow and retracement I/O
+
+Adds the nullable `bars` role (OHLCV with volume), the two nullable exact-extremum REFERENCE roles, id encoder, config builders and original synthetic M01..M36 and T01..T32 requests under EF2-IO #609. See [API](docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md) and [source checkpoint](docs/EF2_MONEY_FLOW_RETRACEMENT_IO.md). No indicator or retracement mathematics, observed-source admission, sink/SDK/version change or release acceptance.
+
 ## Unreleased - EF1 supplied multi-venue status I/O
 
 Adds exact five nullable roles, lossless venue-row conversion, the four reference-id encoders, config builder and original synthetic MV01 to MV44 requests under EQ212#570 for EQ165#505. See [API](docs/api/EF1_VENUE_STATUS_INPUTS.md) and [source checkpoint](docs/EF1_VENUE_STATUS_IO.md). No population, precedence, count or clock mathematics, sink/SDK/schema/version change or release acceptance.
