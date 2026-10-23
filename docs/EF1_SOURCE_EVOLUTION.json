@@ -67,7 +67,7 @@
       "reason": "Additive EF2 supplied Ichimoku and price-channel bars conversion, nullable bars role and producer config builder; original synthetic facts keyed by the contract fixture ids only, no Ichimoku, Keltner, Donchian, pivot, percentile or squeeze mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/relative_rv.py": {
-      "sha256": "13679866f16a96169450f60ea7ad928c4462de82e475d0bce535e9e2be5e1970",
+      "sha256": "b119cfecb3f91bae43b42d31536b3c9050f6e0b3bc11e25f0e1717f4e066af3f",
       "reason": "Additive EF3 supplied relative-statistics, daily log-volatility and realized-variance conversion, close-only and OHLCV bar roles on a local daily grid and producer config builders; original fixture-derived facts only, no return, beta, correlation, logarithm, variance or annualization mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {

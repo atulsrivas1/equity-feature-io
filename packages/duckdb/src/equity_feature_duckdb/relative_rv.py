@@ -191,7 +191,7 @@ def _checked_slots(slots: Sequence[Mapping[str, Any]], states: tuple[str, ...]) 
 
 
 def close_batch(role_instrument_id: str, grid: DailyGrid, slots: Sequence[Mapping[str, Any]], *, input_id: str,
-                scale: int, namespace: str = NAMESPACE, known_default: int = 50) -> CanonicalBatch | None:
+                scale: int, namespace: str = NAMESPACE, known_default: int = 50) -> CanonicalBatch:
     """One close-only daily BAR role (instrument or benchmark) on the local grid; `slots` is one entry per grid slot.
 
     priced: row with close c and known_at; absent: no row and no coverage; gap: declared incomplete coverage and no
@@ -235,7 +235,7 @@ def _bar_batch(names: tuple[str, ...], rows: Sequence[tuple[Any, ...]], interval
 
 
 def intraday_batch(context: IntradayContextSpec, slots: Sequence[Mapping[str, Any]], *, input_id: str,
-                   scale: int, namespace: str = NAMESPACE) -> CanonicalBatch | None:
+                   scale: int, namespace: str = NAMESPACE, known_default: int = 50) -> CanonicalBatch:
     """One regular-session OHLCV chunk over the governed slots of the (single) session of the context.
 
     priced: open=high=low=close=c, volume 100, known_at; absent: nothing; gap: declared incomplete coverage;
@@ -261,7 +261,7 @@ def intraday_batch(context: IntradayContextSpec, slots: Sequence[Mapping[str, An
             intervals.append(IntervalCoverage(name, start, end, Coverage(0, 0, True)))
         else:
             c = slot.get("c", UNSUPPLIED_CLOSE)
-            known = None if state == "unknown" else slot.get("known_at", 50)
+            known = None if state == "unknown" else slot.get("known_at", known_default)
             if state == "null":
                 row = (context.instrument_id, session_id, start, end, None, None, None, None, None, known)
             else:

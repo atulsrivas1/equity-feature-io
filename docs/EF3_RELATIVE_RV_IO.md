@@ -17,7 +17,9 @@ Executed (Python 3.12, `python -I`, core `main` at d8ed913 with the merged EF3 l
 - Refusals: all 48 refusal fixtures were built from a valid base with the one violation described (63 sub-cases,
   including the boundary values of each parameter). All raised the contract's error code (48 of 48). Two sub-cases
   (RF19, RF26, zero close) were refused by the shared canonical BAR validation while the adapter built the batch, before
-  the library ran; the code is the contract's INVALID_SCHEMA.
+  the library ran; the code is the contract's INVALID_SCHEMA. The corresponding RF40 (null or zero close), RF41 (zero
+  volume with OHLC) and RF42 (negative volume) sub-cases are likewise refused at batch build by that shared validation
+  (INVALID_SCHEMA, INVALID_SCHEMA, BOUNDS), not by the library.
 - Sink: each of the 62 joint results was published as its own generation to a new scratch DuckDB file (double values
   with their hex form, status, counts, reasons and evidence rows). A republish returned the same receipt. After close and
   reopen, all values were bit-identical (`struct` binary64 comparison, including `+0.0`), and all statuses, reasons,
@@ -31,8 +33,9 @@ Deviations and choices:
 - `python -I` ignores `PYTHONPATH`, so the scratch harness inserts the core package paths itself.
 - The compact notation omits the close of an `unknown` slot. The adapter uses the placeholder close 1 (documented in the
   API); the slot is never READY and no output uses it.
-- The refusal and fixture harness (which reads the contract JSON read-only and builds the bad inputs) is scratch
-  code, not committed. Only the adapter and the synthetic example are in the repository.
+- The 62/62 harness and the PX03 construction (RV21 check) are uncommitted scratch. The refusal harness (which reads the
+  contract JSON read-only and builds the bad inputs) is scratch code too. Only the adapter and the synthetic example
+  are in the repository.
 - The core library and the contract were not changed.
 
 NOT executed: the EF3 worker (#612), mypy, an independent oracle beyond the contract's own hand-derived values, the
