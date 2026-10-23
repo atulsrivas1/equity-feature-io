@@ -248,8 +248,6 @@ def _config(identity: str, algorithm: str, params: tuple[Parameter, ...], sessio
     """The closed envelope of the library `make_config`: target session, one shared adjustment, the explicit unit."""
     if type(session) is not SessionSpec:
         raise ContractError(ErrorCode.INVALID_CONFIG, "concrete session required")
-    if timing.market_cutoff_ns < session.open_ns:
-        raise ContractError(ErrorCode.BOUNDS, "market cutoff precedes the target session open")
     return ConfigSpec(identity, algorithm, params, session,
                       WindowSpec(1, session.session_id, (session.session_id,), "prior_only"), timing, adjustment("raw"),
                       unit)

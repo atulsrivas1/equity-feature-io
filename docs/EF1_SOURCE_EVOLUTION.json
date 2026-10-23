@@ -75,7 +75,7 @@
       "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/quote_vwap.py": {
-      "sha256": "1516f7a35994ed12c907bf6ea2bce0e952521133fab4d0b8b533e42bda4665bf",
+      "sha256": "bc03184372a4e6086ed5ee1c62bd8d3ecfe4b19115c49f97e382f2814a0134e2",
       "reason": "Additive EF4-H supplied quote, trade, bar, declared-gap, grid edge, prepared-proof and bounds conversion with explicit coverage and closed parameter assembly; original fixture-derived values only, no midpoint, spread, microprice, VWAP, slope or extremum mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/breadth_adaptive.py": {

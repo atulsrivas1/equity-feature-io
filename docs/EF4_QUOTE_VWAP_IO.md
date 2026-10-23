@@ -45,8 +45,9 @@ that commit in a scratch directory. The shared core checkout was not modified.
   scope. Bars use per-slot entries (complete rows, incomplete rows, declared gaps) with an incomplete aggregate. Grid, bounds and
   proof facts are declared complete. A trade role delivered without a declaration in a fixture (RV31 mutation) is declared
   complete by the runner, because the recipe mutates delivered rows and the model carries no declaration.
-- Config envelopes: the adapter builds the same `ConfigSpec` as the core builders and passes caller parameters through unchanged.
-  The runner proves equality with the core builders on all 69 results.
+- Config envelopes: the adapter's `ConfigSpec` equals the core builder output on all 69 results. The one difference from the
+  builders is that the adapter has no market-cutoff-before-session-open check (removed after review, since the core builder
+  accepts that input). Caller parameters pass through unchanged.
 - Basis: `adjustment(basis)` maps a supplied basis to an `AdjustmentSpec`. Non-raw bases use placeholder labels; the L.basis
   recipes are refused by the library's adjustment check.
 - OHLC: bars carry supplied OHLC columns only when a supplied bar has them, so the base fixtures keep the default column set.

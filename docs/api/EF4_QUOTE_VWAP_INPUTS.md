@@ -15,7 +15,7 @@ admission, decision and refusal.
 | `trade_batch(rows, scope=, unit=, declared=, basis=)` | trades | TRADE | Supplied `eligible`, `price` and `size`. |
 | `bar_batch(rows, gaps, scope=, unit=, basis=)` | bars | BAR | `BarRow` per delivered slot, with optional `ohlc`; `Gap` per declared incomplete slot with no row. A slot with neither is absent. |
 
-`declared` is required and is one of `complete`, `incomplete` or `absent`. `complete` declares the row count, `incomplete`
+`bar_batch` declares each delivered slot complete unless its `BarRow` sets `incomplete=True`, which declares the slot incomplete; a `Gap` is incomplete with no row. `declared` is required and is one of `complete`, `incomplete` or `absent`. `complete` declares the row count, `incomplete`
 declares an unknown expected count, and `absent` admits no row. There is no undeclared path: a role with rows is always sent
 with an explicit declaration. `Scope(start_ns, end_ns, name)` is the declared delivery window of a batch. `adjustment(basis)`
 builds the shared adjustment basis of a batch.
@@ -30,6 +30,8 @@ builds the shared adjustment basis of a batch.
   parameter tuples. Grid and series policy are present exactly when supplied; the library refuses any other presence.
 - `availability(market_cutoff_ns, knowledge_cutoff_ns)` builds the causal timing.
 - `reference(text)` encodes a reference identity as `x1:` followed by the unpadded URL-safe base64 of the text.
+
+Bounds-fact text must equal the snapshot label `snap` (`SNAPSHOT_ID`); any other text is refused by the library as `INCONSISTENT_IDENTITY`.
 
 The entity (instrument and session), session, interval, grid version, series policy and series identifiers are caller values.
 The module fixes only the namespace, source, snapshot (`snap`) and mapping labels.
