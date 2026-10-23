@@ -174,9 +174,10 @@ def population_batch(members: Sequence[str], target: Session, *, input_id: str) 
                   bounds=(target.open_ns, target.close_ns), count=len(rows))
 
 
-def grid_batch(offsets: Sequence[int], target: Session, *, input_id: str, grid_version: str = GRID_VERSION) -> CanonicalBatch:
+def grid_batch(offsets: Sequence[int], target: Session, *, input_id: str, instrument_id: str = INSTRUMENT_ID,
+               grid_version: str = GRID_VERSION) -> CanonicalBatch:
     """`grid` role: B+1 ef3.bucket.edge facts, offsets from the actual open (first 0, strictly increasing)."""
-    rows = [(INSTRUMENT_ID, target.session_id, reference(f"{grid_version}#{i}"), KIND_EDGE, int(o), None, grid_version,
+    rows = [(instrument_id, target.session_id, reference(f"{grid_version}#{i}"), KIND_EDGE, int(o), None, grid_version,
              KNOWN_AT_DEFAULT) for i, o in enumerate(offsets)]
     names = ("instrument_id", "session_id", "reference_id", "fact_kind", "effective_start_ns", "effective_end_ns", "text",
              "known_at_ns")
@@ -184,19 +185,23 @@ def grid_batch(offsets: Sequence[int], target: Session, *, input_id: str, grid_v
                   bounds=(target.open_ns, target.open_ns + max(offsets) + 1), count=len(rows))
 
 
-def daily_batch(entries: Sequence[tuple[str, Session, Cell]], *, field: str, scale: int, input_id: str) -> CanonicalBatch:
+def daily_batch(entries: Sequence[tuple[str, Session, Cell]], *, field: str, scale: int, input_id: str,
+                role: str) -> CanonicalBatch:
     """DAILY rows of one or more instruments on governed sessions (`series` and `cohort_values` roles).
 
     `field` names the operand: volume (int64 shares, column volume) or a price (open, high, low or close coefficients at
     `scale`). A priced price row carries open = high = low = close = c and volume VOLUME_PRICED; a null price row carries
-    null OHLC with zero volume (the shared zero-volume rule); a null volume row carries a null volume."""
+    null OHLC with zero volume (the shared zero-volume rule); a null volume row carries a null volume. `role` names the
+    coverage entries explicitly: "session" (series: session:<session_id>) or "member" (cohort: member:<instrument_id>)."""
+    if role not in ("session", "member"):
+        raise ContractError(ErrorCode.INVALID_CONFIG, "role must be session or member")
     if field not in ("volume", "open", "high", "low", "close"):
         raise ContractError(ErrorCode.INVALID_CONFIG, "field outside volume, open, high, low, close")
     price = field != "volume"
     rows: list[tuple[Any, ...]] = []
     intervals: list[IntervalCoverage] = []
     for instrument, s, cell in entries:
-        name = f"session:{s.session_id}" if instrument == INSTRUMENT_ID else f"member:{instrument}"
+        name = f"session:{s.session_id}" if role == "session" else f"member:{instrument}"
         if cell.state == ABSENT:
             continue
         if cell.state == GAP:
@@ -220,7 +225,7 @@ def daily_batch(entries: Sequence[tuple[str, Session, Cell]], *, field: str, sca
 
 
 def bars_batch(entries: Sequence[tuple[Session, int, Cell]], offsets: Sequence[int], *, input_id: str,
-               scale: int = 0) -> CanonicalBatch:
+               instrument_id: str = INSTRUMENT_ID, scale: int = 0) -> CanonicalBatch:
     """BAR rows: one row per session per grid bucket c, covering [open + offsets[c], open + offsets[c + 1])."""
     rows: list[tuple[Any, ...]] = []
     intervals: list[IntervalCoverage] = []
@@ -232,7 +237,7 @@ def bars_batch(entries: Sequence[tuple[Session, int, Cell]], offsets: Sequence[i
         if cell.state == GAP:
             intervals.append(IntervalCoverage(name, start, end, Coverage(1, 0, False)))
             continue
-        rows.append((INSTRUMENT_ID, s.session_id, start, end, cell.value, cell.known_at))
+        rows.append((instrument_id, s.session_id, start, end, cell.value, cell.known_at))
     rows.sort(key=lambda r: (r[2], r[1]))
     names = ("instrument_id", "session_id", "start_ns", "end_ns", "volume", "known_at_ns")
     lo = min(s.open_ns for s, _, _ in entries)

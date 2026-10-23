@@ -11,7 +11,8 @@ def main() -> None:
     target = sessions[5]
     volumes = [7, 3, 9, 1, 5, 6]
     series = daily_batch([("X", s, Cell("row", v, 50)) for s, v in zip(sessions, volumes)], field="volume", scale=0,
-                         input_id="series")
+                         input_id="series",
+                         role="session")
     sessions_role = sessions_batch(sessions, input_id="sessions")
     history = robust_history_config(target, timing=availability(target.close_ns), field="volume", scale=0, window=5,
                                     min_history=5, quantile=(1, 2), evidence_limit=0)
