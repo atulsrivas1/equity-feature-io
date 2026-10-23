@@ -173,7 +173,7 @@ class PathEfficiencyInputs:
 def make_path_config(context: IntradayContextSpec, *, window: Any, epoch_profile: Any,
                      availability: AvailabilitySpec, adjustment: AdjustmentSpec, price_unit: PriceUnit | None,
                      evidence_limit: Any, policy_version: Any = POLICY_VERSION) -> ConfigSpec:
-    """ef4.path_efficiency envelope over the accepted R17 context (byte-identical to the library codec).
+    """ef4.path_efficiency envelope over the accepted R17 context (same parameters, identity and algorithm as the library builder for the same context).
 
     Pure I/O checks only: types, the window range, the governed_history cap of 63 and the price unit presence. The
     library decodes every other value (evidence range, mode coherence, the policy label, adjustment, identities).
@@ -209,7 +209,8 @@ def make_path_context(instrument_id: str, *, calendar_id: str, grid_id: str, rev
                       sessions: Sequence[Any], runs: Sequence[IntradayRunSpec], anchor_index: int,
                       target_index: int, epoch_profile: str) -> IntradayContextSpec:
     """The R17 context for one epoch profile; the mode is fixed by the profile (session_reset: reset,
-    governed_history: carry)."""
+    governed_history: carry). The library enforces the 64-session context cap and the mode consistency when it
+    decodes the context, so this builder does not repeat those checks."""
     if type(epoch_profile) is not str or epoch_profile not in EPOCH_PROFILES:
         raise ContractError(ErrorCode.INVALID_CONFIG, "epoch_profile must be session_reset or governed_history")
     return IntradayContextSpec(instrument_id, calendar_id, grid_id, revision, tuple(sessions), tuple(runs),
