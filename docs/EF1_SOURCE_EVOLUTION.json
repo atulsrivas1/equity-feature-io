@@ -62,6 +62,10 @@
       "sha256": "858095f11c70e5d46deac180e2f091fa7d482dfb547d879fbe1056ee8479cd54",
       "reason": "Additive EF2 supplied momentum bars conversion, nullable bars role and family config builder; original synthetic facts keyed by the contract fixture ids only, no EMA, MACD, DMI, ADX or stochastic mathematics."
     },
+    "packages/duckdb/src/equity_feature_duckdb/channels.py": {
+      "sha256": "b19df699e6aaa8ab5ec7467085705f9be5cd510c9d838b1255305653c9b62b3f",
+      "reason": "Additive EF2 supplied Ichimoku and price-channel bars conversion, nullable bars role and producer config builder; original synthetic facts keyed by the contract fixture ids only, no Ichimoku, Keltner, Donchian, pivot, percentile or squeeze mathematics."
+    },
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {
       "sha256": "d9eaa5ac3d45280aed8c632137c697bdcd8b3aa93a692e25c36429793509f371",
       "reason": "Additive EF2 supplied prior-extrema REFERENCE conversion, exact two nullable roles, id encoder and config builder; original synthetic T01 to T32 facts only, no level or extremum mathematics."
