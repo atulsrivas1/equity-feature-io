@@ -1,3 +1,7 @@
+## Unreleased - EF3 supplied breadth and adaptive volume I/O
+
+Adds the nine declared, four observed and one adaptive nullable REFERENCE roles and the configuration envelopes for `ef3.session_breadth` (`ef3-breadth1`), `ef3.observed_breadth` (`ef3-obsbreadth1`) and `ef3.adaptive_volume` (`ef3-adaptive1`) under EF3-IO #611. Original fixture-derived requests cover all 99 result, 7 prefix and 62 refusal contract fixture ids through a scratch harness. See [API](docs/api/EF3_BREADTH_ADAPTIVE_INPUTS.md) and [source checkpoint](docs/EF3_BREADTH_ADAPTIVE_IO.md). No count, ratio, proximity, rate, rank or float mathematics, observed-source admission, sink/SDK/version change or release acceptance.
+
 ## Unreleased - EF3 supplied robust-history, volume-pace and mean-ratio I/O
 
 Adds the nullable `series`, `sessions`, `population`, `cohort_values`, `grid` and `bars` roles and the configuration envelopes for `ef3.robust_history` (`ef3-robust1`), `ef3.volume_pace_robust` (`ef3-pace1`) and `ef3.volume_ratio_mean` (`ef3-mean1`) under EF3-IO #611. Original fixture-derived requests cover all 124 result and 48 refusal contract fixture ids through a scratch harness. See [API](docs/api/EF3_ROBUST_PACE_INPUTS.md) and [source checkpoint](docs/EF3_ROBUST_PACE_IO.md). No median, MAD, quantile, rank, ratio, z-score or mean mathematics, observed-source admission, sink/SDK/version change or release acceptance. Also corrects the declared digest of `relative_rv.py` in `EF1_SOURCE_EVOLUTION.json`.

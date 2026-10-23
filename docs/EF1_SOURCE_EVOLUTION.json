@@ -74,6 +74,12 @@
       "sha256": "acd6a67345ba5c350df10979cb60c7990c45d0f163a5d7340c24386b75ab5cf3",
       "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics."
     },
+    "packages/duckdb/src/equity_feature_duckdb/breadth_adaptive.py": {
+
+      "sha256": "cd8aa244b111bf978bc38553a1c905ab206826ab7508109b95159d25b0d740c0",
+
+      "reason": "Additive EF3 supplied declared-breadth, observed-breadth and adaptive-volume conversion, population, roster and observation reference facts and producer config envelopes; original fixture-derived facts only, no count, ratio, proximity, rate, rank or float mathematics."
+    },
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {
       "sha256": "d9eaa5ac3d45280aed8c632137c697bdcd8b3aa93a692e25c36429793509f371",
       "reason": "Additive EF2 supplied prior-extrema REFERENCE conversion, exact two nullable roles, id encoder and config builder; original synthetic T01 to T32 facts only, no level or extremum mathematics."
