@@ -1,3 +1,7 @@
+## Unreleased - EF3 supplied robust-history, volume-pace and mean-ratio I/O
+
+Adds the nullable `series`, `sessions`, `population`, `cohort_values`, `grid` and `bars` roles and the configuration envelopes for `ef3.robust_history` (`ef3-robust1`), `ef3.volume_pace_robust` (`ef3-pace1`) and `ef3.volume_ratio_mean` (`ef3-mean1`) under EF3-IO #611. Original fixture-derived requests cover all 124 result and 48 refusal contract fixture ids through a scratch harness. See [API](docs/api/EF3_ROBUST_PACE_INPUTS.md) and [source checkpoint](docs/EF3_ROBUST_PACE_IO.md). No median, MAD, quantile, rank, ratio, z-score or mean mathematics, observed-source admission, sink/SDK/version change or release acceptance. Also corrects the declared digest of `relative_rv.py` in `EF1_SOURCE_EVOLUTION.json`.
+
 ## Unreleased - EF1 supplied regular first-trade I/O
 
 Adds exact three nullable roles, lossless supplied TRADE/REFERENCE conversion and original synthetic R001/R019 requests under EQ212#570. See [API](docs/api/EF1_REGULAR_FIRST_TRADE_PRICE_INPUTS.md) and [source checkpoint](docs/EF1_REGULAR_FIRST_TRADE_PRICE_IO.md). No producer mathematics, observed-source admission, sink/SDK/schema/version change or release acceptance.
