@@ -58,6 +58,10 @@
       "sha256": "b56e49f1b2624789792cba3f037117cd277b79129821f4d3bffb8915c753aecb",
       "reason": "Additive EF2 supplied money-flow bars conversion, nullable bars role and config builder; original synthetic M01 to M36 facts only, no multiplier, OBV, A/D or CMF mathematics."
     },
+    "packages/duckdb/src/equity_feature_duckdb/momentum.py": {
+      "sha256": "858095f11c70e5d46deac180e2f091fa7d482dfb547d879fbe1056ee8479cd54",
+      "reason": "Additive EF2 supplied momentum bars conversion, nullable bars role and family config builder; original synthetic facts keyed by the contract fixture ids only, no EMA, MACD, DMI, ADX or stochastic mathematics."
+    },
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {
       "sha256": "d9eaa5ac3d45280aed8c632137c697bdcd8b3aa93a692e25c36429793509f371",
       "reason": "Additive EF2 supplied prior-extrema REFERENCE conversion, exact two nullable roles, id encoder and config builder; original synthetic T01 to T32 facts only, no level or extremum mathematics."

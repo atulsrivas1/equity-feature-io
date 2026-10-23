@@ -16,6 +16,10 @@ Correct completion/reservation observation during cooperating first-publication 
 
 # Changelog
 
+## Unreleased - EF2 supplied momentum and trend I/O
+
+Adds the nullable `bars` role (OHLCV, one chunk per actual session), config builder for `intraday.momentum.v1` (`ef2-conv1`) and original synthetic requests keyed by all 100 contract result fixture ids (including D04 with Amendment 1 prices, D22 and the prefix fixtures P01 to P03) under EF2-IO #609. See [API](docs/api/EF2_MOMENTUM_INPUTS.md) and [source checkpoint](docs/EF2_MOMENTUM_IO.md). No indicator mathematics, observed-source admission, sink/SDK/version change or release acceptance.
+
 ## Unreleased - EF2 supplied money-flow and retracement I/O
 
 Adds the nullable `bars` role (OHLCV with volume), the two nullable exact-extremum REFERENCE roles, id encoder, config builders and original synthetic M01..M36 and T01..T32 requests under EF2-IO #609. See [API](docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md) and [source checkpoint](docs/EF2_MONEY_FLOW_RETRACEMENT_IO.md). No indicator or retracement mathematics, observed-source admission, sink/SDK/version change or release acceptance.
