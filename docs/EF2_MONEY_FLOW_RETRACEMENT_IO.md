@@ -7,18 +7,17 @@ layer (EF2-IO [#609](https://github.com/atulsrivas1/equity-features/issues/609))
 [supplied-input API](api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md). No indicator or retracement
 mathematics, no extremum derivation, no sink/SDK/version change.
 
-Executed (Python 3.12, `python -I`): all 36 money-flow and 32 retracement synthetic fixtures
-build with generic canonical validation, money flow in both empty-slot forms; the R17 admission
-function accepts every money-flow BAR chunk, and the config context chunks and digest equal the
-R17 context codec byte for byte.
+Executed (Python 3.12, `python -I`, core main 364fe61 with the merged library): all 68 synthetic
+fixtures build with generic canonical validation (money flow in both empty-slot forms); every synthetic
+config is byte-identical to the library `build_money_flow_config` / `build_retracement_config`
+(so both builders are kept); all 36 money-flow and 32 retracement fixtures run through
+`compute_money_flow` / `compute_retracement_level` and match the contract value (int64 exact, float64
+by `float.hex`), status, reasons, expected and observed with zero mismatches. Each result was published
+as its own generation to a new scratch DuckDB sink and read back identical (int64 `shares` OBV,
+float64 `shares`, `fraction`, `currency/share`), an idempotent republish returned the same receipt, and a
+close/reopen read matched. `tools/check_extraction.py` with the core root exited 0.
 
-NOT executed (pending the library producers, `ef2-b-library`): computation against the
-contract's expected values, the DuckDB sink round-trip of the new units and dtypes (int64 OBV,
-float64 shares / fraction / currency per share), the worker, mypy.
-
-Assumptions the contract leaves open (the config wire layout of the money-flow and retracement
-parameters) are marked in the API document and must be reconciled with the library decoder
-before the worker compares config digests.
+NOT executed: witnesses/evidence comparison against the contract, the worker, mypy, independent oracle.
 
 Remaining gates: library availability and manual run, worker and sink readback, source-evolution
 declaration review, independent review, observed-source rights and release.

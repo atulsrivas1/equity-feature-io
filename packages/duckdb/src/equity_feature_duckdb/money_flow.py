@@ -67,7 +67,8 @@ def make_money_flow_config(*, instrument_id: str, calendar_id: str, grid_id: str
                            evidence_limit: int = 0, policy_version: str = POLICY_VERSION) -> ConfigSpec:
     """Build the ef2.money_flow ConfigSpec from explicit caller-supplied selection.
 
-    ASSUMED ENVELOPE (the contract names the parameters but not their wire layout): the R17
+    Envelope (the contract names the parameters but not their wire layout; verified byte-identical to the
+    library build_money_flow_config): the R17
     intraday envelope unchanged (closed canonical context chunks, sha256, schema) plus
     policy_version, evidence_limit and, only when supplied, cmf_period. There is no default
     period or evidence limit. Every range, mode, anchor/target and vocabulary check

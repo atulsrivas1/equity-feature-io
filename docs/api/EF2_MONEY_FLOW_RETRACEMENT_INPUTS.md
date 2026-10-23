@@ -33,8 +33,8 @@ from equity_feature_duckdb.retracement import (
   namespace are required; origins must match delivery.
 - `make_money_flow_config(...)` builds the `ef2.money_flow` ConfigSpec (`ef2-money-flow-v1`). The
   contract names the parameters (R17 context, `policy_version`, `cmf_period` only with CMF,
-  `evidence_limit`) but not their wire layout; this builder assumes the accepted R17 envelope
-  unchanged (closed canonical context chunks and digest, byte-identical to the R17 context codec)
+  `evidence_limit`) but not their wire layout; this builder uses the accepted R17 envelope
+  unchanged (verified byte-identical to the library `build_money_flow_config`) (closed canonical context chunks and digest, byte-identical to the R17 context codec)
   plus those scalar parameters. Ranges, mode, anchor/target and vocabulary belong to the pure decoder.
 - `SYNTHETIC_MONEY_FLOW_CASES` lists the contract's own 36 result fixture ids (M01..M36).
   `synthetic_money_flow_fixture(case_id, *, empty_form="row"|"coverage")`,
@@ -51,9 +51,9 @@ from equity_feature_duckdb.retracement import (
   producer's.
 - `RetracementInputs(prior_high=None, prior_low=None, provenance=("unavailable",)*2)`: two nullable
   slots in role order; `None` is missing delivery, a zero-row batch is present-empty.
-- `make_retracement_config(*, direction, ratio_num, ratio_den, session, window, availability,
-  adjustment, price_unit, evidence_limit=0)` builds `ef2.retracement_level`
-  (`ef2-retracement-level-v1`) with five flat parameters (assumed layout, as above). No default
+- `make_retracement_config(*, direction, ratio_num, ratio_den, session, availability,
+  adjustment, price_unit, evidence_limit=0)` (the library signature) builds `ef2.retracement_level`
+  (`ef2-retracement-level-v1`) with five flat parameters (byte-identical to the library builder). No default
   ratio; the pure decoder owns reducedness and the `0..1` domain.
 - `SYNTHETIC_RETRACEMENT_CASES` lists T01..T32 with `synthetic_retracement_fixture(case_id)` and
   `synthetic_retracement_config(case_id)`; no expected values.

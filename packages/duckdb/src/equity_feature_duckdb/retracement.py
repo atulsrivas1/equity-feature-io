@@ -63,20 +63,22 @@ def make_extremum_batch(rows: tuple[Mapping[str, Cell], ...], *, metadata: Batch
 
 
 def make_retracement_config(*, direction: str, ratio_num: int, ratio_den: int, session: SessionSpec,
-                            window: WindowSpec, availability: AvailabilitySpec,
+                            availability: AvailabilitySpec,
                             adjustment: AdjustmentSpec, price_unit: PriceUnit, evidence_limit: int = 0,
                             policy_version: str = POLICY_VERSION) -> ConfigSpec:
     """Build the ef2.retracement_level ConfigSpec from the caller's explicit direction and ratio.
 
-    ASSUMED ENVELOPE (the contract lists the five parameters but not their wire layout): five flat
-    scalar parameters policy_version, direction, ratio_num, ratio_den, evidence_limit. There is
+    Envelope (the contract lists the five parameters but not their wire layout; verified byte-identical
+    to the library build_retracement_config): five flat scalar parameters policy_version, direction, ratio_num, ratio_den, evidence_limit. There is
     no default ratio and no reduction here; reducedness, 0 <= ratio <= 1, direction vocabulary
     and the evidence bound are the pure decoder's (invalid_config), so malformed values pass through.
     """
     return ConfigSpec(CONFIG_IDENTITY, ALGORITHM_VERSION, (
         Parameter("policy_version", policy_version), Parameter("direction", direction),
         Parameter("ratio_num", ratio_num), Parameter("ratio_den", ratio_den),
-        Parameter("evidence_limit", evidence_limit)), session, window, availability, adjustment, price_unit)
+        Parameter("evidence_limit", evidence_limit)), session,
+                      WindowSpec(1, session.session_id, (session.session_id,), "completed_eod"),
+                      availability, adjustment, price_unit)
 
 
 @dataclass(frozen=True)
@@ -181,7 +183,7 @@ def synthetic_retracement_config(case_id: str) -> ConfigSpec:
     case = _case(case_id)
     return make_retracement_config(
         direction=case["direction"], ratio_num=case["ratio"][0], ratio_den=case["ratio"][1],
-        session=SessionSpec("SYN", "S", 0, 100, "UTC"), window=WindowSpec(1, "S", ("S",), "completed_eod"),
+        session=SessionSpec("SYN", "S", 0, 100, "UTC"),
         availability=AvailabilitySpec(_CUTOFF_NS, _CUTOFF_NS, _CUTOFF_NS), adjustment=AdjustmentSpec(),
         price_unit=PriceUnit(case["scale"], "USD"), evidence_limit=2)
 
