@@ -27,13 +27,16 @@ Executed (Python 3.12, `python -I`, scratch harness inserting the core and io pa
   to one new scratch DuckDB file. A republish in the same session returned the same receipt for all 99. After close and
   reopen, every result read back bit-identical (canonical encoding).
 - `python -I tools/check_extraction.py --core-root C:\Users\MONIKA~1\AppData\Local\Temp\ef3f-io-scratch\core-wt` exited 0 with
-  `breadth_adaptive.py` declared in `EF1_SOURCE_EVOLUTION.json` (sha256 `cd8aa244...` of the final module).
+  `breadth_adaptive.py` declared in `EF1_SOURCE_EVOLUTION.json` (sha256 `e23a0261...` of the final module).
 - The synthetic example (`examples/ef3_breadth_adaptive.py`) runs and prints the three configurations and the role sizes.
 
 Deviations and choices:
 
 - `python -I` ignores `PYTHONPATH`, so the scratch harness inserts the core and io package source roots itself.
-- Instruments: the contract names no instrument id. Every builder takes the entity explicitly; the harness used the labels
+- Module constants without override: `NAMESPACE`, `SESSION_ID`, `POPULATION_ID`, `POPULATION_REVISION`, `RECORD_SET_ID`,
+  `SNAPSHOT_ID` and the session window `[0, 10^12)` ns are fixed in the module and are not parameters of the builders.
+  Only the entity instrument, the case inputs and the selected outputs are supplied by the caller.
+- Instruments: the contract names no instrument id. The entity is passed explicitly to each `*_case`; the harness used the labels
   `SYN-BREADTH` (declared aggregate), `SYN-ROSTER-AGG` (observed aggregate) and `Q9` (adaptive). Member names are the
   fixture names.
 - Identifiers chosen here (not in the contract, to be pinned by the amendment and #611): population id `SYN-POP`, revision
@@ -42,10 +45,11 @@ Deviations and choices:
   sequence) with the base64url text component; the contract's `B(id)` notation is that encoding.
 - Coverage: a complete role declares its row count as expected (`Coverage(n, n, True)`); an incomplete role declares
   `Coverage(None, n, False)`. The contract's batch-level coverage is used; no per-interval entries.
-- Session: one governed session `0` spanning `[0, 10^12)` ns. The population role's static bounds equal this session. The
+- Session: one governed session `0` spanning `[0, 10^12)` ns (module constant). The population role's static bounds equal this session. The
   bound is a harness choice (wide enough for every fixture time), not a contract value.
 - Units: declared and observed roles use scale 2 (the fixture default), the adaptive stream uses scale 0 for raw rates.
   Every role of one request carries the same PriceUnit.
+- Ordering: `reference_batch` sorts facts by `(start_ns, reference_id)` before validation. An out-of-order caller stream is therefore silently reordered, and the shared INVALID_ORDER (RB08, RA14) cannot be triggered through the adapter; those two refusals were exercised in the scratch harness with raw, unsorted batches. The E adapter (`robust_pace.py`) is mixed: `sessions_batch` and `bars_batch` sort silently as this module does, while `daily_batch`, `grid_batch` and `population_batch` do not sort and let the shared validator refuse out-of-order rows.
 - Fixture notation is not wire format. The population field `e` is not mapped (no contract meaning). Fixtures with
   `mode: reconstruction` (DB41, AD25) are mapped with the same `known_at` availability; the contract's outputs are matched
   exactly, so no reconstruction reason is carried.

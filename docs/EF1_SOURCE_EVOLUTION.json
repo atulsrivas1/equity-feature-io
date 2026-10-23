@@ -75,9 +75,7 @@
       "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/breadth_adaptive.py": {
-
-      "sha256": "cd8aa244b111bf978bc38553a1c905ab206826ab7508109b95159d25b0d740c0",
-
+      "sha256": "e23a0261b64002a6e76abc9ec9e03c87ff9767bc53e210b951ac27960d3a17ef",
       "reason": "Additive EF3 supplied declared-breadth, observed-breadth and adaptive-volume conversion, population, roster and observation reference facts and producer config envelopes; original fixture-derived facts only, no count, ratio, proximity, rate, rank or float mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {

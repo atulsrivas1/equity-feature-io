@@ -8,7 +8,7 @@
 - `Case.config(features)`: the configuration envelope for one selection. A tolerance parameter is present exactly when its fraction output is selected, as in the library.
 - `reference_batch(facts, input_id=..., complete=..., unit=...)`: builds and validates one role. A complete role declares its row count; an incomplete role declares no expected count, so missing members are governed gaps.
 
-Every builder takes its instrument, member and entity explicitly; there are no default instrument ids. Member names come from the supplied rows. Reference identities: `x1:` (population), `bh1:` (membership stint, six digit), `bf1:` (declared facts), `ob1:` (roster and observed facts), `ao1:` (adaptive sequence, 19 digit) with the base64url text components. These identifiers are implementation choices pending the EF3 amendment and must be pinned there.
+Each `*_case` takes the entity instrument explicitly; there are no default instrument ids. `NAMESPACE`, `SESSION_ID`, `POPULATION_ID`, `POPULATION_REVISION`, `RECORD_SET_ID`, `SNAPSHOT_ID` and the session window are module constants, not parameters. `reference_batch` sorts facts by `(start_ns, reference_id)`, so out-of-order input is reordered silently. Member names come from the supplied rows. Reference identities: `x1:` (population), `bh1:` (membership stint, six digit), `bf1:` (declared facts), `ob1:` (roster and observed facts), `ao1:` (adaptive sequence, 19 digit) with the base64url text components. These identifiers are implementation choices pending the EF3 amendment and must be pinned there.
 
 ```python
 from equity_feature_duckdb.breadth_adaptive import adaptive_case, declared_case
