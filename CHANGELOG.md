@@ -1,6 +1,9 @@
 ## Unreleased - EF4-H supplied quote dynamics and VWAP path I/O
 
 Adds the quote, trade, bar, declared-gap, grid, prepared-proof and bounds roles with explicit coverage declarations, and request assembly for ef4.quote_dynamics (ef4-quote1) and ef4.vwap_path (ef4-vwap1) under EQ-159 and EQ-160. Original fixture-derived requests cover all 69 result and 80 refusal contract fixture ids through a scratch runner; the 69 joint results round-trip through the DuckDB sink. See [API](docs/api/EF4_QUOTE_VWAP_INPUTS.md) and [source checkpoint](docs/EF4_QUOTE_VWAP_IO.md). No quote, spread, microprice, VWAP, slope or extremum mathematics, observed-source admission, sink/SDK/version change or release acceptance.
+## Unreleased - EF4-G supplied tape trades and notional top-K I/O
+
+Adds the TRADE, optional `ef4.tick.seed` REFERENCE and notional top-K partition roles and the configuration envelopes for `ef4.tape_window_sign` (`ef4-tape1`) and `ef4.trade_top_k_notional` (`ef4-notional1`) under EQ-158 and EQ-162. The io-sdk codec reads a stored notional-ordered top-K cell from its fields when the size-ranked constructor refuses it (`INVALID_ORDER`); other cells keep the constructor path. All 82 result fixtures under two identity bindings and G01 to G03 round-trip through the DuckDB sink (227 of 227 results); 73 of 75 refusal recipes raise the contract code. See [API](docs/api/EF4_TAPE_INPUTS.md) and [source checkpoint](docs/EF4_TAPE_IO.md). No tick, window, notional or rank mathematics, no worker, no release acceptance and no package version change.
 
 ## Unreleased - EF3 supplied breadth and adaptive volume I/O
 
