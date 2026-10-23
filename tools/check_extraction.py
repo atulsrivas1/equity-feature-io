@@ -49,6 +49,7 @@ def main():
         'packages/duckdb/src/equity_feature_duckdb/venue_status.py',
         'packages/duckdb/src/equity_feature_duckdb/money_flow.py',
         'packages/duckdb/src/equity_feature_duckdb/retracement.py',
+        'packages/duckdb/src/equity_feature_duckdb/momentum.py',
     }
     additive_checked = {}
     for name, declaration in additions.items():
