@@ -10,6 +10,7 @@ from time import monotonic_ns as _now
 from equity_feature_contracts import CanonicalBatch, ContractError, FeatureResult, validate_batch
 from equity_feature_evidence import EvidenceError, canonical_content, fingerprint_result, verify_receipt_content
 from ._binding import pairs, validate_bundle
+from . import _versions as V
 from ._errors import BundleError, require, sanitized
 from ._model import BundleInput, I64_MAX, MAX_CALCULATION_ACCEPT_NS, ReplayReport, ReproductionBundle
 
@@ -17,7 +18,7 @@ from ._model import BundleInput, I64_MAX, MAX_CALCULATION_ACCEPT_NS, ReplayRepor
 def _installed_calculator() -> Callable[..., FeatureResult] | None:
     # All names are literals in trusted code; no bundle-selected import or install.
     try:
-        if (version('equity-feature-contracts'), version('equity-feature-evidence'), version('equity-features')) != ('0.0.4a4', '0.1.0a2', '0.0.4a4'):
+        if (version('equity-feature-contracts'), version('equity-feature-evidence'), version('equity-features')) != (V.CONTRACTS, V.EVIDENCE, V.FEATURES):
             return None
         from equity_features.session import compute_trades
     except (PackageNotFoundError, ImportError):

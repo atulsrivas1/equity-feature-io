@@ -6,6 +6,7 @@ from equity_feature_contracts import CanonicalBatch, ConfigSpec, EntityKey, Feat
 from equity_feature_evidence import (
     ContentFingerprint, ExecutionReceipt, canonical_content, decode_receipt, encode_receipt,
 )
+from . import _versions as V
 from ._archive import read_stored, write_stored
 from ._binding import aggregate, pairs, shape
 from ._errors import require, sanitized
@@ -41,7 +42,7 @@ def write_bundle(receipt: ExecutionReceipt, configuration: ConfigSpec, result: F
         aggregate((configuration, result) + tuple(x[1] for x in inputs))
         supplied = dict(inputs)
         manifest = BundleManifest('session.compute_trades.v1', shape(configuration, result),
-            BundleVersions('0.1.0a1', '0.0.4a4', '0.1.0a2', '0.0.4a4'), publication)
+            BundleVersions(V.BUNDLE, V.CONTRACTS, V.EVIDENCE, V.FEATURES), publication)
         bundle = ReproductionBundle(manifest, receipt, configuration, result,
             tuple(BundleInput(x.role, x.input_id, x.content, supplied.get(x.role)) for x in receipt.inputs))
         return _encode(bundle)

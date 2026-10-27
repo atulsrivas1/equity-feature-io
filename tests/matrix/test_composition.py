@@ -28,7 +28,7 @@ from equity_features.session import compute_bars
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'examples'))
 from duckdb_conformance import Fixture
 
-VERSIONS={'equity-feature-contracts':'0.0.4a4','equity-features':'0.0.4a4',
+VERSIONS={'equity-feature-contracts':'0.0.4a4','equity-features':'0.0.4a5',
  'equity-feature-io-contracts':'0.1.0a2','equity-feature-io-sdk':'0.1.0a2',
  'equity-feature-duckdb':'0.1.0a9','equity-feature-parquet':'0.1.0a1',
  'equity-feature-duckdb-sink':'0.1.0a0','equity-feature-example-extensions':'0.1.0a0',
@@ -52,7 +52,7 @@ class Composition(unittest.TestCase):
             self.assertEqual((q.expected,q.observed),(2,2))
             self.assertEqual((q.status,q.reasons),(Status.MISSING_INPUT,(Reason.ABSENT_INPUT,)) if values[q.feature_id] is None else (Status.AVAILABLE,()))
         m=result.metadata
-        self.assertEqual((m.namespace,m.session_id,m.backend_id,m.backend_version,m.schema_version,m.math_policy_version,m.evidence_limit),(namespace,session,'python-exact','0.0.4a4','1','v1',0))
+        self.assertEqual((m.namespace,m.session_id,m.backend_id,m.backend_version,m.schema_version,m.math_policy_version,m.evidence_limit),(namespace,session,'python-exact',VERSIONS['equity-features'],'1','v1',0))
         self.assertEqual((m.availability.market_cutoff_ns,m.availability.knowledge_cutoff_ns,m.availability.evaluation_ns),cutoff)
         self.assertEqual(len(m.inputs),1);binding=m.inputs[0]
         self.assertEqual(binding.role,'bars');self.assertEqual(binding.metadata.source,source)

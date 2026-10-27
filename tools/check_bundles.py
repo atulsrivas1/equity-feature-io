@@ -33,7 +33,7 @@ def main():
     tags=[n.comparators[0].value for n in ast.walk(tree) if isinstance(n,ast.Compare)
         and isinstance(n.left,ast.Name) and n.left.id=='tag' and isinstance(n.comparators[0],ast.Constant)]
     assert len(tags)==len(set(tags))==35
-    assert len(list(SOURCE.glob('*.py')))==9
+    assert len(list(SOURCE.glob('*.py')))==10
     print('Bundle imports, no extraction/executable hooks and 35 fixed typed branches passed.')
 
 

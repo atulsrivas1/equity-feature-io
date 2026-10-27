@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from equity_feature_contracts import CanonicalBatch, ConfigSpec, EntityKey, FeatureResult
 from equity_feature_evidence import ContentFingerprint, ExecutionReceipt, fingerprint_batch
 from ._errors import label, require, sanitized
+from . import _versions as V
 
 MAX_CALCULATION_ACCEPT_NS = 5000000000
 I64_MAX = 2**63 - 1
@@ -31,7 +32,7 @@ class BundleVersions:
     def __post_init__(self) -> None:
         require(all(type(x) is str for x in (self.bundle, self.contracts, self.evidence, self.features)))
         require((self.bundle, self.contracts, self.evidence, self.features)
-            == ('0.1.0a1', '0.0.4a4', '0.1.0a2', '0.0.4a4'), 'unsupported_version')
+            == (V.BUNDLE, V.CONTRACTS, V.EVIDENCE, V.FEATURES), 'unsupported_version')
 
 
 @dataclass(frozen=True)

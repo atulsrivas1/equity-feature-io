@@ -21,7 +21,7 @@ OLD_IO='8461ee52a2631ac8aa1be52f6cf222ac7a14b87b'
 IO_A1='8f3208d53da095bcf730cdf95f65a749028af2d6'
 SCOPED=('packages','examples/third_party','examples/duckdb_conformance.py','tests','tools','requirements-dev.txt','.github/workflows/matrix.yml',
         'docs/EQ122_EXTRACTION_INVENTORY.json','docs/EF1_SOURCE_EVOLUTION.json')
-VERSIONS={'equity-feature-contracts':'0.0.4a4','equity-features':'0.0.4a4','equity-feature-io-contracts':'0.1.0a2',
+VERSIONS={'equity-feature-contracts':'0.0.4a4','equity-features':'0.0.4a5','equity-feature-io-contracts':'0.1.0a2',
           'equity-feature-io-sdk':'0.1.0a2','equity-feature-duckdb':'0.1.0a9','equity-feature-parquet':'0.1.0a1',
           'equity-feature-duckdb-sink':'0.1.0a0','equity-feature-example-extensions':'0.1.0a0','equity-feature-workers':'0.1.0a1'}
 
