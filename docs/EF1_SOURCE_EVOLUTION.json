@@ -67,20 +67,20 @@
       "reason": "Additive EF2 supplied Ichimoku and price-channel bars conversion, nullable bars role and producer config builder; original synthetic facts keyed by the contract fixture ids only, no Ichimoku, Keltner, Donchian, pivot, percentile or squeeze mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/relative_rv.py": {
-      "sha256": "cbd57e14f72c2155130748fa39c402bfc57b31d62f43a2766debcd7c17b658a2",
-      "reason": "Additive EF3 supplied relative-statistics, daily log-volatility and realized-variance conversion, close-only and OHLCV bar roles on a local daily grid and producer config builders; original fixture-derived facts only, no return, beta, correlation, logarithm, variance or annualization mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change."
+      "sha256": "b6750d08db5f833cef6a241e658be7a7aa5fc2bca662b967a6b3779253c99337",
+      "reason": "Additive EF3 supplied relative-statistics, daily log-volatility and realized-variance conversion, close-only and OHLCV bar roles on a local daily grid and producer config builders; original fixture-derived facts only, no return, beta, correlation, logarithm, variance or annualization mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters."
     },
     "packages/duckdb/src/equity_feature_duckdb/robust_pace.py": {
-      "sha256": "e1a03cd1db8c67b12c1c8c1ef318b83134f882adf89dc853202df3bf0981589f",
-      "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change."
+      "sha256": "c01439575f7eb27e1a6d917fb4424f9e00bd1c7c96cd618c0a7033660f8d01eb",
+      "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters."
     },
     "packages/duckdb/src/equity_feature_duckdb/quote_vwap.py": {
       "sha256": "bc03184372a4e6086ed5ee1c62bd8d3ecfe4b19115c49f97e382f2814a0134e2",
       "reason": "Additive EF4-H supplied quote, trade, bar, declared-gap, grid edge, prepared-proof and bounds conversion with explicit coverage and closed parameter assembly; original fixture-derived values only, no midpoint, spread, microprice, VWAP, slope or extremum mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/breadth_adaptive.py": {
-      "sha256": "81e2ebcf41a71389f17c16fd9e9a6610fd161b631da83faddf330d9a5c5b5c7f",
-      "reason": "Additive EF3 supplied declared-breadth, observed-breadth and adaptive-volume conversion, population, roster and observation reference facts and producer config envelopes; original fixture-derived facts only, no count, ratio, proximity, rate, rank or float mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change."
+      "sha256": "280437147d0fa041227d8ddb41f50d97f807bc55fda784b56238aa9aa67f7740",
+      "reason": "Additive EF3 supplied declared-breadth, observed-breadth and adaptive-volume conversion, population, roster and observation reference facts and producer config envelopes; original fixture-derived facts only, no count, ratio, proximity, rate, rank or float mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters."
     },
     "packages/duckdb/src/equity_feature_duckdb/path_efficiency.py": {
       "sha256": "234ce9a915f241b0e908a1ff0390ed83291c5d6dd258144985241808d24e5862",
@@ -103,8 +103,8 @@
       "reason": "Optional EF4-I2 DuckDB sink publication through the SDK path with lazy optional imports; computes nothing."
     },
     "packages/duckdb/src/equity_feature_duckdb/_typed.py": {
-      "sha256": "36758341603d7ef5383e42abba0a49f0b6562753b6aecb079d9b7d7715c56f53",
-      "reason": "Additive typed adapter-build refusal guard (io#43): converts stray builder exceptions into ContractError with fixed message and ErrorCode (INVALID_SCHEMA or OVERFLOW); no mathematics."
+      "sha256": "1c40d0fa50b146dd7b901999880684c74ddb4c81b5f647d76f598bf277b2b024",
+      "reason": "Additive typed adapter-build refusal guard (io#43): converts stray builder exceptions into ContractError with fixed message and ErrorCode (INVALID_SCHEMA or OVERFLOW); no mathematics. Also checked_known_at: validates a supplied known_at (null or non-negative integer) without defaulting."
     }
   },
   "limits": "Declaration and source integrity only; not executed conformance, authenticated acquisition, EF1 numerical or artifact acceptance. Original EQ122 source hashes remain authoritative and unchanged."

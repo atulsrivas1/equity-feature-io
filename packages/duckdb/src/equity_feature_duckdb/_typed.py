@@ -30,6 +30,17 @@ def typed_refusal(function: F) -> F:
     return guarded  # type: ignore[return-value]
 
 
+def checked_known_at(value: Any) -> int | None:
+    """A supplied per-fact `known_at_ns`: None (unknown availability, reported by the library) or a non-negative int.
+
+    Nothing is defaulted. Anything else (bool, float, str, negative) is a typed schema refusal with a fixed message."""
+    if value is None:
+        return None
+    if type(value) is not int or value < 0:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "known_at must be a non-negative integer or null")
+    return value
+
+
 def guard_public(namespace: MutableMapping[str, Any], module: str) -> None:
     """Wrap every public function defined in `module` so adapter-build failures are typed."""
     for name, value in list(namespace.items()):

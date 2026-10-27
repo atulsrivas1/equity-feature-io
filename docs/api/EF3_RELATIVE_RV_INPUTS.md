@@ -21,6 +21,9 @@ from equity_feature_duckdb.relative_rv import (
   (`instrument_id`, `session_id`, `start_ns`, `end_ns`, `close`, `known_at_ns`) into a canonical BAR batch. Slot states:
   `priced` (row, coverage 1/1 complete), `absent` (no row, no coverage), `gap` (declared incomplete coverage 1/0, no row),
   `unknown` (`known_at` null), `future` (`known_at` as given), `null` (row with null close).
+  **Breaking change (R5):** `known_default` now defaults to `None`, no longer 50. A slot without its own `known_at` yields a null
+  `known_at_ns` (unknown availability, reported by the library); pass `known_default=` or a per-slot `known_at` explicitly. A
+  `known_at` that is not null or a non-negative integer is a typed `INVALID_SCHEMA` refusal.
 - `make_intraday_context(instrument_id, sessions=, runs=, anchor_index=, target_index=, mode="reset")` and
   `synthetic_intraday_session(count)` build the R17 context codec locally (`IntradayContextSpec`, `IntradayRunSpec`).
 - `intraday_batch(context, slots, *, input_id, scale)` converts one regular-session OHLCV chunk: `priced` (open, high,
