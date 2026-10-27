@@ -22,6 +22,7 @@ from equity_feature_contracts import (
     EntityKey, ErrorCode, InputScope, Parameter, PriceUnit, SessionSpec, SourceBinding, WindowSpec,
     validate_batch,
 )
+from ._typed import guard_public
 
 NAMESPACE = "SYN"
 CURRENCY = "USD"
@@ -330,3 +331,6 @@ __all__ = [
     "SNAPSHOT_ID", "adaptive_case", "availability", "declared_case", "observed_case", "price_unit", "reference",
     "reference_batch", "session_spec",
 ]
+
+
+guard_public(globals(), __name__)
