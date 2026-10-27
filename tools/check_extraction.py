@@ -59,6 +59,7 @@ def main():
         'packages/duckdb/src/equity_feature_duckdb/tape.py',
         'packages/duckdb/src/equity_feature_duckdb/ef4_projections.py',
         'packages/duckdb/src/equity_feature_duckdb/ef4_projections_sink.py',
+        'packages/duckdb/src/equity_feature_duckdb/_typed.py',
     }
     additive_checked = {}
     for name, declaration in additions.items():
