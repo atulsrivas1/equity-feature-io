@@ -3,7 +3,7 @@
 A malformed supplied input must surface as a `ContractError` that carries the shared library `ErrorCode`, never as a bare
 Python exception (`KeyError`, `IndexError`, `TypeError`, `ValueError`, `OverflowError`). `ContractError` subclasses
 `ValueError`, so callers that already catch `ValueError` keep working. Fixed messages only: the original exception text
-(which can echo supplied values) is dropped."""
+(which can echo supplied values) stays only as __cause__, never in the message."""
 from __future__ import annotations
 
 import functools
@@ -23,10 +23,10 @@ def typed_refusal(function: F) -> F:
             return function(*args, **kwargs)
         except ContractError:
             raise
-        except OverflowError:
-            raise ContractError(ErrorCode.OVERFLOW, "supplied value exceeds the representable range") from None
-        except (KeyError, IndexError, TypeError, ValueError, AttributeError):
-            raise ContractError(ErrorCode.INVALID_SCHEMA, "malformed supplied input") from None
+        except OverflowError as exc:
+            raise ContractError(ErrorCode.OVERFLOW, "supplied value exceeds the representable range") from exc
+        except (KeyError, IndexError, TypeError, ValueError, AttributeError) as exc:
+            raise ContractError(ErrorCode.INVALID_SCHEMA, "malformed supplied input") from exc
     return guarded  # type: ignore[return-value]
 
 
