@@ -71,7 +71,7 @@
       "reason": "Additive EF3 supplied relative-statistics, daily log-volatility and realized-variance conversion, close-only and OHLCV bar roles on a local daily grid and producer config builders; original fixture-derived facts only, no return, beta, correlation, logarithm, variance or annualization mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters."
     },
     "packages/duckdb/src/equity_feature_duckdb/robust_pace.py": {
-      "sha256": "e2a10254d70d01e65f04f2b412346d59aad6edfc0dea116383157ebd1d5f8ad3",
+      "sha256": "c01439575f7eb27e1a6d917fb4424f9e00bd1c7c96cd618c0a7033660f8d01eb",
       "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters."
     },
     "packages/duckdb/src/equity_feature_duckdb/quote_vwap.py": {

@@ -226,12 +226,12 @@ def daily_batch(entries: Sequence[tuple[str, Session, Cell]], *, field: str, sca
             intervals.append(IntervalCoverage(name, s.open_ns, s.close_ns, Coverage(1, 0, False)))
             continue
         if not price:
-            rows.append((instrument, s.session_id, s.open_ns, s.close_ns, cell.value, cell.known_at))
+            rows.append((instrument, s.session_id, s.open_ns, s.close_ns, cell.value, checked_known_at(cell.known_at)))
         elif cell.value is None:
-            rows.append((instrument, s.session_id, s.open_ns, s.close_ns, None, None, None, None, 0, cell.known_at))
+            rows.append((instrument, s.session_id, s.open_ns, s.close_ns, None, None, None, None, 0, checked_known_at(cell.known_at)))
         else:
             c = cell.value
-            rows.append((instrument, s.session_id, s.open_ns, s.close_ns, c, c, c, c, VOLUME_PRICED, cell.known_at))
+            rows.append((instrument, s.session_id, s.open_ns, s.close_ns, c, c, c, c, VOLUME_PRICED, checked_known_at(cell.known_at)))
     if price:
         names = ("instrument_id", "session_id", "start_ns", "end_ns", "open", "high", "low", "close", "volume",
                  "known_at_ns")
@@ -255,7 +255,7 @@ def bars_batch(entries: Sequence[tuple[Session, int, Cell]], offsets: Sequence[i
         if cell.state == GAP:
             intervals.append(IntervalCoverage(name, start, end, Coverage(1, 0, False)))
             continue
-        rows.append((instrument_id, s.session_id, start, end, cell.value, cell.known_at))
+        rows.append((instrument_id, s.session_id, start, end, cell.value, checked_known_at(cell.known_at)))
     rows.sort(key=lambda r: (r[2], r[1]))
     names = ("instrument_id", "session_id", "start_ns", "end_ns", "volume", "known_at_ns")
     lo = min(s.open_ns for s, _, _ in entries)
