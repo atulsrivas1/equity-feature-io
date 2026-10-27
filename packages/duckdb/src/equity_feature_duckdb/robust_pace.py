@@ -222,6 +222,7 @@ def daily_batch(entries: Sequence[tuple[str, Session, Cell]], *, field: str, sca
         name = f"session:{s.session_id}" if role == "session" else f"member:{instrument}"
         if cell.state == ABSENT:
             continue
+        checked_known_at(cell.exclusion_known_at)  # validated even though not emitted
         if cell.state == GAP:
             intervals.append(IntervalCoverage(name, s.open_ns, s.close_ns, Coverage(1, 0, False)))
             continue
@@ -252,6 +253,7 @@ def bars_batch(entries: Sequence[tuple[Session, int, Cell]], offsets: Sequence[i
         name = f"bucket:{s.session_id}:{c}"
         if cell.state == ABSENT:
             continue
+        checked_known_at(cell.exclusion_known_at)  # validated even though not emitted
         if cell.state == GAP:
             intervals.append(IntervalCoverage(name, start, end, Coverage(1, 0, False)))
             continue
