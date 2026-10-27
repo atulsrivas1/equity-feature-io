@@ -16,7 +16,7 @@ def core_check():
         import equity_feature_contracts as c
         import equity_features as f
         from equity_features.session import compute_bars
-        assert c.__version__ == f.__version__ == '0.0.4a4'
+        assert (c.__version__, f.__version__) == ('0.0.4a4', '0.0.4a5')
         assert len(c.builtin_registry().list_features()) == 39
         unit=c.PriceUnit(0,'USD')
         config=c.ConfigSpec('synthetic-bars','v1',(c.Parameter('eligibility_policy','example-v1'),),c.SessionSpec('demo','S',100,200,'caller-supplied'),c.WindowSpec(1,'S',('P','S')),c.AvailabilitySpec(200,210,210),price_unit=unit)

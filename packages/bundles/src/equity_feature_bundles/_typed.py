@@ -6,6 +6,7 @@ from typing import Any
 from equity_feature_contracts import inputs as i, results as r, specs as s
 from equity_feature_evidence import canonical_content
 from ._errors import require
+from . import _versions as V
 from ._json import fields, load
 
 
@@ -324,7 +325,7 @@ def decode(value: Any) -> Any:
 def typed_content(raw: bytes, domain: str) -> Any:
     envelope = fields(load(raw), ('algorithm', 'canonicalization', 'contracts_version', 'domain', 'project', 'schema_version', 'value'))
     require(envelope['algorithm'] == 'sha256' and envelope['canonicalization'] == 'typed-json-v1'
-        and envelope['contracts_version'] == '0.0.4a4' and envelope['schema_version'] == '1', 'unsupported_version')
+        and envelope['contracts_version'] == V.CONTRACTS and envelope['schema_version'] == '1', 'unsupported_version')
     require(envelope['project'] == 'equity-features' and envelope['domain'] == domain)
     result = decode(envelope['value'])
     require((domain == 'canonical_batch' and type(result) is i.CanonicalBatch)

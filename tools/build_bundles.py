@@ -23,7 +23,7 @@ OUT=ROOT/'dist/bundles'
 CORE_HEAD='ec1e3b1b55a2c3e7e8a7c2ecddc43f11a99c72ca'
 EPOCH=1700000000
 PACKAGES={'contracts':('equity_feature_contracts','0.0.4a4'),
-    'features':('equity_features','0.0.4a4'),'evidence':('equity_feature_evidence','0.1.0a2'),
+    'features':('equity_features','0.0.4a5'),'evidence':('equity_feature_evidence','0.1.0a2'),
     'bundles':('equity_feature_bundles','0.1.0a1')}
 
 
@@ -75,7 +75,7 @@ def inspect(path, name, source):
     assert metadata['Name']==module.replace('_','-') and metadata['Version']==version
     assert metadata['License-Expression']=='Apache-2.0' and metadata['Requires-Python']=='<3.13,>=3.12'
     if name=='bundles':
-        assert metadata.get_all('Requires-Dist',[])==['equity-feature-contracts==0.0.4a4','equity-feature-evidence==0.1.0a2','equity-features==0.0.4a4; extra == \"replay\"']
+        assert metadata.get_all('Requires-Dist',[])==['equity-feature-contracts==0.0.4a4','equity-feature-evidence==0.1.0a2','equity-features==0.0.4a5; extra == \"replay\"']
         assert metadata.get_all('Provides-Extra',[])==['replay']
     if name=='evidence': assert metadata.get_all('Requires-Dist',[])==['equity-feature-contracts==0.0.4a4']
     package_prefix=module+'/' if wheel else prefix+'src/'+module+'/'

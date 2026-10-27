@@ -12,7 +12,7 @@ report_path = Path(sys.argv[2])
 versions = {}
 for name, version in (("equity-feature-acquisition","0.1.0a0"),
                       ("equity-feature-io-contracts","0.1.0a2"),
-                      ("equity-feature-contracts","0.0.4a4"), ("equity-features","0.0.4a4")):
+                      ("equity-feature-contracts","0.0.4a4"), ("equity-features","0.0.4a5")):
     dist = importlib.metadata.distribution(name)
     assert dist.version == version
     versions[name] = version

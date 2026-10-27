@@ -11,6 +11,7 @@ import sys
 import traceback
 import unittest
 
+from equity_features import __version__ as FEATURES_VERSION
 from equity_feature_contracts.adapters import SourceError, SourceErrorCode, validate_delivery
 from equity_feature_contracts.inputs import Coverage, PriceUnit, SourceBinding
 from equity_feature_contracts.results import Reason, Status
@@ -57,7 +58,7 @@ class Extensions(unittest.TestCase):
                 q=qualities[name];self.assertEqual((q.expected,q.observed),(2,2))
                 if expected[name] is None:self.assertEqual((q.status,q.reasons),(Status.MISSING_INPUT,(Reason.ABSENT_INPUT,)))
                 else:self.assertEqual((q.status,q.reasons),(Status.AVAILABLE,()))
-            m=result.metadata;self.assertEqual((m.namespace,m.session_id,m.backend_id,m.backend_version,m.schema_version,m.math_policy_version),('demo','S','python-exact','0.0.4a4','1','v1'))
+            m=result.metadata;self.assertEqual((m.namespace,m.session_id,m.backend_id,m.backend_version,m.schema_version,m.math_policy_version),('demo','S','python-exact',FEATURES_VERSION,'1','v1'))
             self.assertEqual((m.availability.market_cutoff_ns,m.availability.knowledge_cutoff_ns,m.availability.evaluation_ns),(200,210,210))
             self.assertEqual(m.config_digest,'ddc1b3b90e8d3333f31c268228e472aa440029f3f6ba7d72745d2f0096c3c931')
             self.assertEqual(len(m.inputs),1);binding=m.inputs[0]

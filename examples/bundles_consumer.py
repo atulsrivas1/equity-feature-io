@@ -24,7 +24,7 @@ result = compute_trades(batch, configuration, entity=EntityKey('A','S'))
 assert tuple(c.values[0] for c in result.values) == (3,10,1011,101.1,10/3)
 receipt = make_content_receipt(result, configuration, (('trades',batch),),
     EnvironmentDeclaration('CPython','3.12','caller-declared',(
-        PackageVersion('equity-feature-contracts','0.0.4a4'),PackageVersion('equity-features','0.0.4a4'))),
+        PackageVersion('equity-feature-contracts','0.0.4a4'),PackageVersion('equity-features','0.0.4a5'))),
     ExecutionClaim(), EvidenceDisclosure('not_supplied',0))
 publication = PublicationDeclaration('synthetic','Caller-created synthetic example','caller_owned')
 raw = write_bundle(receipt, configuration, result, (('trades',batch),), publication)

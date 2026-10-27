@@ -12,7 +12,7 @@ root=Path(sys.argv[1]).resolve(); report_path=Path(sys.argv[2]); mode=sys.argv[3
 versions={}
 for name, expected in (("equity-feature-files","0.1.0a0"),("equity-feature-acquisition","0.1.0a0"),
     ("equity-feature-io-sdk","0.1.0a2"),("equity-feature-io-contracts","0.1.0a2"),
-    ("equity-feature-contracts","0.0.4a4"),("equity-features","0.0.4a4")):
+    ("equity-feature-contracts","0.0.4a4"),("equity-features","0.0.4a5")):
     dist=importlib.metadata.distribution(name);assert dist.version==expected;versions[name]=expected
     for relative in dist.files:
         assert "site-packages" in Path(dist.locate_file(relative)).resolve().parts
