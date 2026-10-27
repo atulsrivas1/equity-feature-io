@@ -20,6 +20,7 @@ from equity_feature_contracts import (
     DataKind, ErrorCode, InputScope, IntervalCoverage, Parameter, PriceUnit, SessionSpec, SourceBinding, WindowSpec,
     validate_batch,
 )
+from ._typed import guard_public
 
 GRID_SCHEMA = "equity-features.ef3-daily-grid.v1"
 CONTEXT_SCHEMA = "equity-features.intraday-context.v1"  # the accepted R17 context codec, unchanged
@@ -293,3 +294,6 @@ __all__ = ["DailyGrid", "IntradayContextSpec", "IntradayRunSpec", "GRID_SCHEMA",
            "DAILY_STATES", "INTRADAY_STATES", "UNSUPPLIED_CLOSE", "daily_sessions", "daily_grid", "availability_for", "price_unit",
            "relative_config", "log_volatility_config", "realized_variance_config", "close_batch", "intraday_batch",
            "make_intraday_context", "synthetic_intraday_session", "grid_scope"]
+
+
+guard_public(globals(), __name__)

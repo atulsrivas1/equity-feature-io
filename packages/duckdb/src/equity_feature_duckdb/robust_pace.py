@@ -19,6 +19,7 @@ from equity_feature_contracts import (
     DataKind, ErrorCode, InputScope, IntervalCoverage, Parameter, PriceUnit, SessionSpec, SourceBinding, WindowSpec,
     validate_batch,
 )
+from ._typed import guard_public
 
 NAMESPACE = "SYN"
 CURRENCY = "USD"
@@ -301,3 +302,6 @@ __all__ = [
     "KNOWLEDGE_CUTOFF_DEFAULT", "KNOWN_AT_DEFAULT", "KNOWN_AT_LATE", "SESSION_SPAN_DEFAULT", "SESSION_STEP",
     "UNSUPPLIED_VALUE", "VOLUME_PRICED",
 ]
+
+
+guard_public(globals(), __name__)
