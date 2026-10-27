@@ -7,7 +7,7 @@ from equity_feature_duckdb.robust_pace import (
 
 def main() -> None:
     # Five prior volumes and a target volume over six governed sessions (session 5 is the target).
-    sessions = [session(i) for i in range(6)]
+    sessions = [session(i, bounds_known_at=50) for i in range(6)]
     target = sessions[5]
     volumes = [7, 3, 9, 1, 5, 6]
     series = daily_batch([("X", s, Cell("row", v, 50)) for s, v in zip(sessions, volumes)], field="volume", scale=0,
@@ -20,12 +20,12 @@ def main() -> None:
 
     # Three equal buckets; prior sessions and the target in one bars role.
     offsets = [0, 100, 200, 300]
-    prior = [session(j) for j in range(5)]
+    prior = [session(j, bounds_known_at=50) for j in range(5)]
     bars = bars_batch([(s, c, Cell("row", 10 + c, 50)) for s in prior + [target] for c in range(3)], offsets,
                       input_id="bars")
     pace = volume_pace_config(target, timing=availability(target.open_ns + 200), profile="bucket", window=5,
                               min_history=5, scale_pair=(1, 1))
-    grid = grid_batch(offsets, target, input_id="grid")
+    grid = grid_batch(offsets, target, input_id="grid", known_at=50)
     print("volume pace", pace.identity, bars.row_count, grid.row_count)
 
     mean = mean_ratio_config(target, timing=availability(target.close_ns), numerator_window=2, baseline_window=4,

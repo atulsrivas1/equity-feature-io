@@ -12,12 +12,12 @@ from equity_feature_duckdb.robust_pace import (
 )
 ```
 
-- `session(index, close=300, excluded=False, exclusion_known_at=50)` builds one governed session: id `str(index)`,
+- `session(index, close=300, excluded=False, exclusion_known_at=None, bounds_known_at=None)` builds one governed session: id `str(index)`,
   open `index * 1000`, close `open + close` (nanoseconds, UTC). `Session` is the frozen record.
 - `sessions_batch(sessions, input_id=...)` builds the `sessions` role: one `ef3.session.bounds` fact per session and an
   `ef3.session.excluded` fact where a session is excluded. Reference identities use the closed `x1:` encoding (`reference`).
-- `population_batch(members, target, input_id=...)` builds the `population` role (`ef3.population.member`, target session).
-- `grid_batch(offsets, target, input_id=...)` builds the `grid` role (`ef3.bucket.edge`, offsets from the actual open).
+- `population_batch(members, target, input_id=..., known_at=None, namespace=..., population_id=...)` builds the `population` role (`ef3.population.member`, target session).
+- `grid_batch(offsets, target, input_id=..., known_at=None, namespace=...)` builds the `grid` role (`ef3.bucket.edge`, offsets from the actual open).
 - `daily_batch(entries, field=..., scale=..., input_id=...)` builds the DAILY roles (`series`, `cohort_values`) from
   `(instrument_id, session, Cell)` entries. `field` is `volume` (int64 shares) or a price (`open`, `high`, `low`, `close`
   coefficients at `scale`). Gap cells declare incomplete coverage (`session:<id>` or `member:<id>`); absent cells add nothing.
@@ -27,7 +27,13 @@ from equity_feature_duckdb.robust_pace import (
   passed through (refusals belong to the library builders and decoders). The quantile pair is present exactly with
   `robust.quantile`, `min_population` exactly with a cohort output, and the scale pair exactly with `pace.robust_z`.
   `grid_version` is the fixed label `ef3-grid1`.
-- `Cell(state, value, known_at, excluded, exclusion_known_at)` is the supplied slot form. `parse_cell` reads the contract's
+- No `known_at` is defaulted. Each fact carries the `known_at` supplied for it (bounds on `Session.bounds_known_at`, members
+  and offsets as `(name, known_at)` / `(offset, known_at)` pairs or a bare value with the explicit `known_at` argument,
+  rows on `Cell.known_at`). Absent means null, which the library reports as `unknown_availability` (core amendment E-A2);
+  a value that is not null or a non-negative integer is a typed `INVALID_SCHEMA` refusal. `namespace` and `population_id`
+  are explicit parameters whose defaults (`SYN`, `SYN-POP`) are documented demo values.
+- `Cell(state, value, known_at, excluded, exclusion_known_at)` is the supplied slot form. `parse_cell(token, known_at=...)`
+  takes the explicit `known_at` of tokens that state none and reads the contract's
   compact notation (integer priced row, `"null"`, `"absent"`, `"gap"`, `None`, `["x", v]`, `["xu"]`, `["xf"]`, `["f", v]`,
   `["u", v]`, `["p", v, known_at]`). This is notation for the contract fixtures only, not a wire format.
 

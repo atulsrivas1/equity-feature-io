@@ -20,12 +20,12 @@ from equity_feature_contracts import (
     DataKind, ErrorCode, InputScope, IntervalCoverage, Parameter, PriceUnit, SessionSpec, SourceBinding, WindowSpec,
     validate_batch,
 )
-from ._typed import guard_public
+from ._typed import checked_known_at, guard_public
 
 GRID_SCHEMA = "equity-features.ef3-daily-grid.v1"
 CONTEXT_SCHEMA = "equity-features.intraday-context.v1"  # the accepted R17 context codec, unchanged
 MAPPING_VERSION = "ef3-map1"
-NAMESPACE = "SYN"
+NAMESPACE = "SYN"  # documented demo default of the `namespace` parameters; callers pass their own
 CURRENCY = "USD"
 RELATIVE_IDENTITY, RELATIVE_ALGORITHM, RELATIVE_POLICY = "ef3.relative_stats", "ef3-relative-stats-v1", "ef3-rel1"
 RELATIVE_FEATURES = ("relative.beta", "relative.correlation", "relative.residual_return")
@@ -114,11 +114,11 @@ class IntradayContextSpec:
         return hashlib.sha256(self.to_json().encode("ascii")).hexdigest()
 
 
-def daily_sessions(count: int) -> tuple[SessionSpec, ...]:
-    """One whole session per governed slot: [10i, 10i+5), namespace SYN, session id S<i>."""
+def daily_sessions(count: int, namespace: str = NAMESPACE) -> tuple[SessionSpec, ...]:
+    """One whole session per governed slot: [10i, 10i+5), the given namespace, session id S<i>."""
     if type(count) is not int or count < 1:
         raise ContractError(ErrorCode.INVALID_CONFIG, "positive slot count required")
-    return tuple(SessionSpec(NAMESPACE, f"S{i}", i * DAILY_SLOT_NS, i * DAILY_SLOT_NS + DAILY_SESSION_NS, "UTC")
+    return tuple(SessionSpec(namespace, f"S{i}", i * DAILY_SLOT_NS, i * DAILY_SLOT_NS + DAILY_SESSION_NS, "UTC")
                  for i in range(count))
 
 
@@ -192,10 +192,10 @@ def _checked_slots(slots: Sequence[Mapping[str, Any]], states: tuple[str, ...]) 
 
 
 def close_batch(role_instrument_id: str, grid: DailyGrid, slots: Sequence[Mapping[str, Any]], *, input_id: str,
-                scale: int, namespace: str = NAMESPACE, known_default: int = 50) -> CanonicalBatch:
+                scale: int, namespace: str = NAMESPACE, known_default: int | None = None) -> CanonicalBatch:
     """One close-only daily BAR role (instrument or benchmark) on the local grid; `slots` is one entry per grid slot.
 
-    priced: row with close c and known_at; absent: no row and no coverage; gap: declared incomplete coverage and no
+    priced: row with close c and the slot's known_at (`known_default` when the slot has none; None is unknown availability, never a default); absent: no row and no coverage; gap: declared incomplete coverage and no
     row; unknown: known_at null; future: known_at as given (above the cutoff); null: row with a null close.
     """
     if len(slots) != len(grid.sessions):
@@ -211,7 +211,7 @@ def close_batch(role_instrument_id: str, grid: DailyGrid, slots: Sequence[Mappin
         if state == "gap":
             intervals.append(IntervalCoverage(name, session.open_ns, session.close_ns, Coverage(1, 0, False)))
             continue
-        known = None if state == "unknown" else slot.get("known_at", known_default)
+        known = None if state == "unknown" else checked_known_at(slot.get("known_at", known_default))
         close = None if state == "null" else slot.get("c", UNSUPPLIED_CLOSE)
         rows.append((role_instrument_id, session.session_id, session.open_ns, session.close_ns, close, known))
         intervals.append(IntervalCoverage(name, session.open_ns, session.close_ns, Coverage(1, 1, True)))
@@ -236,7 +236,7 @@ def _bar_batch(names: tuple[str, ...], rows: Sequence[tuple[Any, ...]], interval
 
 
 def intraday_batch(context: IntradayContextSpec, slots: Sequence[Mapping[str, Any]], *, input_id: str,
-                   scale: int, namespace: str = NAMESPACE, known_default: int = 50) -> CanonicalBatch:
+                   scale: int, namespace: str = NAMESPACE, known_default: int | None = None) -> CanonicalBatch:
     """One regular-session OHLCV chunk over the governed slots of the (single) session of the context.
 
     priced: open=high=low=close=c, volume 100, known_at; absent: nothing; gap: declared incomplete coverage;
@@ -262,7 +262,7 @@ def intraday_batch(context: IntradayContextSpec, slots: Sequence[Mapping[str, An
             intervals.append(IntervalCoverage(name, start, end, Coverage(0, 0, True)))
         else:
             c = slot.get("c", UNSUPPLIED_CLOSE)
-            known = None if state == "unknown" else slot.get("known_at", known_default)
+            known = None if state == "unknown" else checked_known_at(slot.get("known_at", known_default))
             if state == "null":
                 row = (context.instrument_id, session_id, start, end, None, None, None, None, None, known)
             else:
@@ -281,9 +281,9 @@ def make_intraday_context(instrument_id: str, *, sessions: Sequence[SessionSpec]
                                anchor_index, target_index, mode)
 
 
-def synthetic_intraday_session(count: int) -> tuple[tuple[SessionSpec, ...], tuple[IntradayRunSpec, ...]]:
+def synthetic_intraday_session(count: int, namespace: str = NAMESPACE) -> tuple[tuple[SessionSpec, ...], tuple[IntradayRunSpec, ...]]:
     """One regular session [0, 10 * count) with `count` contiguous bars of 10 ns."""
-    session = SessionSpec(NAMESPACE, "S0", 0, BAR_NS * count, "UTC")
+    session = SessionSpec(namespace, "S0", 0, BAR_NS * count, "UTC")
     return (session,), (IntradayRunSpec("S0", 0, BAR_NS, count),)
 
 

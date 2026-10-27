@@ -16,14 +16,14 @@ def main() -> None:
         "params": {"near_high_tol": [1, 4], "near_low_tol": [1, 5], "evidence_limit": 3},
         "roles": {
             "population": population,
-            "pra": {"cov": "complete", "rows": {m: {"k": "available"} for m in members}},
-            "ret": {"cov": "complete", "rows": {m: {"v": returns[m]} for m in members}},
-            "vol": {"cov": "complete", "rows": {m: {"v": 100 * (i + 1)} for i, m in enumerate(members)}},
-            "ep": {"cov": "complete", "rows": {m: {"v": endpoints[m], "t": 40} for m in members}},
-            "vwap": {"cov": "complete", "rows": {m: {"k": "rat", "num": 1000, "den": 1} for m in members}},
-            "mom": {"cov": "complete", "rows": {m: {"v": 1} for m in members}},
-            "hi": {"cov": "complete", "rows": {m: {"v": 1120} for m in members}},
-            "lo": {"cov": "complete", "rows": {m: {"v": 1000} for m in members}},
+            "pra": {"cov": "complete", "rows": {m: {"k": "available", "ka": 60} for m in members}},
+            "ret": {"cov": "complete", "rows": {m: {"v": returns[m], "ka": 60} for m in members}},
+            "vol": {"cov": "complete", "rows": {m: {"v": 100 * (i + 1), "ka": 60} for i, m in enumerate(members)}},
+            "ep": {"cov": "complete", "rows": {m: {"v": endpoints[m], "t": 40, "ka": 60} for m in members}},
+            "vwap": {"cov": "complete", "rows": {m: {"k": "rat", "num": 1000, "den": 1, "ka": 60} for m in members}},
+            "mom": {"cov": "complete", "rows": {m: {"v": 1, "ka": 60} for m in members}},
+            "hi": {"cov": "complete", "rows": {m: {"v": 1120, "ka": 60} for m in members}},
+            "lo": {"cov": "complete", "rows": {m: {"v": 1000, "ka": 60} for m in members}},
         },
     }
     case = declared_case(declared, entity_instrument="BREADTH-AGG")
@@ -35,10 +35,10 @@ def main() -> None:
               "params": {"scope": "group", "group_label": "desk-1", "floor_price": [10, 1], "floor_volume": 100,
                          "evidence_limit": 3},
               "roles": {
-                  "members": {"cov": "complete", "rows": {"p": {"g": "desk-1"}, "q": {"g": "desk-2"}}},
-                  "chg": {"cov": "complete", "rows": {"p": {"v": 1}, "q": {"v": -1}}},
-                  "qp": {"cov": "complete", "rows": {"p": {"v": 1500}, "q": {"v": 900}}},
-                  "qv": {"cov": "complete", "rows": {"p": {"v": 200}, "q": {"v": 50}}}}}
+                  "members": {"cov": "complete", "rows": {"p": {"g": "desk-1", "ka": 60}, "q": {"g": "desk-2", "ka": 60}}},
+                  "chg": {"cov": "complete", "rows": {"p": {"v": 1, "ka": 60}, "q": {"v": -1, "ka": 60}}},
+                  "qp": {"cov": "complete", "rows": {"p": {"v": 1500, "ka": 60}, "q": {"v": 900, "ka": 60}}},
+                  "qv": {"cov": "complete", "rows": {"p": {"v": 200, "ka": 60}, "q": {"v": 50, "ka": 60}}}}}
     observed = observed_case(roster, entity_instrument="ROSTER-AGG")
     print("observed", observed.config(()).identity, [s.row_count if s else None for s in observed.slots])
 
@@ -46,7 +46,7 @@ def main() -> None:
     rates = (8, 8, 16, 32, 8, 8)
     stream = {"C": 100000000000, "K": 100000000000, "tau_ns": 1000000000, "W": 2, "evidence_limit": 2,
               "obs": {"cov": "complete", "rows": [
-                  {"q": i + 1, "t": (i + 1) * 1000000000, "rate": [r, 1, 1]} for i, r in enumerate(rates)]}}
+                  {"q": i + 1, "t": (i + 1) * 1000000000, "rate": [r, 1, 1], "ka": (i + 1) * 1000000000} for i, r in enumerate(rates)]}}
     adaptive = adaptive_case(stream, entity_instrument="Q9")
     print("adaptive", adaptive.config(()).identity, [s.row_count if s else None for s in adaptive.slots])
 
