@@ -263,6 +263,7 @@ def intraday_batch(context: IntradayContextSpec, slots: Sequence[Mapping[str, An
         else:
             c = slot.get("c", UNSUPPLIED_CLOSE)
             known = None if state == "unknown" else checked_known_at(slot.get("known_at", known_default))
+            row: tuple[Any, ...]
             if state == "null":
                 row = (context.instrument_id, session_id, start, end, None, None, None, None, None, known)
             else:
