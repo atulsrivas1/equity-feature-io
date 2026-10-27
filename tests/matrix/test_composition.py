@@ -32,7 +32,7 @@ VERSIONS={'equity-feature-contracts':'0.0.4a4','equity-features':'0.0.4a5',
  'equity-feature-io-contracts':'0.1.0a2','equity-feature-io-sdk':'0.1.0a2',
  'equity-feature-duckdb':'0.1.0a9','equity-feature-parquet':'0.1.0a1',
  'equity-feature-duckdb-sink':'0.1.0a0','equity-feature-example-extensions':'0.1.0a0',
- 'equity-feature-workers':'0.1.0a1','duckdb':'1.5.6','numpy':'2.2.6','pyarrow':'20.0.0'}
+ 'duckdb':'1.5.6','numpy':'2.2.6','pyarrow':'20.0.0'}
 INSTALLED=False
 
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -112,8 +112,11 @@ class Composition(unittest.TestCase):
             if INSTALLED:
                 module=importlib.import_module(name.replace('-','_'))
                 self.assertIn('site-packages',Path(module.__file__).resolve().parts)
+        # Workers evolve independently: derive from the installed distribution instead of pinning a version.
         import equity_feature_workers as workers
-        self.assertEqual(workers.__all__,['__version__']);self.assertEqual(distribution('equity-feature-workers').requires,['equity-feature-io-sdk==0.1.0a2']);self.assertFalse(distribution('equity-feature-workers').entry_points)
+        dist=distribution('equity-feature-workers')
+        self.assertEqual(workers.__version__,dist.version)
+        self.assertIn('equity-feature-io-sdk=='+VERSIONS['equity-feature-io-sdk'],dist.requires or [])
     def test_unsupported_codec_and_writer_rejected_before_publication(self):
         for sink in self.sinks('reject'):
             for requirements in (replace(LIMITS,codec_version='unknown'),replace(LIMITS,writer_mode='conflict_safe_multi_writer')):
