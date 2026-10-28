@@ -367,7 +367,7 @@ def synthetic_channels_fixture(case_id: str, *, empty_form: str = "row") -> Chan
         elif state == "empty" and empty_form == "row":
             row = {"high": None, "low": None, "close": None, "volume": 0, "known_at_ns": _KNOWN_NS}
         if row is not None:
-            cells = (("instrument_id", "X"), ("session_id", ids[part]), ("start_ns", start),
+            cells: tuple[tuple[str, Cell], ...] = (("instrument_id", "X"), ("session_id", ids[part]), ("start_ns", start),
                      ("end_ns", end), *row.items())
             rows[part].append(tuple(v for k, v in cells if k not in absent))
             entries[part].append(make_slot_coverage(index, start, end, expected=1, observed=1, complete=True))

@@ -22,7 +22,7 @@ import hashlib
 import json
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from equity_feature_contracts import (
     AdjustmentSpec, AvailabilitySpec, BatchMetadata, CanonicalBatch, Column, ConfigSpec, ContractError, Coverage,
@@ -145,8 +145,10 @@ def _known(token: Any, knowledge_ns: int | None, compact_k: int | None) -> int |
     if token is None:
         return None
     if compact_k is None:
-        return token
-    return knowledge_ns - (compact_k - token) * SECOND_NS
+        instant: int | None = token
+        return instant
+    known: int | None = knowledge_ns - (compact_k - token) * SECOND_NS
+    return known
 
 
 def _unpack(slot: Any) -> tuple[str, Any, Any, dict[str, Any]]:
@@ -435,8 +437,10 @@ def _config(producer: str, fx: Mapping[str, Any], ids: ProjectionIds, grid: Any,
                           availability, adjustment, unit)
     identity, algorithm = ((RELATIVE_IDENTITY, RELATIVE_ALGORITHM) if producer == "relative_excess"
                            else (RATE_IDENTITY, RATE_ALGORITHM))
-    return ConfigSpec(identity, algorithm, tuple(parameters), batches_session,
-                      WindowSpec(1, batches_session.session_id, (batches_session.session_id,), "prior_only"),
+    # relative_excess and rate_projection inputs always supply their session (unchanged runtime behavior).
+    own = cast(SessionSpec, batches_session)
+    return ConfigSpec(identity, algorithm, tuple(parameters), own,
+                      WindowSpec(1, own.session_id, (own.session_id,), "prior_only"),
                       availability, adjustment, unit)
 
 
@@ -448,6 +452,7 @@ def build_request(producer: str, fx: Mapping[str, Any], ctx: Mapping[str, Any],
     `ctx` carries config_unit, batch unit and adjustment, config_adjustment, capability and features exactly as the
     harness default context does."""
     features = tuple(ctx["features"])
+    grid: DailyGridCodec | BarGridCodec | None
     config_unit = _unit(ctx["config_unit"])
     try:
         config_adjustment = _adjustment(ctx["config_adjustment"])

@@ -16,6 +16,7 @@ from __future__ import annotations
 import base64
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from typing import Any
 
 from equity_feature_contracts import (
     AdjustmentSpec, AvailabilitySpec, BatchMetadata, CanonicalBatch, Column, ConfigSpec, ContractError, Coverage,
@@ -148,7 +149,7 @@ def _metadata(kind_scope: Scope, coverage: Coverage, unit: PriceUnit | None, *, 
                          InputScope(kind_scope.start_ns, kind_scope.end_ns, "ef4-supplied"), intervals)
 
 
-def _batch(kind: DataKind, names: tuple[str, ...], rows: Sequence[tuple], metadata: BatchMetadata) -> CanonicalBatch:
+def _batch(kind: DataKind, names: tuple[str, ...], rows: Sequence[tuple[Any, ...]], metadata: BatchMetadata) -> CanonicalBatch:
     columns = tuple(Column(name, tuple(row[i] for row in rows)) for i, name in enumerate(names))
     batch = CanonicalBatch(kind, columns, metadata)
     validate_batch(batch, required_fields=())
@@ -212,7 +213,8 @@ def bar_batch(rows: Sequence[BarRow], gaps: Sequence[Gap], *, scope: Scope, unit
     """BAR role: supplied rows and declared gaps. Each row carries a complete slot entry unless declared incomplete; each
     gap carries an incomplete entry with no row; a slot with neither is absent. The aggregate is incomplete (expected
     unknown) because the slot entries carry the declaration."""
-    names = ("instrument_id", "session_id", "start_ns", "end_ns", "volume", "actual_notional", "known_at_ns")
+    names: tuple[str, ...] = ("instrument_id", "session_id", "start_ns", "end_ns", "volume", "actual_notional",
+                              "known_at_ns")
     ohlc_names = tuple(sorted({k for r in rows if r.ohlc is not None for k in r.ohlc}))
     names = names + ohlc_names  # OHLC columns exist only when a supplied bar carries them
     data = [(r.instrument_id, r.session_id, r.start_ns, r.end_ns, r.volume, r.notional, r.known_at_ns)

@@ -51,7 +51,7 @@
       "reason": "Additive supplied close-reconciliation conversion, exact four nullable roles and config builder; original synthetic C01 to C03 facts only, no BPS, tolerance or close mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/venue_status.py": {
-      "sha256": "21720c8f72832068c861034168494d2ec86c92d4118afd94e0c0a84f03f7f718",
+      "sha256": "406a16f7f5c08dadcdb05608d1d7fcb15bf243aeb251706b9d048d9dcfd4cdd2",
       "reason": "Additive supplied multi-venue status conversion, exact five nullable roles, id encoders and config builder; original synthetic MV01 to MV44 facts only, no population, precedence, count or clock mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/money_flow.py": {
@@ -59,11 +59,11 @@
       "reason": "Additive EF2 supplied money-flow bars conversion, nullable bars role and config builder; original synthetic M01 to M36 facts only, no multiplier, OBV, A/D or CMF mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/momentum.py": {
-      "sha256": "858095f11c70e5d46deac180e2f091fa7d482dfb547d879fbe1056ee8479cd54",
+      "sha256": "07f29e6a95cfb169a70a1ddfc9f54988db1da83e9d4a328d2fe75cca801f40e2",
       "reason": "Additive EF2 supplied momentum bars conversion, nullable bars role and family config builder; original synthetic facts keyed by the contract fixture ids only, no EMA, MACD, DMI, ADX or stochastic mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/channels.py": {
-      "sha256": "b19df699e6aaa8ab5ec7467085705f9be5cd510c9d838b1255305653c9b62b3f",
+      "sha256": "950de399a8992d0c9abddf2c0061d4cc7d6f46665762adc2f1c0be4d5220bca1",
       "reason": "Additive EF2 supplied Ichimoku and price-channel bars conversion, nullable bars role and producer config builder; original synthetic facts keyed by the contract fixture ids only, no Ichimoku, Keltner, Donchian, pivot, percentile or squeeze mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/relative_rv.py": {
@@ -75,7 +75,7 @@
       "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters. Also (io#47) validates Cell.exclusion_known_at in daily_batch and bars_batch; no mathematical change."
     },
     "packages/duckdb/src/equity_feature_duckdb/quote_vwap.py": {
-      "sha256": "bc03184372a4e6086ed5ee1c62bd8d3ecfe4b19115c49f97e382f2814a0134e2",
+      "sha256": "384b1a9465226f24041e0140b0607aa1da812d2c5281996b8cfa9634ec2749bc",
       "reason": "Additive EF4-H supplied quote, trade, bar, declared-gap, grid edge, prepared-proof and bounds conversion with explicit coverage and closed parameter assembly; original fixture-derived values only, no midpoint, spread, microprice, VWAP, slope or extremum mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/breadth_adaptive.py": {
@@ -87,7 +87,7 @@
       "reason": "Additive EF4 supplied path-efficiency and choppiness conversion, nullable bars role per session chunk, R17 context-based ef4.path_efficiency config envelope; original fixture-derived facts only, no efficiency ratio, logarithm, true-range, window-range or choppiness mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/tape.py": {
-      "sha256": "5738f50e3e479f0c9d33fbd98dbd677a2515ed4c835225bfb2eed50c041e6018",
+      "sha256": "51c186e7aef98b7a80ce933f7f48700dbcbdcd8d691ccce1bfc3b4cb54f0a31b",
       "reason": "Additive EF4-G supplied tape trade, tick-seed and notional top-K partition conversion and producer config envelopes; original fixture-derived inputs only, no tick sign, window total, notional or rank mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {
@@ -95,7 +95,7 @@
       "reason": "Additive EF2 supplied prior-extrema REFERENCE conversion, exact two nullable roles, id encoder and config builder; original synthetic T01 to T32 facts only, no level or extremum mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/ef4_projections.py": {
-      "sha256": "7872f4cfdb752a54cd42078e4fb394ab9210b57f78478e4f851d36c56ed0fe1a",
+      "sha256": "ab0bf157d3e81276a799b4d3ad9bee886e9dd13af3343697c565321b8eee6ae5",
       "reason": "Additive EF4-I2 supplied-projection conversion (session, bar, relative-excess and rate inputs) and hand-built core envelopes; imports only equity_feature_contracts and the EF3 daily codec; no projection mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/ef4_projections_sink.py": {
