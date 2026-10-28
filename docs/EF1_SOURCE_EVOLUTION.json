@@ -67,12 +67,12 @@
       "reason": "Additive EF2 supplied Ichimoku and price-channel bars conversion, nullable bars role and producer config builder; original synthetic facts keyed by the contract fixture ids only, no Ichimoku, Keltner, Donchian, pivot, percentile or squeeze mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/relative_rv.py": {
-      "sha256": "b6750d08db5f833cef6a241e658be7a7aa5fc2bca662b967a6b3779253c99337",
+      "sha256": "149837a3ceef5d842227bc9a8c9c8300d16d2584624b9e9a9bf89d633a0cdaa9",
       "reason": "Additive EF3 supplied relative-statistics, daily log-volatility and realized-variance conversion, close-only and OHLCV bar roles on a local daily grid and producer config builders; original fixture-derived facts only, no return, beta, correlation, logarithm, variance or annualization mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters."
     },
     "packages/duckdb/src/equity_feature_duckdb/robust_pace.py": {
-      "sha256": "c01439575f7eb27e1a6d917fb4424f9e00bd1c7c96cd618c0a7033660f8d01eb",
-      "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters."
+      "sha256": "862af9c7e6c51ebcaa11c11d26d74db0978577cf96c509cd01a665e8136df3bd",
+      "reason": "Additive EF3 supplied robust-history, volume-pace and mean-ratio conversion, daily and bucket roles, reference facts and producer config builders; original fixture-derived facts only, no median, MAD, quantile, rank, ratio, z-score or mean mathematics. Also (io#43) wraps public builders with the _typed guard converting stray KeyError/IndexError/TypeError/ValueError/OverflowError into ContractError; no mathematical change. Known_at is carried per fact from supplied data (null when absent, typed INVALID_SCHEMA when malformed); namespace, population and session identity are explicit parameters. Also (io#47) validates Cell.exclusion_known_at in daily_batch and bars_batch; no mathematical change."
     },
     "packages/duckdb/src/equity_feature_duckdb/quote_vwap.py": {
       "sha256": "bc03184372a4e6086ed5ee1c62bd8d3ecfe4b19115c49f97e382f2814a0134e2",

@@ -12,7 +12,7 @@ from __future__ import annotations
 import base64
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 from equity_feature_contracts import (
     AdjustmentSpec, AvailabilitySpec, BatchMetadata, CanonicalBatch, Column, ConfigSpec, ContractError, Coverage,
@@ -193,7 +193,7 @@ def grid_batch(offsets: Sequence[int | tuple[int, int | None]], target: Session,
     """`grid` role: B+1 ef3.bucket.edge facts, offsets from the actual open (first 0, strictly increasing).
 
     An offset is an int or an (offset, known_at) pair; a bare int takes `known_at` (None is unknown availability)."""
-    pairs = [(o, known_at) if type(o) is int else (o[0], o[1]) for o in offsets]
+    pairs = [(o, known_at) if type(o) is int else (cast("tuple[int, int | None]", o)[0], cast("tuple[int, int | None]", o)[1]) for o in offsets]
     rows = [(instrument_id, target.session_id, reference(f"{grid_version}#{i}"), KIND_EDGE, int(o), None, grid_version,
              checked_known_at(ka)) for i, (o, ka) in enumerate(pairs)]
     names = ("instrument_id", "session_id", "reference_id", "fact_kind", "effective_start_ns", "effective_end_ns", "text",
@@ -233,6 +233,7 @@ def daily_batch(entries: Sequence[tuple[str, Session, Cell]], *, field: str, sca
         else:
             c = cell.value
             rows.append((instrument, s.session_id, s.open_ns, s.close_ns, c, c, c, c, VOLUME_PRICED, checked_known_at(cell.known_at)))
+    names: tuple[str, ...]
     if price:
         names = ("instrument_id", "session_id", "start_ns", "end_ns", "open", "high", "low", "close", "volume",
                  "known_at_ns")

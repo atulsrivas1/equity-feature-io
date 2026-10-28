@@ -1,4 +1,5 @@
 """Explicit synthetic EF3 relative-statistics, log-volatility and realized-variance requests as supplied inputs; no acquisition."""
+from typing import Any
 from equity_feature_duckdb.relative_rv import (
     availability_for, close_batch, daily_grid, daily_sessions, intraday_batch, log_volatility_config,
     make_intraday_context, realized_variance_config, relative_config, synthetic_intraday_session,
@@ -9,9 +10,9 @@ def main() -> None:
     # Two daily closes per role over four governed sessions (slot 2 has unknown availability, slot 3 is a gap).
     sessions = daily_sessions(4)
     grid = daily_grid(sessions, target_index=3)
-    instrument = [{"state": "priced", "c": 100, "known_at": 50}, {"state": "priced", "c": 101, "known_at": 50},
+    instrument: list[dict[str, Any]] = [{"state": "priced", "c": 100, "known_at": 50}, {"state": "priced", "c": 101, "known_at": 50},
                   {"state": "unknown"}, {"state": "gap"}]
-    benchmark = [{"state": "priced", "c": 200, "known_at": 50}, {"state": "priced", "c": 202, "known_at": 50},
+    benchmark: list[dict[str, Any]] = [{"state": "priced", "c": 200, "known_at": 50}, {"state": "priced", "c": 202, "known_at": 50},
                  {"state": "priced", "c": 201, "known_at": 50}, {"state": "priced", "c": 205, "known_at": 50}]
     inst_batch = close_batch("X", grid, instrument, input_id="inst", scale=2)
     bench_batch = close_batch("B", grid, benchmark, input_id="bench", scale=2)
