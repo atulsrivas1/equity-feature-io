@@ -1,3 +1,7 @@
+## Unreleased - EF4 C3: recorded Parquet round trip for notional cells
+
+`tools/verify_ef4_notional_cells.py` now also publishes a `tape.top_k_notional` result through `ParquetSink`, reads it back, and checks the stored `cells.parquet` cell wire and `evidence.parquet` rows are in notional order (a, b, c; size order would be b, a, c). Run on io main `106897a` with core main `3af2d99`, CPython 3.12.10, pyarrow 20.0.0, Windows: OK. Tool only; no package source changed.
+
 ## Unreleased - EF5 supplied price-structure inputs (candle, structure, technical)
 
 `equity_feature_duckdb.price_structures` maps supplied bars to the EF5 `bars` role and builds the closed `ef5.*` configuration envelopes with no defaults; rows without declared coverage are refused at the adapter (E2). Gate `tools/verify_ef5_io.py`: 89 result fixtures and 59 refusals match the contract. Notes: [docs/EF5_PRICE_STRUCTURES_IO.md](docs/EF5_PRICE_STRUCTURES_IO.md). No package version bump.

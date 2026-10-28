@@ -1,6 +1,10 @@
 """Round trip of notional-ranked `tape.top_k_notional` cells through the bundles typed decoder, the io-sdk codec and the
 core Arrow result conversion (PO ruling E1, C3/L2), plus the refusals the rank-aware shared check requires.
 
+It also publishes the notional result through the Parquet sink, reads it back (decoding the stored cells.parquet projection)
+and checks the physical Parquet cell rows carry the notional order (C3, PO re-check 2026-10-28). The reproduction-bundle result.json
+read path is the bundles typed decoder checked below.
+
 Requires the core library (`equity_features`) and the io packages on the interpreter path. Run: `python tools/verify_ef4_notional_cells.py`;
 exit status 0 only if every check holds. This is a regression driver, not a unit test.
 """
@@ -8,7 +12,10 @@ from __future__ import annotations
 
 import dataclasses
 import json
+import re
 import sys
+import tempfile
+from pathlib import Path
 from typing import Any
 
 from equity_feature_bundles import _json as lexer, _typed as typed
@@ -19,6 +26,9 @@ from equity_feature_contracts import (
 from equity_feature_contracts.columnar import to_arrow_result
 from equity_feature_evidence import canonical_content
 from equity_feature_io_sdk.codec import decode_result, encode_result
+from equity_feature_io_contracts import SinkRequirements
+from equity_feature_io_sdk.publication import prepare_publication, publish
+from equity_feature_parquet import ParquetSink
 from equity_features.ef4 import build_notional_top_k_config, compute_trade_top_k_notional
 
 FEATURE = "tape.top_k_notional"
@@ -59,6 +69,33 @@ def refused(call: Any) -> bool:
     return False
 
 
+def parquet_round_trip(result: Any, problems: list[str]) -> None:
+    import pyarrow.parquet as pq  # type: ignore[import-untyped]
+
+    limits = SinkRequirements(max_results=100, max_chunk_bytes=1048576, max_total_bytes=10485760,
+                              max_result_cells=100000, max_evidence_rows=100000)
+    results = (result,)
+    envelope = prepare_publication(results, destination_scope="ef4-notional", generation_id="g", job_id="j",
+                                   partition_id="p", limits=limits)
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp) / "destination"
+        with ParquetSink(root, "ef4-notional") as sink:
+            receipt = publish(sink, envelope, results)
+            back = sink.read(receipt)
+        if tuple(encode_result(x) for x in back) != tuple(encode_result(x) for x in results):
+            problems.append("Parquet sink read-back differs from the published notional result")
+        if back[0].values[0].values[0] != result.values[0].values[0]:
+            problems.append("Parquet read-back notional cell differs")
+        stored = [row for f in sorted(root.rglob("*.cells.parquet")) for row in pq.read_table(f).to_pylist()]
+        wire = [row["value_wire"] for row in stored if row["feature_id"] == FEATURE]
+        order = [] if len(wire) != 1 else re.findall(rb'"event_id":"([a-z])"', wire[0])
+        if order != [b"a", b"b", b"c"]:
+            problems.append("stored cells.parquet notional cell is missing or not in notional order")
+        evidence = [row["row_id"] for f in sorted(root.rglob("*.evidence.parquet")) for row in pq.read_table(f).to_pylist()]
+        if evidence != ["a", "b", "c"]:
+            problems.append("stored evidence.parquet rows are not in notional order")
+
+
 def main() -> int:
     problems: list[str] = []
     result = notional_result()
@@ -73,6 +110,7 @@ def main() -> int:
         problems.append("io-sdk codec does not round trip the notional cell")
     if FEATURE not in to_arrow_result(result)["values"]:
         problems.append("Arrow conversion lost the notional column")
+    parquet_round_trip(result, problems)
     # The same stored cell under a size-ranked feature id is refused by the shared check (constructor and decoder).
     if not refused(lambda: renamed(result, "session.trade.top_k")):
         problems.append("notional cell under a size-ranked feature id was accepted")
@@ -104,7 +142,7 @@ def main() -> int:
     for line in problems:
         print("FAIL", line)
     if not problems:
-        print("OK: notional top-K cell round trips (bundles typed decoder, io-sdk codec, Arrow) and the rank refusals hold")
+        print("OK: notional top-K cell round trips (bundles typed decoder, io-sdk codec, Arrow, Parquet sink) and the rank refusals hold")
     return 1 if problems else 0
 
 
