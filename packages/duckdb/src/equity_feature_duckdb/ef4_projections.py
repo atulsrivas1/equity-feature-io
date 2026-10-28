@@ -47,7 +47,6 @@ EPOCH_NS = 1_700_000_000_000_000_000  # origin of the compact slot clock (wire_e
 BAR_NS = 60 * 10**9                   # epoch bar spacing of the compact clock
 DAY_NS = 86_400 * 10**9               # daily slot spacing of the compact clock; one whole day per daily slot
 SECOND_NS = 10**9
-KNOWN_DEFAULT = 50                    # default compact known_at token (ka)
 PLACEHOLDER_CLOSE = 1                 # close of an unknown-availability slot: never READY, never used
 DELIVERY_MODE = "batch"
 
@@ -151,21 +150,24 @@ def _known(token: Any, knowledge_ns: int | None, compact_k: int | None) -> int |
     return known
 
 
-def _unpack(slot: Any) -> tuple[str, Any, Any, dict[str, Any]]:
-    """(state, payload, known token, wire overrides). State is `row`, `absent`, `gap`, `empty` or `null`."""
+def _unpack(slot: Any, default_ka: int | None = None) -> tuple[str, Any, Any, dict[str, Any]]:
+    """(state, payload, known token, wire overrides). State is `row`, `absent`, `gap`, `empty` or `null`.
+
+    A slot that carries no `ka` has unknown availability (token `None`), exactly as a null `known_at` does: nothing is
+    defaulted here. Only a caller that decodes a fixture notation with a documented default passes `default_ka`."""
     if isinstance(slot, str):
-        return slot, None, KNOWN_DEFAULT, {}
+        return slot, None, default_ka, {}
     if isinstance(slot, dict) and "wire" in slot:
         wire = dict(slot["wire"])
         payload = wire.pop("row", None)
-        token = KNOWN_DEFAULT
+        token = default_ka
         if isinstance(payload, dict) and "row" in payload:
-            token = payload["ka"] if "ka" in payload else KNOWN_DEFAULT
+            token = payload.get("ka", default_ka)
             payload = payload["row"]
         return "row", payload, token, wire
     if isinstance(slot, dict) and "row" in slot:
-        return "row", slot["row"], slot["ka"] if "ka" in slot else KNOWN_DEFAULT, {}
-    return "row", slot, KNOWN_DEFAULT, {}
+        return "row", slot["row"], slot.get("ka", default_ka), {}
+    return "row", slot, default_ka, {}
 
 
 def _aggregate(expected: int, observed: int) -> Coverage:
@@ -180,7 +182,8 @@ def _checked(batch: CanonicalBatch, availability: AvailabilitySpec | None) -> Ca
 
 # ------------------------------------------------------------------------------------------ session projection
 def session_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: ProjectionIds, *,
-                              input_id: str = "daily") -> tuple[CanonicalBatch, DailyGridCodec, AvailabilitySpec]:
+                              input_id: str = "daily", default_known_at: int | None = None
+                              ) -> tuple[CanonicalBatch, DailyGridCodec, AvailabilitySpec]:
     """Daily close-only BAR role on the governed daily grid: one slot per supplied close, target slot explicit."""
     closes = fx["closes"]
     count = len(closes)
@@ -194,7 +197,7 @@ def session_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids
     rows: list[tuple[Any, ...]] = []
     intervals: list[IntervalCoverage] = []
     for index, slot in enumerate(closes):
-        state, payload, token, wire = _unpack(slot)
+        state, payload, token, wire = _unpack(slot, default_known_at)
         session = sessions[index]
         instrument = ids.bind(wire["inst"]) if "inst" in wire else ids.instrument_id
         session_id = ids.bind(wire["ss"]) if "ss" in wire else session.session_id
@@ -220,7 +223,8 @@ def session_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids
 
 # ------------------------------------------------------------------------------------------ bar projection
 def bar_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: ProjectionIds, *,
-                          input_id: str = "bars") -> tuple[CanonicalBatch, BarGridCodec, AvailabilitySpec]:
+                          input_id: str = "bars", default_known_at: int | None = None
+                          ) -> tuple[CanonicalBatch, BarGridCodec, AvailabilitySpec]:
     """The reset-epoch bars of one supplied flat list (one entry per bar slot) as ONE batch for the role; per-slot
     coverage is named `bar:<i>`. The chunked R17 delivery is not modelled here: the caller supplies one list."""
     bars = fx["bars"]
@@ -234,7 +238,7 @@ def bar_projection_inputs(fx: Mapping[str, Any], ctx: Mapping[str, Any], ids: Pr
     rows: list[dict[str, Any]] = []
     intervals: list[IntervalCoverage] = []
     for index, slot in enumerate(bars):
-        state, payload, token, wire = _unpack(slot)
+        state, payload, token, wire = _unpack(slot, default_known_at)
         start = EPOCH_NS + index * BAR_NS
         end = start + BAR_NS
         name = f"bar:{index}"
@@ -445,24 +449,28 @@ def _config(producer: str, fx: Mapping[str, Any], ids: ProjectionIds, grid: Any,
 
 
 def build_request(producer: str, fx: Mapping[str, Any], ctx: Mapping[str, Any],
-                  ids: ProjectionIds) -> ProjectionRequest:
+                  ids: ProjectionIds, *, default_known_at: int | None = None) -> ProjectionRequest:
     """Supplied inputs (I/O tier) and the core configuration envelope (hand-built). Computation and the delivery
     capability check belong to the caller (the core library).
 
     `ctx` carries config_unit, batch unit and adjustment, config_adjustment, capability and features exactly as the
-    harness default context does."""
+    harness default context does.
+
+    Availability is never defaulted: a session or bar slot without `ka` is unknown availability. `default_known_at` is
+    an explicit opt-in for a caller that decodes a fixture notation documenting a default token (contract fixtures:
+    50); it is None unless given."""
     features = tuple(ctx["features"])
     grid: DailyGridCodec | BarGridCodec | None
     config_unit = _unit(ctx["config_unit"])
     try:
         config_adjustment = _adjustment(ctx["config_adjustment"])
         if producer == "session_projection":
-            batch, grid, availability = session_projection_inputs(fx, ctx, ids)
+            batch, grid, availability = session_projection_inputs(fx, ctx, ids, default_known_at=default_known_at)
             batches: tuple[CanonicalBatch | None, ...] = (batch,)
             entity = None
             session = None
         elif producer == "bar_projection":
-            batch, grid, availability = bar_projection_inputs(fx, ctx, ids)
+            batch, grid, availability = bar_projection_inputs(fx, ctx, ids, default_known_at=default_known_at)
             batches = (batch,)
             entity = None
             session = None
