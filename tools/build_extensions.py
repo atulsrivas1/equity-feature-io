@@ -71,7 +71,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix='extension-build-',dir=ROOT/'work') as temporary:
         location=Path(temporary)
         pure=foundation.snapshot(core,foundation.CORE_COMMIT,location/'core',('packages/contracts','packages/features'))
-        source=foundation.snapshot(ROOT,commit,location/'component',('packages','examples/factory_consumer','examples/third_party','tests'))
+        source=foundation.snapshot(ROOT,commit,location/'component',('packages','examples/factory_consumer','examples/third_party','tests','tools/_versions.py'))
         deps=location/'dependencies'
         for folder in ('contracts','features'):foundation.build(pure/'packages'/folder,deps)
         for folder in ('io-contracts','io-sdk'):foundation.build(source/'packages'/folder,deps)

@@ -69,7 +69,7 @@ def main():
                     else:shutil.copy2(source,target)
                 report=cwd/'report.json'
                 run(py,'-I',component/'tests/acquisition_probe.py',cwd,report,cwd=cwd)
-                after=fingerprint(py,cwd);assert before==after and len(before)==61
+                after=fingerprint(py,cwd);assert before==after and len(before)==62
                 public=json.loads(report.read_text());assert public['tests_run']==32
                 fp=hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest()
                 public.update({'form':form,'source_commit':head,'core_before_sha256':fp,'core_after_sha256':fp})
