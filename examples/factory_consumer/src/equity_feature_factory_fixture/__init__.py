@@ -13,7 +13,7 @@ from equity_feature_contracts.inputs import (
 )
 from equity_feature_io_contracts import CredentialProvider, PublicConfig, SinkCapabilitiesView
 
-__version__ = "0.1.0a1"
+__version__ = "0.1.0a2"
 
 
 class SyntheticSource:
@@ -42,7 +42,7 @@ class SyntheticCapabilities:
     codec_versions: tuple[str, ...] = ("efio-json1",)
     identity_versions: tuple[str, ...] = ("efio-key1",)
     digest_versions: tuple[str, ...] = ("efio-content1",)
-    canonical_package_versions: tuple[str, ...] = ("0.0.4a4",)
+    canonical_package_versions: tuple[str, ...] = ("0.0.4a5",)
     canonical_schema_versions: tuple[str, ...] = ("1",)
     math_policy_versions: tuple[str, ...] = ("v1",)
     visibility: str = "manifest_last"

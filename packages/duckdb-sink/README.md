@@ -1,6 +1,6 @@
 # equity-feature-duckdb-sink
 
-Experimental transactional local result sink, Python 3.12 / SDK 0.1.0a2 /
+Experimental transactional local result sink, Python 3.12 / SDK 0.1.0a3 /
 DuckDB 1.5.6. [EQ127](https://github.com/atulsrivas1/equity-features/issues/284)
 tracks current acceptance and [delivery evidence](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/EQ127_DELIVERY.md).
 

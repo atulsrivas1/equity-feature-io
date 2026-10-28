@@ -11,7 +11,7 @@ requires-python = ">=3.12,<3.13"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{name = "Equity Features contributors"}]
-dependencies = ["equity-feature-acquisition==0.1.0a0", "equity-feature-io-sdk==0.1.0a2"]
+dependencies = ["equity-feature-acquisition==0.1.0a0", "equity-feature-io-sdk==0.1.0a3"]
 
 [project.optional-dependencies]
 parquet = ["pyarrow==20.0.0"]

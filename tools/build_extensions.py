@@ -10,6 +10,8 @@ import subprocess
 import sys
 import tempfile
 import build_foundation as foundation
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # tools/_versions.py, also when loaded by path from tests
+from _versions import CONTRACTS, IO_SDK
 
 ROOT = Path(__file__).resolve().parents[1]
 SCOPED = ('packages', 'examples/third_party', 'examples/factory_consumer', 'tests', 'tools',
@@ -80,7 +82,7 @@ def main():
         artifacts=sorted(first.iterdir());assert len(artifacts)==2
         for artifact in artifacts:
             assert foundation.sha(artifact)==foundation.sha(repeat/artifact.name)
-            foundation.inspect(artifact,'equity-feature-example-extensions',['equity-feature-contracts==0.0.4a4','equity-feature-io-sdk==0.1.0a2'])
+            foundation.inspect(artifact,'equity-feature-example-extensions',[f'equity-feature-contracts=={CONTRACTS}',f'equity-feature-io-sdk=={IO_SDK}'])
         forms=[qualify(source,dependencies,next(p for p in artifacts if (p.suffix=='.whl')==(form=='wheel')),form) for form in ('wheel','sdist')]
         assert foundation.git(ROOT,'rev-parse','HEAD')==commit
         assert not foundation.git(ROOT,'status','--porcelain','--',*SCOPED)

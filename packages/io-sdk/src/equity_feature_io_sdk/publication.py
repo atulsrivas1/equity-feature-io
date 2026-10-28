@@ -7,6 +7,7 @@ from typing import Protocol
 
 from equity_feature_contracts.results import FeatureResult
 from equity_feature_io_contracts import FactoryError, SinkRequirements
+from equity_feature_io_contracts.factories import CANONICAL_PACKAGE_VERSION
 from equity_feature_io_contracts.publication import (
     AbortOutcome, CompletionReceipt, PublicationEnvelope, PublicationIdentity, PublicationState, PublicationStatus,
     ResultSink, SinkError, SinkErrorCode, WriteSession,
@@ -14,7 +15,7 @@ from equity_feature_io_contracts.publication import (
 from .codec import content_digest, descriptor, encode_result, idempotency_key
 from .factories import admit_sink
 
-_VERSIONS = ("1", "efio-json1", "efio-key1", "efio-content1", "0.0.4a4", "1", "v1")
+_VERSIONS = ("1", "efio-json1", "efio-key1", "efio-content1", CANONICAL_PACKAGE_VERSION, "1", "v1")
 _VERSION_FIELDS = ("protocol_version", "codec_version", "identity_version", "digest_version", "canonical_package_version", "canonical_schema_version", "math_policy_version")
 
 

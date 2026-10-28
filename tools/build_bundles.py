@@ -17,14 +17,16 @@ import sys
 import tarfile
 import tempfile
 import zipfile
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # tools/_versions.py, also when loaded by path from tests
+from _versions import CONTRACTS, FEATURES, EVIDENCE, OWN
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'dist/bundles'
 CORE_HEAD='ec1e3b1b55a2c3e7e8a7c2ecddc43f11a99c72ca'
 EPOCH=1700000000
-PACKAGES={'contracts':('equity_feature_contracts','0.0.4a4'),
-    'features':('equity_features','0.0.4a5'),'evidence':('equity_feature_evidence','0.1.0a2'),
-    'bundles':('equity_feature_bundles','0.1.0a1')}
+PACKAGES={'contracts':('equity_feature_contracts',CONTRACTS),
+    'features':('equity_features',FEATURES),'evidence':('equity_feature_evidence',EVIDENCE),
+    'bundles':('equity_feature_bundles',OWN['equity-feature-bundles'])}
 
 
 def run(*args, cwd=ROOT, env=None):
@@ -75,9 +77,9 @@ def inspect(path, name, source):
     assert metadata['Name']==module.replace('_','-') and metadata['Version']==version
     assert metadata['License-Expression']=='Apache-2.0' and metadata['Requires-Python']=='<3.13,>=3.12'
     if name=='bundles':
-        assert metadata.get_all('Requires-Dist',[])==['equity-feature-contracts==0.0.4a4','equity-feature-evidence==0.1.0a2','equity-features==0.0.4a5; extra == \"replay\"']
+        assert metadata.get_all('Requires-Dist',[])==[f'equity-feature-contracts=={CONTRACTS}',f'equity-feature-evidence=={EVIDENCE}',f'equity-features=={FEATURES}; extra == \"replay\"']
         assert metadata.get_all('Provides-Extra',[])==['replay']
-    if name=='evidence': assert metadata.get_all('Requires-Dist',[])==['equity-feature-contracts==0.0.4a4']
+    if name=='evidence': assert metadata.get_all('Requires-Dist',[])==[f'equity-feature-contracts=={CONTRACTS}']
     package_prefix=module+'/' if wheel else prefix+'src/'+module+'/'
     expected={p.relative_to(source/'src').as_posix():p.read_bytes() for p in (source/'src'/module).rglob('*') if p.is_file()}
     actual={module+'/'+n.removeprefix(package_prefix):body for n,body in files.items() if n.startswith(package_prefix)}

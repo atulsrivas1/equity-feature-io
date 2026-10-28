@@ -20,7 +20,7 @@ from equity_feature_io_sdk import encode_result, prepare_publication, publish
 from equity_features.ef1 import compute_ef1
 
 PACKETS = Path(__file__).with_name('period_phase_contract_packets.json')
-PACKET_SHA = 'b4c78f03b3c1ec5100740803d4b853920f9aa28cb58d73446dea6b3f403db09c'
+PACKET_SHA = '298851f79f26da042fada31163c8384eb497f9769d9c3b38b1f51128ec8f93be'
 
 
 def packets():

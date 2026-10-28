@@ -1,9 +1,9 @@
 # Equity Feature Bundles
 
-Optional `equity-feature-bundles==0.1.0a1` provides data-only, deterministic byte
+Optional `equity-feature-bundles==0.1.0a2` provides data-only, deterministic byte
 archives for a fixed `session.compute_trades.v1` request. It requires contracts
-0.0.4a4 and evidence0.1.0a2. The explicit `replay` extra additionally requires
-features0.0.4a5. CPython3.12; Apache-2.0. No registry publication is implied.
+0.0.4a5 and evidence0.1.0a3. The explicit `replay` extra additionally requires
+features0.0.4a6. CPython3.12; Apache-2.0. No registry publication is implied.
 
 `write_bundle(receipt, configuration, result, inputs, publication)` accepts
 immutable supplied facts. `inputs` is a tuple of role/CanonicalBatch pairs for

@@ -15,6 +15,7 @@ import uuid
 from equity_feature_contracts.inputs import I64_MAX
 from equity_feature_contracts.results import FeatureResult
 from equity_feature_io_contracts import FactoryError, FactoryErrorCode, SinkRequirements
+from equity_feature_io_contracts.factories import CANONICAL_PACKAGE_VERSION
 from equity_feature_io_contracts.publication import (
     AbortOutcome, ArtifactReference, CompletionReceipt, PublicationEnvelope,
     PublicationState, PublicationStatus, SinkCapabilities, SinkError, SinkErrorCode, WriteSession,
@@ -103,7 +104,7 @@ class DuckDBSink:
 
     def capabilities(self) -> SinkCapabilities:
         return SinkCapabilities(("1",), ("efio-json1",), ("efio-key1",), ("efio-content1",),
-                                ("0.0.4a4",), ("1",), ("v1",), "transactional", "serialized_writer",
+                                (CANONICAL_PACKAGE_VERSION,), ("1",), ("v1",), "transactional", "serialized_writer",
                                 True, True, True, RETENTION_NS, self._limits.max_results,
                                 self._limits.max_chunk_bytes, self._limits.max_total_bytes,
                                 self._limits.max_result_cells, self._limits.max_evidence_rows)

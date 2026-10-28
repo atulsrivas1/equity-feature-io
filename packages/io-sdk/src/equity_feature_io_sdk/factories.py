@@ -9,6 +9,7 @@ from typing import Generic, TypeVar
 
 from equity_feature_contracts.adapters import AcquisitionRequest, require_adapter_capability
 from equity_feature_contracts.inputs import I64_MAX
+from equity_feature_io_contracts.factories import CANONICAL_PACKAGE_VERSION
 from equity_feature_io_contracts import (
     ComponentFactory, ConfigValue, CredentialProvider, FactoryError, FactoryErrorCode,
     PublicConfig, SinkCandidate, SinkRequirements, SourceCandidate,
@@ -104,7 +105,7 @@ def admit_sink(instance: _K, requirements: SinkRequirements) -> _K:
     if type(requirements) is not SinkRequirements:
         raise FactoryError(FactoryErrorCode.INVALID_CONFIG)
     # Frozen v1 compatibility admission; backend semantics need conformance.
-    supported = ("1", "efio-json1", "efio-key1", "efio-content1", "0.0.4a4", "1", "v1")
+    supported = ("1", "efio-json1", "efio-key1", "efio-content1", CANONICAL_PACKAGE_VERSION, "1", "v1")
     requested = (requirements.protocol_version, requirements.codec_version,
                  requirements.identity_version, requirements.digest_version,
                  requirements.canonical_package_version, requirements.canonical_schema_version,

@@ -28,10 +28,10 @@ from equity_features.session import compute_bars
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'examples'))
 from duckdb_conformance import Fixture
 
-VERSIONS={'equity-feature-contracts':'0.0.4a4','equity-features':'0.0.4a5',
- 'equity-feature-io-contracts':'0.1.0a2','equity-feature-io-sdk':'0.1.0a2',
- 'equity-feature-duckdb':'0.1.0a9','equity-feature-parquet':'0.1.0a1',
- 'equity-feature-duckdb-sink':'0.1.0a0','equity-feature-example-extensions':'0.1.0a0',
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
+from _versions import VERSIONS as PACKAGE_VERSIONS
+VERSIONS={**{name:PACKAGE_VERSIONS[name] for name in ('equity-feature-contracts','equity-features','equity-feature-io-contracts',
+ 'equity-feature-io-sdk','equity-feature-duckdb','equity-feature-parquet','equity-feature-duckdb-sink','equity-feature-example-extensions')},
  'duckdb':'1.5.6','numpy':'2.2.6','pyarrow':'20.0.0'}
 INSTALLED=False
 

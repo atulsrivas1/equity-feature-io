@@ -12,6 +12,7 @@ from typing import Any, TypeAlias
 from types import MappingProxyType
 
 from equity_feature_contracts import inputs as i, results as r, specs as s
+from equity_feature_io_contracts.factories import CANONICAL_PACKAGE_VERSION
 from equity_feature_io_contracts.publication import (
     ArtifactReference, CompletionReceipt, FeatureHeader, PublicationEnvelope, PublicationIdentity,
     ResultDescriptor, SinkError, SinkErrorCode,
@@ -257,7 +258,7 @@ def _wire_versions(value: Wire, *, receipt: bool = False) -> None:
         raise SinkError(SinkErrorCode.INVALID_CONTENT)
     assert isinstance(identity, dict)
     versions = {"protocol_version": "1", "codec_version": "efio-json1", "identity_version": "efio-key1",
-                "digest_version": "efio-content1", "canonical_package_version": "0.0.4a4",
+                "digest_version": "efio-content1", "canonical_package_version": CANONICAL_PACKAGE_VERSION,
                 "canonical_schema_version": "1", "math_policy_version": "v1"}
     for field, expected in versions.items():
         if field not in identity or type(identity[field]) is not str:
