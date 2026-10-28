@@ -95,7 +95,7 @@
       "reason": "Additive EF2 supplied prior-extrema REFERENCE conversion, exact two nullable roles, id encoder and config builder; original synthetic T01 to T32 facts only, no level or extremum mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/ef4_projections.py": {
-      "sha256": "ab0bf157d3e81276a799b4d3ad9bee886e9dd13af3343697c565321b8eee6ae5",
+      "sha256": "8d6b72095ca4a12331df8b9068ebae22423ce709f5b6e8b6d653f04c908cf514",
       "reason": "Additive EF4-I2 supplied-projection conversion (session, bar, relative-excess and rate inputs) and hand-built core envelopes; imports only equity_feature_contracts and the EF3 daily codec; no projection mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/ef4_projections_sink.py": {
