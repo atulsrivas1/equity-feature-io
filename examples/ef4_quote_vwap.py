@@ -1,5 +1,5 @@
 """Explicit synthetic EF4-H quote dynamics and VWAP path requests as supplied inputs; no acquisition, no computation."""
-from equity_feature_contracts import EntityKey, SessionSpec
+from equity_feature_contracts import CanonicalBatch, EntityKey, SessionSpec
 from equity_feature_duckdb.quote_vwap import (
     BarRow, COMPLETE, Fact, Gap, QuoteRow, Scope, adjustment, availability, bar_batch, price_unit, quote_batch,
     quote_parameters, quote_request, reference, reference_batch, vwap_parameters, vwap_request,
@@ -13,7 +13,7 @@ SCOPE = Scope(INTERVAL[0], INTERVAL[1], "interval:interval-1")
 UNIT = price_unit(0, "USD")
 
 
-def bounds(known_at: int):
+def bounds(known_at: int) -> CanonicalBatch:
     fact = Fact(ENTITY.instrument_id, ENTITY.session_id, reference("interval-1"), "ef4.interval.bounds", INTERVAL[0],
                 INTERVAL[1], "snap", known_at)
     return reference_batch([fact], scope=SCOPE, declared=COMPLETE, input_id="bounds")

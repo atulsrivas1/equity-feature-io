@@ -11,9 +11,9 @@ def main() -> None:
         config = synthetic_money_flow_config(case_id)
         print(case_id, inputs.roles, len(inputs.batches), synthetic_money_flow_features(case_id), config.identity)
     for case_id in ('T01', 'T20', 'T23'):
-        inputs = synthetic_retracement_fixture(case_id)
+        retracement = synthetic_retracement_fixture(case_id)
         config = synthetic_retracement_config(case_id)
-        print(case_id, inputs.roles, [b is not None for b in inputs.slots], config.identity)
+        print(case_id, retracement.roles, [b is not None for b in retracement.slots], config.identity)
     # The EF2 producers are computed by the pure library layer, with the bars chunks
     # `inputs.bars` (money flow) or the two roles `inputs.slots` (retracement); this module only maps.
 
