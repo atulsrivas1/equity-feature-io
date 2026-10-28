@@ -17,7 +17,7 @@ instead of repeating `"0.0.4a4"`. The two standalone example packages keep the l
 | --- | --- | --- | --- |
 | equity-feature-io-contracts | 0.1.0a2 | 0.1.0a3 | canonical package constant moved to the new contracts version |
 | equity-feature-io-sdk | 0.1.0a2 | 0.1.0a3 | notional cells (#54), tape adapter (#41), publication fixes since the a2 bump; canonical constant |
-| equity-feature-bundles | 0.1.0a1 | 0.1.0a2 | notional cells (#54), admitted versions; this is the version the compatibility note refers to |
+| equity-feature-bundles | 0.1.0a1 | 0.1.0a2 | notional cells (#54), admitted versions (now core evidence 0.1.0a3 too); this is the version the compatibility note refers to |
 | equity-feature-duckdb | 0.1.0a9 | 0.1.0a10 | 33 source commits since the a9 bump (EF2 to EF4 adapters, fail-closed fixes) |
 | equity-feature-duckdb-sink | 0.1.0a0 | 0.1.0a1 | canonical constant, pins |
 | equity-feature-parquet | 0.1.0a1 | 0.1.0a2 | canonical constant, pins |
@@ -46,7 +46,7 @@ digests re-derived, ZIP re-packed by the test's stdlib packer, which was first c
 | `tests/ef1/regular_bar_prices_contract_packets.json` | `05d5b4815df3fd621993037c84f9d897a32ee84c833715e6ca1f6c4e1473d030` | `70fcaff8038d416f8cbc00340c7084fa106944c85a8e1ec4088d3b4b5149db96` |
 | `tests/ef1/regular_first_trade_price_contract_packets.json` | `e1835d416a09bd65fce59612323d23c241fe81dcb8493170002e2c3eadffe531` | `e4cd2ec2f97c43012884a7676d7bb6b81e3643ecbe88ebccb9ac251f9bcd6a44` |
 | `tests/ef1/regular_first_trade_price_fixture_manifest.json` | `385171c5bc1a1491fb0da6a652844f1e14138a5dc95db6325fbb6834c59f6060` | `aabe816abfe36921a6c08e4240a66c11e0e0e38401f495464cc935d66706024d` |
-| `tests/fixtures/bundle_oracle.json` | `da0e1728ec670f080a5329240b78c7785af7e4aaa2e28df35dea391a7ce6ca38` | `14004566e2c9ca05c8be3d02c7f2b8ca1791868ba8d56ab00a21390058c3cf9e` |
+| `tests/fixtures/bundle_oracle.json` | `da0e1728ec670f080a5329240b78c7785af7e4aaa2e28df35dea391a7ce6ca38` | `bb6d45f64c8de4e826996080f3ab9c1b15a805d315c15da5af797a089ea2deb0` |
 | `tests/publication_goldens.json` | `67525e9cf53e840d436841b683839c52550e324ee60171d1d84146146168eec7` | `e86e6aa87f6e7726b7efce2957b074d3ac031d42a79d81e1effe3d8b5eb65f4f` |
 
 `tools/check_extraction.py` still holds: the duckdb version marker substitution is now `0.1.0a7` to `0.1.0a10` in
@@ -58,3 +58,8 @@ describe the accepted archive matrix at fixed historical commits and are left un
 ## Repeat-build equality (checklist 1.3)
 
 All 27 packages of the three repositories (12 core, 8 io plus 2 example packages, 5 workers) were built twice from fresh copies with `SOURCE_DATE_EPOCH=1700000000` and the pinned `build 1.2.2.post1` / `setuptools 80.9.0`: wheels are byte-equal and sdists are equal after the repository's own normalization (`tools/build_explanations.py normalize`), 27 of 27. Not a release build: no tag, no publish.
+
+## BLOCKING follow-up: re-pin the commit-pinned builders
+
+`tools/build_*.py` with commit constants read the table but still name pre-bump commits; they are NOT executed end to end. Re-pin after the
+three PRs merge and before any release claim or end-to-end run (PO ruling 2026-10-28).

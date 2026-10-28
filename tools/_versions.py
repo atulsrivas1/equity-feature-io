@@ -8,7 +8,7 @@ Historical receipts, release records and frozen archive baselines keep the versi
 from __future__ import annotations
 
 # Core distributions this repository is built and tested against (their sibling repository owns them).
-CORE = {"equity-feature-contracts": "0.0.4a5", "equity-features": "0.0.4a6", "equity-feature-evidence": "0.1.0a2"}
+CORE = {"equity-feature-contracts": "0.0.4a5", "equity-features": "0.0.4a6", "equity-feature-evidence": "0.1.0a3"}
 
 # Distributions owned by this repository (examples included).
 OWN = {

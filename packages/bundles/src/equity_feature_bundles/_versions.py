@@ -6,5 +6,5 @@ values read from the installed packages. Keep FEATURES equal to the current
 """
 BUNDLE = '0.1.0a2'
 CONTRACTS = '0.0.4a5'
-EVIDENCE = '0.1.0a2'
+EVIDENCE = '0.1.0a3'
 FEATURES = '0.0.4a6'

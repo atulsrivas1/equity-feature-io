@@ -68,12 +68,12 @@ class BundleTests(unittest.TestCase):
 
     def test_independent_known_bytes_and_headers(self):
         self.assertEqual(len(RAW), 11517)
-        self.assertEqual(hashlib.sha256(RAW).hexdigest(), 'c9e6f7521e7bf8e61282ffb42c94578079e379d4ecc68ab3d9d189c7cfb02ec4')
+        self.assertEqual(hashlib.sha256(RAW).hexdigest(), '455c41644d4a6a25489bd9b0f85e59ad31c7c83bf213171c98441e0ac5aec1e4')
         self.assertEqual(standard_zip(members()), RAW)
         self.assertEqual(exported(self.bundle), RAW)
         manifest = members()['manifest.json']
         self.assertEqual((len(manifest), hashlib.sha256(manifest).hexdigest()),
-            (1336, 'eca144825da5d1519ad4a1ac241260e1a5d7b252f7df8a5cabb38529f18d8090'))
+            (1336, 'd148d443cd805d7dc82af4b100b0e8d0aa30cf84943597b6fdc9b8dac3b42460'))
         self.assertEqual(tuple(x.values[0] for x in self.bundle.result.values), (3,10,1011,101.1,10/3))
 
     @unittest.skipUnless(HAS_FEATURES, 'explicit replay extra required')
