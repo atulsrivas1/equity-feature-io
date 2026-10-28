@@ -77,7 +77,7 @@ def main():
         artifacts=sorted(first.iterdir());assert len(artifacts)==2
         for artifact in artifacts:
             assert foundation.sha(artifact)==foundation.sha(repeat/artifact.name)
-            foundation.inspect(artifact,'equity-feature-duckdb-sink',['equity-feature-io-sdk==0.1.0a2','duckdb==1.5.6'])
+            foundation.inspect(artifact,'equity-feature-duckdb-sink',[f'equity-feature-io-sdk=={foundation.IO_SDK}','duckdb==1.5.6'])
         forms=[qualify(source,dependencies,next(p for p in artifacts if (p.suffix=='.whl')==(form=='wheel')),form) for form in ('wheel','sdist')]
         assert foundation.git(ROOT,'rev-parse','HEAD')==commit
         assert not foundation.git(ROOT,'status','--porcelain','--',*SCOPED)

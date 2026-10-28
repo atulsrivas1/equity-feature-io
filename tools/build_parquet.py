@@ -77,7 +77,7 @@ def main():
         artifacts=sorted(first.iterdir());assert len(artifacts)==2
         for artifact in artifacts:
             assert foundation.sha(artifact)==foundation.sha(repeat/artifact.name)
-            foundation.inspect(artifact,'equity-feature-parquet',['equity-feature-io-sdk==0.1.0a2','pyarrow==20.0.0'])
+            foundation.inspect(artifact,'equity-feature-parquet',[f'equity-feature-io-sdk=={foundation.IO_SDK}','pyarrow==20.0.0'])
         forms=[qualify(source,dependencies,next(p for p in artifacts if (p.suffix=='.whl')==(form=='wheel')),form) for form in ('wheel','sdist')]
         assert foundation.git(ROOT,'rev-parse','HEAD')==commit
         assert not foundation.git(ROOT,'status','--porcelain','--',*SCOPED)

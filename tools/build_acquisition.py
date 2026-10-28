@@ -9,14 +9,14 @@ import shutil
 import sys
 import tempfile
 
-from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot
+from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot, IO_CONTRACTS, IO_SDK
 
 ROOT = Path(__file__).resolve().parents[1]
 CORE = '710fe05b812d4acc06d7e828c96ac1922e3203dc'
 PATHS = ('packages/acquisition','packages/io-contracts','tests/acquisition',
          'tests/acquisition_goldens.json','tests/acquisition_probe.py',
          'examples/acquisition_consumer.py','tools/build_acquisition.py',
-         'tools/build_foundation.py','requirements-dev.txt','.github/workflows/acquisition.yml')
+         'tools/build_foundation.py','requirements-dev.txt')
 
 
 def main():
@@ -47,7 +47,7 @@ def main():
         archives=sorted(first.iterdir());assert len(archives)==2
         for archive in archives:
             assert sha(archive)==sha(repeat/archive.name),'Nonrepeatable acquisition archive'
-            inspect(archive,'equity-feature-acquisition',['equity-feature-io-contracts==0.1.0a2'])
+            inspect(archive,'equity-feature-acquisition',[f'equity-feature-io-contracts=={IO_CONTRACTS}'])
         deps=sorted(dependencies.glob('*.whl'));assert len(deps)==3
         forms=[]
         for form in ('wheel','sdist'):
