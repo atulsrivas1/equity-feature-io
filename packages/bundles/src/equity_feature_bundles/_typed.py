@@ -25,6 +25,31 @@ def _float(value: Any) -> float:
     return result
 
 
+_NOTIONAL_FEATURE = 'tape.top_k_notional'
+
+
+def _top_k(raw: Any, ranking: str) -> Any:
+    f = fields(raw, ('k', 'rows'))
+    return r.TopKTrades(
+        k=decode(f['k']),
+        rows=decode(f['rows']),
+        ranking=ranking)
+
+
+def _column_values(value: Any, feature_id: Any) -> Any:
+    """Cell values of one column. Only `tape.top_k_notional` cells are notional ranked (E1); the shared
+    FeatureResult check binds that ranking to the feature id, so any other feature id still requires the size rank."""
+    if feature_id != _NOTIONAL_FEATURE or type(value) is not list:
+        return decode(value)
+    cells = []
+    for cell in value:
+        if type(cell) is dict and cell.get('type') == 'results.TopKTrades' and set(cell) == {'type', 'fields'}:
+            cells.append(_top_k(cell['fields'], 'notional'))
+        else:
+            cells.append(decode(cell))
+    return tuple(cells)
+
+
 def decode(value: Any) -> Any:
     if type(value) in (str, int, bool) or value is None:
         return value
@@ -170,7 +195,7 @@ def decode(value: Any) -> Any:
             dtype=r.ValueType(f['dtype']),
             unit=decode(f['unit']),
             entities=decode(f['entities']),
-            values=decode(f['values']),
+            values=_column_values(f['values'], f['feature_id']),
             schema_version=decode(f['schema_version']))
     if tag == 'results.EntityKey':
         f = fields(raw, ('instrument_id', 'session_id'))
@@ -234,10 +259,7 @@ def decode(value: Any) -> Any:
             eligible=decode(f['eligible']),
             expected=decode(f['expected']))
     if tag == 'results.TopKTrades':
-        f = fields(raw, ('k', 'rows'))
-        return r.TopKTrades(
-            k=decode(f['k']),
-            rows=decode(f['rows']))
+        return _top_k(raw, 'size')
     if tag == 'results.TopKTradeRow':
         f = fields(raw, ('input_id', 'event_id', 'event_ns', 'order_key', 'known_at_ns', 'price', 'size'))
         return r.TopKTradeRow(
