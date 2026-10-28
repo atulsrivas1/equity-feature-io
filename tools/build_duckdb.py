@@ -14,6 +14,8 @@ import zipfile
 
 from _r4_artifact_helpers import EPOCH, core_fingerprint, digest, inspect, normalize_sdist
 from build_foundation import snapshot
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # tools/_versions.py, also when loaded by path from tests
+from _versions import CONTRACTS, OWN
 
 ROOT = Path(__file__).resolve().parents[1]
 CORE_COMMIT = "2cd51cd35c0a3081f88e1752c7c1c41ffe0e62af"
@@ -35,7 +37,7 @@ def inspect_adapter(path):
         assert b'License-Expression: Apache-2.0' in meta
         assert b'Requires-Dist: duckdb==1.5.6' in meta
         assert b'Requires-Dist: numpy==2.2.6' in meta
-        assert b'Requires-Dist: equity-feature-contracts==0.0.4a4' in meta
+        assert b'Requires-Dist: equity-feature-contracts==' + CONTRACTS.encode() in meta
         assert any(n.endswith('/licenses/LICENSE') for n in files)
     else:
         with tarfile.open(path,'r:gz') as archive:
@@ -85,7 +87,7 @@ def qualify(output, form, source_commit):
         compatibility.update(system=platform.system(),form=form,core_source_commit=CORE_COMMIT,
             old_adapter_artifact={old_adapter.name:digest(old_adapter)},new_artifacts={p.name:digest(p) for p in [*paths,adapter]})
         compatibility_path.write_text(json.dumps(compatibility,sort_keys=True,indent=2)+'\n',encoding='utf-8')
-        run(str(py),'-I','-c',"from pathlib import Path; import equity_feature_duckdb as d,duckdb,numpy; assert 'site-packages' in Path(d.__file__).parts; assert d.__version__=='0.1.0a9'; assert duckdb.__version__=='1.5.6'; assert numpy.__version__=='2.2.6'",cwd=env)
+        run(str(py),'-I','-c',"from pathlib import Path; import equity_feature_duckdb as d,duckdb,numpy; assert 'site-packages' in Path(d.__file__).parts; assert d.__version__=='"+OWN['equity-feature-duckdb']+"'; assert duckdb.__version__=='1.5.6'; assert numpy.__version__=='2.2.6'",cwd=env)
         result=subprocess.run([str(py),'-I','-m','unittest','discover','-s',str(ROOT/'tests/duckdb')],cwd=env,text=True,capture_output=True)
         print(result.stdout+result.stderr)
         result.check_returncode()
@@ -118,7 +120,7 @@ print('Pure core registry executes with DuckDB forbidden')
         assert before==after,'adapter execution changed installed core'
         fingerprint = lambda x: hashlib.sha256(json.dumps(x,sort_keys=True).encode()).hexdigest()
         report = dict(schema='duckdb-install1',source_commit=source_commit,
-                      form=form,system=platform.system(),python=platform.python_version(),duckdb='1.5.6',numpy='2.2.6',adapter='0.1.0a9',
+                      form=form,system=platform.system(),python=platform.python_version(),duckdb='1.5.6',numpy='2.2.6',adapter=OWN['equity-feature-duckdb'],
                       artifacts={p.name:digest(p) for p in [*paths,adapter]},synthetic_tests=count,
                       test_suite_sha256=hashlib.sha256(b''.join(p.read_bytes() for p in sorted((ROOT/'tests/duckdb').glob('test_*.py')))).hexdigest(),
                       before_core_sha256=fingerprint(before),after_core_sha256=fingerprint(after),

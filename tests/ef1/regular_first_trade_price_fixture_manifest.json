@@ -1,6 +1,6 @@
 {
   "oracle": "tests/ef1/regular_first_trade_price_contract_packets.json",
-  "sha256": "e1835d416a09bd65fce59612323d23c241fe81dcb8493170002e2c3eadffe531",
+  "sha256": "e4cd2ec2f97c43012884a7676d7bb6b81e3643ecbe88ebccb9ac251f9bcd6a44",
   "outcome_cases": 122,
   "refusal_cases": 159,
   "worker_result_cases": 17,

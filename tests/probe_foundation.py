@@ -16,7 +16,7 @@ def core_check():
         import equity_feature_contracts as c
         import equity_features as f
         from equity_features.session import compute_bars
-        assert (c.__version__, f.__version__) == ('0.0.4a4', '0.0.4a5')
+        assert (c.__version__, f.__version__) == ('0.0.4a5', '0.0.4a6')
         assert len(c.builtin_registry().list_features()) == 39
         unit=c.PriceUnit(0,'USD')
         config=c.ConfigSpec('synthetic-bars','v1',(c.Parameter('eligibility_policy','example-v1'),),c.SessionSpec('demo','S',100,200,'caller-supplied'),c.WindowSpec(1,'S',('P','S')),c.AvailabilitySpec(200,210,210),price_unit=unit)
@@ -31,11 +31,11 @@ def core_check():
     finally: sys.meta_path.remove(deny)
 
 core_check()
-expected={'equity-feature-io-contracts':['equity-feature-contracts==0.0.4a4'],'equity-feature-io-sdk':['equity-feature-io-contracts==0.1.0a2'],'equity-feature-workers':['equity-feature-io-sdk==0.1.0a0']}
+expected={'equity-feature-io-contracts':['equity-feature-contracts==0.0.4a5'],'equity-feature-io-sdk':['equity-feature-io-contracts==0.1.0a3'],'equity-feature-workers':['equity-feature-io-sdk==0.1.0a0']}
 for name in sys.argv[1:]:
     if name=='core':continue
     module=importlib.import_module(name.replace('-','_'))
-    assert module.__version__ == ('0.1.0a0' if name == 'equity-feature-workers' else '0.1.0a2')
+    assert module.__version__ == ('0.1.0a0' if name == 'equity-feature-workers' else '0.1.0a3')
     expected_exports = {'equity-feature-io-contracts': ['__version__','ComponentFactory','ConfigValue','CredentialProvider','FactoryError','FactoryErrorCode','PublicConfig','SinkCandidate','SinkCapabilitiesView','SinkRequirements','SourceCandidate', 'AbortOutcome', 'ArtifactReference', 'CompletionReceipt', 'FeatureHeader', 'PublicationEnvelope', 'PublicationIdentity', 'PublicationState', 'PublicationStatus', 'ResultDescriptor', 'ResultSink', 'SinkCapabilities', 'SinkError', 'SinkErrorCode', 'WriteSession'], 'equity-feature-io-sdk': ['__version__','SinkRegistry','SourceRegistry','admit_sink','admit_source', 'content_digest', 'decode_envelope', 'decode_receipt', 'decode_result', 'descriptor', 'encode_envelope', 'encode_receipt', 'encode_result', 'idempotency_key', 'ConformanceCase', 'SinkConformanceReport', 'qualify_sink', 'Cancellation', 'envelope_requirements', 'prepare_publication', 'publish', 'verify_content', 'verify_receipt'], 'equity-feature-workers': ['__version__']}
     assert module.__all__ == expected_exports[name]
     assert 'site-packages' in Path(module.__file__).resolve().parts

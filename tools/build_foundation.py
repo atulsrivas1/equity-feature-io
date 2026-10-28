@@ -14,13 +14,15 @@ import tarfile
 import tempfile
 import tomllib
 import zipfile
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # tools/_versions.py, also when loaded by path from tests
+from _versions import CONTRACTS, IO_CONTRACTS, IO_SDK, OWN
 
 ROOT = Path(__file__).resolve().parents[1]
 EPOCH = 1700000000
 CORE_COMMIT = "7a6db8c2317de1ee9dd9116e0897cbf6445e359e"
 EXPECTED = {
-    "equity-feature-io-contracts": ["equity-feature-contracts==0.0.4a4"],
-    "equity-feature-io-sdk": ["equity-feature-io-contracts==0.1.0a2"],
+    "equity-feature-io-contracts": [f"equity-feature-contracts=={CONTRACTS}"],
+    "equity-feature-io-sdk": [f"equity-feature-io-contracts=={IO_CONTRACTS}"],
     "equity-feature-workers": ["equity-feature-io-sdk==0.1.0a0"],
 }
 
@@ -138,13 +140,13 @@ def qualify(dependencies, artifacts, form, packages, probe, factory_probe, publi
         run(py, "-I", factory_probe, "--installed", "--report-json", factory_report, cwd=location)
         factories = json.loads(factory_report.read_text(encoding="utf-8"))
         assert factories["synthetic_factory_tests"] == 21 and factories["installed_public_execution"]
-        assert factories["io_contracts"] == factories["io_sdk"] == "0.1.0a2" and factories["consumer"] == "0.1.0a1"
+        assert factories["io_contracts"] == IO_CONTRACTS and factories["io_sdk"] == IO_SDK and factories["consumer"] == OWN["equity-feature-factory-fixture"]
         assert factories["test_suite_sha256"] == sha(factory_probe)
         publication_report = location / "publication-report.json"
         run(py, "-I", publication_probe, "--installed", "--report-json", publication_report, cwd=location)
         publications = json.loads(publication_report.read_text(encoding="utf-8"))
         assert publications["publication_tests"] == 25 and publications["installed_public_execution"]
-        assert publications["io_contracts"] == publications["io_sdk"] == "0.1.0a2" and publications["consumer"] == "0.1.0a1"
+        assert publications["io_contracts"] == IO_CONTRACTS and publications["io_sdk"] == IO_SDK and publications["consumer"] == OWN["equity-feature-factory-fixture"]
         assert publications["test_suite_sha256"] == sha(publication_probe)
         assert publications["hand_golden_sha256"] == sha(publication_probe.with_name("publication_goldens.json"))
         assert not publications["backend_durability_certification"] and not publications["private_execution"]
@@ -216,7 +218,7 @@ def main():
         for path in artifacts:
             assert sha(path) == sha(repeat / path.name), "Non-repeatable archive: " + path.name
             name = next(n for n in packages + ["equity-feature-factory-fixture"] if path.name.startswith(n.replace("-", "_") + "-"))
-            inspect(path, name, ["equity-feature-io-sdk==0.1.0a2"] if name == "equity-feature-factory-fixture" else None)
+            inspect(path, name, [f"equity-feature-io-sdk=={IO_SDK}"] if name == "equity-feature-factory-fixture" else None)
         deps = sorted(dependencies.glob("*.whl"))
         reports = []
         for form in ("wheel", "sdist"):

@@ -3,5 +3,5 @@ from .source import ExampleSource, example_request
 from .sink import ExampleSink
 from .factories import SourceFactory, SinkFactory
 
-__version__ = "0.1.0a0"
+__version__ = "0.1.0a1"
 __all__ = ["__version__", "ExampleSource", "ExampleSink", "SourceFactory", "SinkFactory", "example_request"]

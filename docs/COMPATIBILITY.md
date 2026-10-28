@@ -4,7 +4,7 @@
 
 ## EQ098 bundles candidate
 
-New optional bundles0.1.0a1 pins contracts0.0.4a4/evidence0.1.0a2 and explicit replay extra features0.0.4a5 on CPython3.12 Windows/Linux. Root read/write does not import features or install/fetch missing inputs. Existing I/O package versions/sources remain unchanged. Unknown versions refuse; EQ099 or a future format/dependency extension requires explicit versioning and renewed bundle compatibility qualification. Source candidate is not fresh installed/actual-main acceptance.
+New optional bundles0.1.0a2 pins contracts0.0.4a5/evidence0.1.0a2 and explicit replay extra features0.0.4a6 on CPython3.12 Windows/Linux. Root read/write does not import features or install/fetch missing inputs. Existing I/O package versions/sources remain unchanged. Unknown versions refuse; EQ099 or a future format/dependency extension requires explicit versioning and renewed bundle compatibility qualification. Source candidate is not fresh installed/actual-main acceptance.
 
 ## BUG-005 correction candidate
 

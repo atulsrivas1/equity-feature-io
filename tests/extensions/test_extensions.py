@@ -11,6 +11,8 @@ import sys
 import traceback
 import unittest
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'tools'))
+from _versions import VERSIONS as PACKAGE_VERSIONS
 from equity_features import __version__ as FEATURES_VERSION
 from equity_feature_contracts.adapters import SourceError, SourceErrorCode, validate_delivery
 from equity_feature_contracts.inputs import Coverage, PriceUnit, SourceBinding
@@ -187,7 +189,7 @@ class Extensions(unittest.TestCase):
 
     def test_import_public_package_is_side_effect_free_and_dependency_light(self):
         module=importlib.import_module('equity_feature_example_extensions')
-        self.assertEqual(module.__version__,'0.1.0a0')
+        self.assertEqual(module.__version__,PACKAGE_VERSIONS['equity-feature-example-extensions'])
         self.assertEqual(module.__all__,['__version__','ExampleSource','ExampleSink','SourceFactory','SinkFactory','example_request'])
         self.assertFalse(any(isinstance(value,(ExampleSource,ExampleSink,SourceRegistry,SinkRegistry)) for value in vars(module).values()))
 

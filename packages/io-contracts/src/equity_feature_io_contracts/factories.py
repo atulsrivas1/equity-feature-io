@@ -13,6 +13,9 @@ ConfigValue: TypeAlias = str | int | float | bool | None
 PublicConfig: TypeAlias = Mapping[str, ConfigValue]
 _T_co = TypeVar("_T_co", covariant=True)
 
+# The one canonical equity-feature-contracts distribution version this I/O v1 admits (tools/verify_versions.py checks it).
+CANONICAL_PACKAGE_VERSION = "0.0.4a5"
+
 
 class CredentialProvider(Protocol):
     def get(self, name: str) -> str | None: ...
@@ -99,7 +102,7 @@ class SinkRequirements:
     codec_version: str = "efio-json1"
     identity_version: str = "efio-key1"
     digest_version: str = "efio-content1"
-    canonical_package_version: str = "0.0.4a4"
+    canonical_package_version: str = CANONICAL_PACKAGE_VERSION
     canonical_schema_version: str = "1"
     math_policy_version: str = "v1"
     visibility: str | None = None

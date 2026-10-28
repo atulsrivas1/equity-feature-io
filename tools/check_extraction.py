@@ -4,6 +4,10 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _versions import OWN  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -20,7 +24,7 @@ def main():
     assert evolution['canonical_baseline'] == inventory['canonical_baseline']
     substitutions = evolution['allowed_version_marker_substitutions']
     assert set(substitutions) == set(inventory['allowed_runtime_differences']) | {'tests/duckdb/test_evidence.py'}
-    assert evolution['current_distribution_version'] == '0.1.0a9'
+    assert evolution['current_distribution_version'] == OWN['equity-feature-duckdb']
     checked = {}
     for name, expected_hash in inventory['source_sha256_utf8_git_bytes'].items():
         original = subprocess.check_output(['git', 'show', inventory['canonical_baseline'] + ':' + name], cwd=args.core_root)
@@ -30,7 +34,7 @@ def main():
             expected = original
             if name in substitutions:
                 change = substitutions[name]
-                assert change['from'] == '0.1.0a7' and change['to'] == '0.1.0a9'
+                assert change['from'] == '0.1.0a7' and change['to'] == OWN['equity-feature-duckdb']
                 assert type(change['occurrences']) is int and change['occurrences'] == 1
                 previous, current_version = change['from'].encode('ascii'), change['to'].encode('ascii')
                 assert expected.count(previous) == change['occurrences'], name
