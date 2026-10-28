@@ -199,7 +199,8 @@ def run(fx: dict[str, Any], features: tuple[str, ...] | None = None) -> tuple[An
         for feature in chosen:
             require_ef5_capability(feature, call)
     context_arg = None if ("context" in fx and fx["context"] is None) else context
-    return compute_ef5(fx["producer"], chunks, context_arg, config, features=chosen), config, (context, parts)
+    # context_arg is deliberately None for the "context not delivered" refusal recipe (RF16); the library refuses it.
+    return compute_ef5(fx["producer"], chunks, context_arg, config, features=chosen), config, (context, parts)  # type: ignore[arg-type]
 
 
 def accepts(want: dict[str, Any] | None, value: Any) -> bool:
