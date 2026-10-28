@@ -533,7 +533,9 @@ def synthetic_venue_status_fixture(case_id: str = "MV05") -> VenueStatusInputs:
                                  Coverage(expected, observed, complete), None)  # type: ignore[arg-type]
         batches.append(make_venue_batch(rows, metadata=metadata,  # type: ignore[arg-type]
                                         instrument_id=_INSTRUMENT, session_id=_SESSION))
-    return VenueStatusInputs(*batches, provenance=tuple("unavailable" if b is None else "synthetic" for b in batches))
+    population, seed, states, prefix, validity = batches
+    return VenueStatusInputs(population, seed, states, prefix, validity,
+                             provenance=tuple("unavailable" if b is None else "synthetic" for b in batches))
 
 
 __all__ += ["SYNTHETIC_VENUE_STATUS_CASES", "synthetic_venue_status_config", "synthetic_venue_status_fixture"]

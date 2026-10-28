@@ -348,6 +348,8 @@ def synthetic_momentum_config(case_id: str, *, length: int | None = None) -> Con
     count = len(_series(case_id, "A", length))
     anchor = case["a"]
     end = count * _STEP_NS
+    sessions: tuple[SessionSpec, ...]
+    runs: tuple[tuple[str, int, int, int], ...]
     if anchor:
         sessions = (SessionSpec("SYN", "S0", 0, anchor * _STEP_NS, "UTC"),
                     SessionSpec("SYN", "S", anchor * _STEP_NS, end, "UTC"))

@@ -88,6 +88,7 @@ class TapeCase:
     def config(self) -> ConfigSpec:
         """The envelope of this request (no selection-dependent parameter exists for either producer)."""
         s = self.settings
+        params: tuple[Parameter, ...]
         if self.producer == "window":
             params = (Parameter("policy_version", s["policy_version"]), Parameter("window_ns", s["window_ns"]),
                       Parameter("seed_policy", s["seed_policy"]), Parameter("evidence_limit", s["evidence_limit"]),
