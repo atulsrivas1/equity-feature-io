@@ -14,7 +14,7 @@ from .governance import (GovernedCalendar, HistoryPlan, plan_history, make_histo
                          ReferenceRequest, ReferenceResolution, resolve_supplied_reference)
 from .evidence import VerificationPolicy, FileEvidence, AcquisitionReceipt
 
-__version__ = "0.1.0a10"
+__version__ = "0.1.0a11"
 __all__ = [
     "CatalogConfig", "FilePin", "ResolvedPartition", "ResolvedSource",
     "SourceSelection", "resolve_source",
