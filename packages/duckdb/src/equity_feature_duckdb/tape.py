@@ -51,7 +51,7 @@ class TradeSupply:
 
     rows: tuple[Mapping[str, Any], ...]
     delivered: tuple[str, ...] = ()  # payload columns the supplier delivers (subset of TRADE_PAYLOAD)
-    coverage: Coverage | None = None  # default: the delivered rows, complete
+    coverage: Coverage | None = None  # required when rows are delivered (undeclared coverage is refused)
     scale: int | None = None  # price scale of the batch; default: the request price scale
     adjustment: str = "raw"  # supplied action basis label
     kind: DataKind = DataKind.TRADE
@@ -134,7 +134,9 @@ def trade_batch(supply: TradeSupply, *, open_ns: int, cutoff_ns: int, price_scal
     rows = supply.rows
     columns = [Column(name, tuple(_required(row, name) for row in rows)) for name in TRADE_IDENTITY]
     columns += [Column(name, tuple(row.get(name) for row in rows)) for name in TRADE_PAYLOAD if name in supply.delivered]
-    coverage = supply.coverage if supply.coverage is not None else Coverage(len(rows), len(rows), True)
+    if supply.coverage is None and rows:
+        raise ContractError(ErrorCode.INVALID_SCHEMA, "coverage not declared")  # fail closed: never default to complete
+    coverage = supply.coverage if supply.coverage is not None else Coverage(0, 0, True)
     scope = InputScope(open_ns if supply.scope_start_ns is None else supply.scope_start_ns,
                        cutoff_ns if supply.scope_end_ns is None else supply.scope_end_ns,
                        eligibility_policy if supply.scope_policy is None else supply.scope_policy,
