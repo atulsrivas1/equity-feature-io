@@ -279,7 +279,7 @@ def sink_readback(result: Any, label: str) -> list[str]:
             session = sink.begin(envelope)
             sink.write(session, 0, result)  # type: ignore[arg-type]
             receipt = sink.commit(session)  # type: ignore[arg-type]
-            restored = sink.read(receipt)  # type: ignore[arg-type]
+            restored = sink.read(receipt)
     return [] if restored == (result,) else [f"{label}: DuckDB sink read-back differs from the library result"]
 
 
