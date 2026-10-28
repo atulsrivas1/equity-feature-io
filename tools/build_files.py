@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CORE = '710fe05b812d4acc06d7e828c96ac1922e3203dc'
 PATHS = ('packages/files','packages/acquisition','packages/io-contracts','packages/io-sdk',
          'tests/files','tests/file_goldens.json','tests/files_probe.py','examples/files_consumer.py',
-         'tools/build_files.py','tools/build_foundation.py','requirements-dev.txt')
+         'tools/build_files.py','tools/build_foundation.py','tools/_versions.py','requirements-dev.txt')
 
 
 def main():
