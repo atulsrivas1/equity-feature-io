@@ -87,7 +87,7 @@
       "reason": "Additive EF4 supplied path-efficiency and choppiness conversion, nullable bars role per session chunk, R17 context-based ef4.path_efficiency config envelope; original fixture-derived facts only, no efficiency ratio, logarithm, true-range, window-range or choppiness mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/tape.py": {
-      "sha256": "0e8044ce26a99befcd6a0e0b361970bd1a3b4f654ffded4f9357de9254313be8",
+      "sha256": "caf450138f9b62377fed9771ddf1f05ce3296ba4272726d22e51eb5cc5131401",
       "reason": "Additive EF4-G supplied tape trade, tick-seed and notional top-K partition conversion and producer config envelopes; original fixture-derived inputs only, no tick sign, window total, notional or rank mathematics."
     },
     "packages/duckdb/src/equity_feature_duckdb/retracement.py": {
