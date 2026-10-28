@@ -59,7 +59,8 @@ describe the accepted archive matrix at fixed historical commits and are left un
 
 All 27 packages of the three repositories (12 core, 8 io plus 2 example packages, 5 workers) were built twice from fresh copies with `SOURCE_DATE_EPOCH=1700000000` and the pinned `build 1.2.2.post1` / `setuptools 80.9.0`: wheels are byte-equal and sdists are equal after the repository's own normalization (`tools/build_explanations.py normalize`), 27 of 27. Not a release build: no tag, no publish.
 
-## BLOCKING follow-up: re-pin the commit-pinned builders
+## Builder re-pin (PO ruling 2026-10-28, item 2)
 
-`tools/build_*.py` with commit constants read the table but still name pre-bump commits; they are NOT executed end to end. Re-pin after the
-three PRs merge and before any release claim or end-to-end run (PO ruling 2026-10-28).
+Core commit pins re-pinned to post-bump core main 710fe05 (build_foundation, build_bundles, build_duckdb, build_acquisition, build_files). Run end to end with the pinned venv against a detached checkout of that commit: build_foundation, build_bundles, build_duckdb_sink, build_parquet, build_extensions all PASS, including their repeat-archive and fresh-install checks; archives carry io-contracts/io-sdk 0.1.0a3, bundles 0.1.0a2, duckdb-sink 0.1.0a1, parquet 0.1.0a2, example extensions 0.1.0a1. Fixes: `tools/_versions.py` is staged with the tests that import it, nonexistent workflow scope entries dropped, expected sdk/contracts pins read from the table.
+
+Not run to completion, so the blocker stays open for these only: `build_acquisition` and `build_files` (re-pinned and fixed up to their installed-file-count assertion, which still fails and needs its expected count refreshed), `build_duckdb` (obsolete: it snapshots `packages/duckdb` from core, which moved to this repository), `build_matrix` (accepted archive matrix at fixed historical commits, deliberately unchanged). No release claim until those are run or retired.
