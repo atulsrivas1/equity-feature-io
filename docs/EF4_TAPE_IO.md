@@ -14,7 +14,7 @@ Spec and library: core `main` commit `c4042b8` (EF4-G library, PRs #706 and #710
 
 ## Deviations and choices
 
-1. Shared codec (io-sdk `codec.py`, `_top_k_cell`). A top-K cell is first rebuilt through the shared constructor, as before. Only on `INVALID_ORDER` (a notional-ordered cell) does it assemble the stored fields with `object.__new__`, after the same bounds, row-type and duplicate-identity checks. Size-ranked cells (EF1 to EF3) take the unchanged path. This is the ruling "the sink must store and read the cell fields, not rebuild through the public constructor"; the rank-aware order check is still missing from the shared validator and is the EF4 shared amendment item.
+1. Shared codec (io-sdk `codec.py`, `_notional_cell`). Superseded by the rank-aware check (see "Refresh" below). The first draft rebuilt a top-K cell through the shared constructor and fell back to `object.__new__` on `INVALID_ORDER`. The merged codec decides by the feature id instead: only a `tape.top_k_notional` column is decoded as a notional-ordered cell, after the bounds, row-type and duplicate-identity checks and a rank check on `(-price * size, event_ns, order_key, event_id)`; a cell out of rank is refused `INVALID_CONTENT`. Every other feature keeps the shared size-ranked constructor.
 2. Session end. A fixture `close` is used when present; a closing-auction session ends at the cutoff C (the harness notation `close = C`); every other session ends at `9 * 10^18` ns (a harness choice, not a contract value).
 3. Seed reference id `x1:` plus the unpadded URL-safe base64 of the caller's seed-set id (the contract's `x1:B(seed_set_id)`). Seed-set identities are the runner's `seedset-a` and `other`, taken from the notation of the fixture bindings.
 4. Reconstruction fixtures (W17, TK10e) use `mode = reconstruction` with the identity label `ef4-supplied-reconstruction`. The contract names no label; the label is an adapter constant.
@@ -38,7 +38,17 @@ Unit tests (owner policy), mypy and lint beyond compilation, an independent orac
 
 ## Risks
 
-- The codec fallback does not re-check notional order on read: a stored notional-ordered cell is trusted once its canonical bytes match. The canonical byte check and the library's identity bindings still detect a changed record, but a forged, reordered cell with a valid encoding would not be refused on read.
+- Closed (see "Refresh"): the codec re-checks the notional rank on read, so a reordered cell with a valid encoding is refused `INVALID_CONTENT`.
 - The top-K cell is built by `object.__new__` in the library (`notional_cell`) and in the codec fallback; any later `replace` or constructor rebuild raises `INVALID_ORDER` until the amendment lands.
 - Two refusal codes differ at the I/O layer (above).
 - Session end and the seed scope (`open - 1` to `open`) are adapter choices; they are not in the contract and are visible in the API.
+
+## Refresh - October 28, 2026 (matches io `main` 31590b1)
+
+This section supersedes the statements above where they differ.
+
+- Coverage fails closed (io #51). A TRADE batch with rows and no declared `coverage` is refused `INVALID_SCHEMA` ("coverage not declared") at `tape.py` `trade_batch`; it is never defaulted to complete. A batch with no rows and no coverage is the declared empty batch (`Coverage(0, 0, True)`).
+- Rank-aware notional check (io-sdk codec, merged). See deviation 1: the decoder is keyed by the feature id `tape.top_k_notional` and refuses an out-of-rank cell `INVALID_CONTENT`. The risk "codec does not re-check notional order" is closed.
+- Refusal drivers unchanged: 73 of 75 recipes raise the contract code (RF18 and RF35 differ as described above); the shared constructor still refuses notional-ordered cells in library code paths, which is why the codec builds the cell itself.
+- Parquet round trip (executed, scratch driver, io `main` 31590b1, Python 3.12, pyarrow 20.0.0): a `tape.top_k_notional` result with a cell whose notional order differs from the size order (3 rows, k = 3) was written with `ParquetSink`, read back by its receipt and read again after closing and reopening the sink. Both readbacks are byte-equal to the library result under `encode_result`. A bar projection result with dollar outputs (`projection.up_dollar_volume`, `down_dollar_volume`, fraction) round trips the same way.
+- Bundles (executed): the `bundles` package does not carry EF4 results. `write_bundle` accepts only the `session.compute_trades.v1` shape and refuses an EF4 configuration `unsupported_version`. Its typed decoder (`_typed.py`) still rebuilds `TopKTrades` through the shared size-ranked constructor and refuses a notional-ordered cell (`ContractError`: "topK rows must be ranked"). Because no EF4 result can reach that decoder through `write_bundle`, this is recorded as an accepted limit, not changed here. Bundle support for EF4 would need both a producer shape and a feature-keyed decoder.
