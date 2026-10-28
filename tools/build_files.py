@@ -9,13 +9,13 @@ import shutil
 import sys
 import tempfile
 
-from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot
+from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot, IO_SDK
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE = '9a180da540a426d9cefb3edb34fc81c26a9bd5d9'
+CORE = '710fe05b812d4acc06d7e828c96ac1922e3203dc'
 PATHS = ('packages/files','packages/acquisition','packages/io-contracts','packages/io-sdk',
          'tests/files','tests/file_goldens.json','tests/files_probe.py','examples/files_consumer.py',
-         'tools/build_files.py','tools/build_foundation.py','requirements-dev.txt','.github/workflows/files.yml')
+         'tools/build_files.py','tools/build_foundation.py','tools/_versions.py','requirements-dev.txt')
 
 
 def main():
@@ -47,7 +47,7 @@ def main():
         for archive in archives:
             assert sha(archive)==sha(repeat/archive.name),'Nonrepeatable acquisition archive'
             inspect(archive,'equity-feature-files',[
-                'equity-feature-acquisition==0.1.0a0','equity-feature-io-sdk==0.1.0a2',
+                'equity-feature-acquisition==0.1.0a0',f'equity-feature-io-sdk=={IO_SDK}',
                 'pyarrow==20.0.0; extra == "parquet"','databento-dbn==0.70.0; extra == "dbn"',
                 'pyarrow==20.0.0; extra == "full"','databento-dbn==0.70.0; extra == "full"'])
         deps=sorted(dependencies.glob('*.whl'));assert len(deps)==5
@@ -75,7 +75,7 @@ def main():
                 run(py,'-m','pip','install','--no-deps','pyarrow==20.0.0','databento-dbn==0.70.0')
                 run(py,'-m','pip','check',cwd=cwd)
                 run(py,'-I',component/'tests/files_probe.py',cwd,report,'full',cwd=cwd)
-                after=fingerprint(py,cwd);assert before==after and len(before)==61
+                after=fingerprint(py,cwd);assert before==after and len(before)==62
                 public=json.loads(report.read_text());assert public['tests_run']==43
                 fp=hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest()
                 public.update({'light':json.loads(light.read_text()),'form':form,'source_commit':head,'core_before_sha256':fp,'core_after_sha256':fp})

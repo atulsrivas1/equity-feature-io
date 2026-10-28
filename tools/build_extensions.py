@@ -65,13 +65,13 @@ def main():
     core=args.core_root.resolve();commit=foundation.git(ROOT,'rev-parse','HEAD')
     assert foundation.git(core,'rev-parse',foundation.CORE_COMMIT)==foundation.CORE_COMMIT
     assert not foundation.git(ROOT,'status','--porcelain','--',*SCOPED),'Freeze source before qualification'
-    paths=foundation.git(ROOT,'ls-files','examples/third_party','tests/extensions','tools/build_extensions.py','tools/build_foundation.py','tests/probe_foundation.py','.github/workflows/extensions.yml').splitlines()
+    paths=foundation.git(ROOT,'ls-files','examples/third_party','tests/extensions','tools/build_extensions.py','tools/build_foundation.py','tools/_versions.py','tests/probe_foundation.py','.github/workflows/extensions.yml').splitlines()
     tracked={p:foundation.sha(ROOT/p) for p in paths};assert len(tracked)>=12
     output=ROOT/'dist-extensions';output.mkdir(exist_ok=True);assert not list(output.iterdir()),'Use a fresh dist-extensions directory'
     with tempfile.TemporaryDirectory(prefix='extension-build-',dir=ROOT/'work') as temporary:
         location=Path(temporary)
         pure=foundation.snapshot(core,foundation.CORE_COMMIT,location/'core',('packages/contracts','packages/features'))
-        source=foundation.snapshot(ROOT,commit,location/'component',('packages','examples/factory_consumer','examples/third_party','tests'))
+        source=foundation.snapshot(ROOT,commit,location/'component',('packages','examples/factory_consumer','examples/third_party','tests','tools/_versions.py'))
         deps=location/'dependencies'
         for folder in ('contracts','features'):foundation.build(pure/'packages'/folder,deps)
         for folder in ('io-contracts','io-sdk'):foundation.build(source/'packages'/folder,deps)

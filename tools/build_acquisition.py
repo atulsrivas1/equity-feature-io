@@ -9,14 +9,14 @@ import shutil
 import sys
 import tempfile
 
-from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot
+from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot, IO_CONTRACTS, IO_SDK
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE = '4689892117bdf70ef47726c1dee754e3e23b0658'
+CORE = '710fe05b812d4acc06d7e828c96ac1922e3203dc'
 PATHS = ('packages/acquisition','packages/io-contracts','tests/acquisition',
          'tests/acquisition_goldens.json','tests/acquisition_probe.py',
          'examples/acquisition_consumer.py','tools/build_acquisition.py',
-         'tools/build_foundation.py','requirements-dev.txt','.github/workflows/acquisition.yml')
+         'tools/build_foundation.py','tools/_versions.py','requirements-dev.txt')
 
 
 def main():
@@ -47,7 +47,7 @@ def main():
         archives=sorted(first.iterdir());assert len(archives)==2
         for archive in archives:
             assert sha(archive)==sha(repeat/archive.name),'Nonrepeatable acquisition archive'
-            inspect(archive,'equity-feature-acquisition',['equity-feature-io-contracts==0.1.0a2'])
+            inspect(archive,'equity-feature-acquisition',[f'equity-feature-io-contracts=={IO_CONTRACTS}'])
         deps=sorted(dependencies.glob('*.whl'));assert len(deps)==3
         forms=[]
         for form in ('wheel','sdist'):
@@ -69,7 +69,7 @@ def main():
                     else:shutil.copy2(source,target)
                 report=cwd/'report.json'
                 run(py,'-I',component/'tests/acquisition_probe.py',cwd,report,cwd=cwd)
-                after=fingerprint(py,cwd);assert before==after and len(before)==61
+                after=fingerprint(py,cwd);assert before==after and len(before)==62
                 public=json.loads(report.read_text());assert public['tests_run']==32
                 fp=hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest()
                 public.update({'form':form,'source_commit':head,'core_before_sha256':fp,'core_after_sha256':fp})

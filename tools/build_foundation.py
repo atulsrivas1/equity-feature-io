@@ -19,7 +19,7 @@ from _versions import CONTRACTS, IO_CONTRACTS, IO_SDK, OWN
 
 ROOT = Path(__file__).resolve().parents[1]
 EPOCH = 1700000000
-CORE_COMMIT = "7a6db8c2317de1ee9dd9116e0897cbf6445e359e"
+CORE_COMMIT = "710fe05b812d4acc06d7e828c96ac1922e3203dc"
 EXPECTED = {
     "equity-feature-io-contracts": [f"equity-feature-contracts=={CONTRACTS}"],
     "equity-feature-io-sdk": [f"equity-feature-io-contracts=={IO_CONTRACTS}"],
