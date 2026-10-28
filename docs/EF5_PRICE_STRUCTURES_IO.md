@@ -12,7 +12,7 @@ through `compute_ef5` and compared with the contract literals.
 - 89/89 result fixtures (534 runs, each output alone and jointly): status, reasons, expected and observed counts, witnesses, value
   by the contract acceptance rule and the echoed adjustment basis (carried by the input bindings, errata E-L2) match.
 - Adapter configurations are identical (parameters, identity, algorithm) to the library `build_ef5_config` for the same context.
-- The library result survives the SDK codec round trip (`encode_result` / `decode_result`) for bool, int64 and float64 columns.
+- The library result survives the SDK codec round trip (`encode_result` / `decode_result`) for bool, int64 and float64 columns, and a publish to a fresh DuckDB sink followed by `read` returns an equal result for every fixture (89 read-backs).
 - 59/59 refusal recipes raise the recorded code (12 codes); 31 are already raised at the adapter.
 
 Rulings honoured: E2 (rows delivered with coverage not declared are refused INVALID_SCHEMA at the adapter, `declare_coverage` has no

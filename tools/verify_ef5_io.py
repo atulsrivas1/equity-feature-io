@@ -22,6 +22,7 @@ import math
 import os
 import sys
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Any
 
 from equity_feature_contracts import (
@@ -32,7 +33,10 @@ from equity_feature_duckdb.price_structures import (
     CLOSE_COLUMNS, OHLCV_COLUMNS, make_ef5_batch, make_ef5_chunks, make_ef5_config, make_ef5_context,
 )
 from equity_feature_duckdb.relative_rv import IntradayRunSpec
+from equity_feature_duckdb_sink import DuckDBSink
+from equity_feature_io_contracts import SinkRequirements
 from equity_feature_io_sdk import decode_result, encode_result
+from equity_feature_io_sdk.publication import prepare_publication
 from equity_features_intraday import IntradayContext, IntradayRun, build_ef5_config, compute_ef5, require_ef5_capability
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -262,13 +266,30 @@ def apply(base: dict[str, Any], mutations: list[dict[str, Any]]) -> dict[str, An
     return fx
 
 
+LIMITS = SinkRequirements(max_results=100, max_chunk_bytes=1048576, max_total_bytes=10485760,
+                          max_result_cells=100000, max_evidence_rows=100000)
+
+
+def sink_readback(result: Any, label: str) -> list[str]:
+    """Publish one library result to a fresh DuckDB sink and require the read-back result to equal it (bool, int64, float64)."""
+    with TemporaryDirectory() as folder:
+        with DuckDBSink(Path(folder) / "destination.db", "ef5-gate") as sink:
+            envelope = prepare_publication((result,), destination_scope="ef5-gate", generation_id="generation",
+                                           job_id="job-" + label, partition_id="partition", limits=LIMITS)
+            session = sink.begin(envelope)
+            sink.write(session, 0, result)  # type: ignore[arg-type]
+            receipt = sink.commit(session)  # type: ignore[arg-type]
+            restored = sink.read(receipt)  # type: ignore[arg-type]
+    return [] if restored == (result,) else [f"{label}: DuckDB sink read-back differs from the library result"]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--contract")
     doc = json.loads(contract_path(parser.parse_args().contract).read_text(encoding="utf-8"))
     by_id = {fx["id"]: fx for key in LISTS for fx in doc[key]}
     problems: list[str] = []
-    runs = at_io = 0
+    runs = at_io = sinks = 0
     for fx in by_id.values():
         outputs = tuple(sorted(fx["expected"]))
         for features in [(f,) for f in outputs] + ([outputs] if len(outputs) > 1 else []):
@@ -279,6 +300,9 @@ def main() -> int:
                 problems.append(f"{fx['id']} {features}: refused {error.code.name}: {error}")
                 continue
             problems += [f"{fx['id']}: {p}" for p in compare(fx, result, config, features)]
+            if len(features) == len(outputs):
+                sinks += 1
+                problems += sink_readback(result, fx["id"])
             producer, availability, basis, unit, names, label, policy = parts
             library = build_ef5_config(producer, context, availability=availability, adjustment=basis, price_unit=unit,
                                        adjustment_label=label, adjustment_policy_version=policy, **names)
@@ -303,7 +327,7 @@ def main() -> int:
         print(f"{len(problems)} MISMATCH(ES)")
         return 1
     print(f"EF5 io: {len(by_id)} result fixtures ({runs} runs), adapter configurations equal the library builder, SDK round "
-          f"trips equal; {len(doc['refusal_fixtures'])} refusals ({len(codes)} codes) raise the recorded code "
+          f"trips equal, {sinks} DuckDB sink read-backs equal; {len(doc['refusal_fixtures'])} refusals ({len(codes)} codes) raise the recorded code "
           f"({at_io} already at the adapter)")
     return 0
 
