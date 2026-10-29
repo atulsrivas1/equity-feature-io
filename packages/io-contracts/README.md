@@ -5,3 +5,7 @@ Experimental0.1.0a1: Typed factory/configuration/credential/error and structural
 ## EQ125 publication v1
 
 Matching I/O contracts/SDK0.1.0a2 add immutable publication envelopes/receipts/capabilities and safe closed codec/lifecycle/conformance. See public API: https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/PUBLICATION.md. Full canonical records/units/quality/evidence/availability survive; logical conformance is separate from backend/process durability. No worker/backend/source fetch is hidden in these packages.
+
+## Contract catalogue (0.1.0a4)
+
+Internal, synthetic, pre-release. The package carries a generated, read-only catalogue of the per-producer input and output views of the EF3, EF4 and EF5 contracts as data files under `equity_feature_io_contracts/catalogue/` (`index.json`, `INDEX.md`, and `<producer_id>/input.{json,md}` and `output.{json,md}`). The same bytes are in the repository at `docs/contracts/catalogue/`; a drift gate keeps both equal to a regeneration from the core contract files. Authority: core frozen contract; on conflict core wins and the gate fails. Format and use: [CATALOGUE.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/CATALOGUE.md). No Python lookup module is shipped in this version.
