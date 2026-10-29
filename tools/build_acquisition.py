@@ -12,7 +12,8 @@ import tempfile
 from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot, IO_CONTRACTS, IO_SDK
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE = '710fe05b812d4acc06d7e828c96ac1922e3203dc'
+CORE = '98778e79f9422904bbb043d067a7ce9e77675311'
+INVARIANT_FILES = 123  # installed files fingerprinted before and after the run (core, I/O contracts, SDK, this distribution)
 PATHS = ('packages/acquisition','packages/io-contracts','tests/acquisition',
          'tests/acquisition_goldens.json','tests/acquisition_probe.py',
          'examples/acquisition_consumer.py','tools/build_acquisition.py',
@@ -69,7 +70,7 @@ def main():
                     else:shutil.copy2(source,target)
                 report=cwd/'report.json'
                 run(py,'-I',component/'tests/acquisition_probe.py',cwd,report,cwd=cwd)
-                after=fingerprint(py,cwd);assert before==after and len(before)==62
+                after=fingerprint(py,cwd);assert before==after and len(before)==INVARIANT_FILES, len(before)
                 public=json.loads(report.read_text());assert public['tests_run']==32
                 fp=hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest()
                 public.update({'form':form,'source_commit':head,'core_before_sha256':fp,'core_after_sha256':fp})
@@ -81,7 +82,7 @@ def main():
             'python':platform.python_version(),'system':platform.system(),
             'archives':{p.name:sha(p) for p in archives+deps},'source_sha256':source_bytes,'forms':forms}
         (output/'manifest.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print('Repeat acquisition archives, fresh wheel/sdist,32 independent tests per form,61 core files invariant PASS')
+    print('Repeat acquisition archives, fresh wheel/sdist,32 independent tests per form,%d installed files invariant PASS' % INVARIANT_FILES)
 
 
 if __name__=='__main__':

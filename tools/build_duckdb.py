@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))  # tools/_versions.py, 
 from _versions import CONTRACTS, OWN
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE_COMMIT = "710fe05b812d4acc06d7e828c96ac1922e3203dc"
+CORE_COMMIT = "98778e79f9422904bbb043d067a7ce9e77675311"
 QUALIFICATION_DECLARATIONS = ('docs/EQ122_EXTRACTION_INVENTORY.json', 'docs/EF1_SOURCE_EVOLUTION.json')
 
 

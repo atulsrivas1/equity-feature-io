@@ -12,7 +12,8 @@ import tempfile
 from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot, IO_SDK
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE = '710fe05b812d4acc06d7e828c96ac1922e3203dc'
+CORE = '98778e79f9422904bbb043d067a7ce9e77675311'
+INVARIANT_FILES = 123  # installed files fingerprinted before and after the run (core, I/O contracts, SDK, this distribution)
 PATHS = ('packages/files','packages/acquisition','packages/io-contracts','packages/io-sdk',
          'tests/files','tests/file_goldens.json','tests/files_probe.py','examples/files_consumer.py',
          'tools/build_files.py','tools/build_foundation.py','tools/_versions.py','requirements-dev.txt')
@@ -75,7 +76,7 @@ def main():
                 run(py,'-m','pip','install','--no-deps','pyarrow==20.0.0','databento-dbn==0.70.0')
                 run(py,'-m','pip','check',cwd=cwd)
                 run(py,'-I',component/'tests/files_probe.py',cwd,report,'full',cwd=cwd)
-                after=fingerprint(py,cwd);assert before==after and len(before)==62
+                after=fingerprint(py,cwd);assert before==after and len(before)==INVARIANT_FILES, len(before)
                 public=json.loads(report.read_text());assert public['tests_run']==43
                 fp=hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest()
                 public.update({'light':json.loads(light.read_text()),'form':form,'source_commit':head,'core_before_sha256':fp,'core_after_sha256':fp})
@@ -87,7 +88,7 @@ def main():
             'python':platform.python_version(),'system':platform.system(),
             'archives':{p.name:sha(p) for p in archives+deps},'source_sha256':source_bytes,'forms':forms}
         (output/'manifest.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print('Repeat files archives, default/light and full fresh wheel/sdist,43 independent tests per form,61 core files invariant PASS')
+    print('Repeat files archives, default/light and full fresh wheel/sdist,43 independent tests per form,%d installed files invariant PASS' % INVARIANT_FILES)
 
 
 if __name__=='__main__':

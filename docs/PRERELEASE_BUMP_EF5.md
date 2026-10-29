@@ -21,4 +21,25 @@ packages are unchanged. No tag, no publish, no release claim. Single source: eac
 
 `docs/EF1_SOURCE_EVOLUTION.json` markers and `tools/check_extraction.py` now expect 0.1.0a11 (check passes).
 
-**Still blocking any release claim:** the commit-pinned builders (`tools/build_*.py`, `qualify_*.py` with commit constants) still name pre-bump commits and need a re-pin after this bump merges (follow-up PR set); they are not executed end to end until then.
+## Builder re-pin after the EF5 bump (closed in part)
+
+Commit pins now name the post-bump main commits (core 98778e7, io 94217cf, workers 99b5fed; core `tools/_versions.py` `SIBLING_COMMITS` and `SIBLINGS` carry them and the
+sibling versions). Builders were run end to end with the pinned venv against detached checkouts of those commits; each builder builds its archives twice and asserts
+repeat equality. Independently, a fresh double build of all 27 packages of the three repositories (SOURCE_DATE_EPOCH, sdists normalized as by
+`tools/build_explanations.py`) is byte-equal for wheels and equal for sdists: 27 of 27. Wheel names confirm intraday 0.1.0a5, duckdb 0.1.0a11, workers 0.1.0a17,
+client 0.1.0a1, provenance 0.1.0a4 and the earlier versions (contracts 0.0.4a5, features 0.0.4a6, evidence 0.1.0a3, io-sdk 0.1.0a3, mcp 0.1.0a2, duckdb-sink 0.1.0a1,
+parquet 0.1.0a2, bundles 0.1.0a2); the conformance and r10 archives carry duckdb 0.1.0a11 and workers 0.1.0a17, the supplied-inputs archive carries intraday 0.1.0a5.
+
+Also in this change: `tools/verify_versions.py` now gates the version pins stated in package READMEs (`name==V`, ``name`V`` or `shortV`; sections headed by an older
+version are history and skipped). An altered README fails; stale statements in the workers README were corrected.
+
+**Ran and passed (io):** build_foundation, build_bundles, build_duckdb_sink, build_parquet, build_extensions, build_acquisition, build_files (the installed-file fingerprint
+count of the acquisition and files builders is now 123).
+**Not run (io):** build_duckdb (obsolete: it snapshots `packages/duckdb` from core, which moved here), build_matrix (accepted archive matrix at fixed historical commits, deliberately unchanged).
+
+## Known limits of the README version gate
+
+`tools/verify_versions.py` checks version statements of the forms `name==V`, ``name`V`` and `shortV` (for example `contracts0.0.4a5`) in package READMEs. It does not cover: a wrong version in a
+heading (a heading that names an older version opens a section treated as history and skipped); names glued to a version without a separator that the patterns do not know (for example
+`workers0.1.0a12`, `workera17`, `MCP0.1.0a1`); versions in prose without the distribution name; and README text outside `packages/*/README.md`. Treat the gate as a net for the common current-pin
+statements, not as proof that every README is current. One stale pin of this kind in the io acquisition README was corrected by hand.

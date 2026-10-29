@@ -40,6 +40,30 @@ def constant(path: Path, name: str) -> str:
     return ""
 
 
+_README = re.compile(r"(?<![\w-])(equity-features?(?:-[a-z0-9]+)*)`?(?:==)?\s?(0\.\d+\.\d+a\d+)")
+_SHORT = re.compile(r"(?<![\w-])(contracts|features|evidence|diagnostics|conformance|continuous|intraday|explanations|labels|strategies)\s?(0\.\d+\.\d+a\d+)")
+
+
+def check_readmes(directory: Path, known: dict[str, str], short: dict[str, str]) -> None:
+    """Every version a package README states for a distribution must equal the table (gate against stale or altered pins)."""
+    for readme in sorted(directory.glob("*/README.md")):
+        label = str(readme.relative_to(ROOT))
+        historical = False
+        for line in readme.read_text(encoding="utf-8").split(chr(10)):
+            found = [(n, v) for n, v in _README.findall(line) if n in known]
+            if line.startswith("#"):
+                # A heading that names an older version of a distribution opens a historical section: its text is a record, not a pin.
+                historical = any(v != known[n] for n, v in found)
+                continue
+            if historical:
+                continue
+            for name, version in found:
+                expect(f"{label} states {name}", version, known[name])
+            for name, version in _SHORT.findall(line):
+                if name in short:
+                    expect(f"{label} states {name}", version, short[name])
+
+
 for pyproject in sorted([*(ROOT / "packages").glob("*/pyproject.toml"), *(ROOT / "examples").glob("*/pyproject.toml")]):
     project = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]
     label = str(pyproject.parent.relative_to(ROOT))
@@ -72,6 +96,8 @@ for path in ("examples/factory_consumer/src/equity_feature_factory_fixture/publi
              "examples/third_party/src/equity_feature_example_extensions/sink.py"):
     found = set(re.findall(r"0\.0\.4a\d+", (ROOT / path).read_text(encoding="utf-8")))
     expect(f"{path} canonical literals", found, {CONTRACTS})
+
+check_readmes(ROOT / "packages", dict(VERSIONS), {n.removeprefix("equity-feature-").removeprefix("equity-"): v for n, v in VERSIONS.items()} | {"intraday": VERSIONS.get("equity-features-intraday", "")})
 
 if errors:
     raise SystemExit("version drift:\n" + "\n".join(errors))
