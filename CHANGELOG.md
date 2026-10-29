@@ -1,3 +1,7 @@
+## Unreleased - builder retirement
+
+`tools/build_duckdb.py` is retired (the adapter moved out of core); `tools/build_matrix.py` is deferred. See docs/RETIRED_BUILDERS.md.
+
 ## Unreleased - coordinated pre-release bump for the EF5 layers
 
 duckdb 0.1.0a11 (EF5 price_structures adapter). Record: [docs/PRERELEASE_BUMP_EF5.md](docs/PRERELEASE_BUMP_EF5.md).
