@@ -2,7 +2,7 @@
 
 Status: source authored against the frozen EF5 contract (`ef5.candle`, `ef5.structure`, `ef5.technical`; core
 `docs/ef5/PRICE_STRUCTURES_CONTRACT_PROPOSAL.md`, errata `EF5_LIBRARY_ERRATA.md`) by the I/O layer. See the
-[supplied-input API](api/EF5_PRICE_STRUCTURES_INPUTS.md). No mathematics, no sink/SDK/version change, no package version bump,
+[supplied-input API](api/EF5_PRICE_STRUCTURES_INPUTS.md). No mathematics, no sink/SDK/version change, no package version bump at authoring (superseded: duckdb a10->a11 in core `docs/PRERELEASE_BUMP_EF5.md`),
 no new unit tests (policy); the fixture gate is `tools/verify_ef5_io.py`.
 
 Executed (Python 3.12, pinned venv, core main with the merged EF5 library): the gate expanded every contract fixture to supplied
@@ -25,3 +25,5 @@ exist only inside the gate, which states and passes them explicitly.
 
 Not executed: the worker, mypy beyond `packages/duckdb/src`, DuckDB-backed observed sources, the sink readback in the shared runner,
 bundles for the new roles (the bundles format is `session.compute_trades.v1` only), rights and release gates.
+
+Posture: internal synthetic data only, not releasable. `ef5.*` is not exposed via the service or MCP. Builders are not all run (see the EF5 bump record `docs/PRERELEASE_BUMP_EF5.md` in core).
