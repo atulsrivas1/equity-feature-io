@@ -20,3 +20,5 @@ packages are unchanged. No tag, no publish, no release claim. Single source: eac
 - DuckDB: the receipt `adapter_version` default is now 0.1.0a11, so acquisition receipt identity digests differ from a10 by construction.
 
 `docs/EF1_SOURCE_EVOLUTION.json` markers and `tools/check_extraction.py` now expect 0.1.0a11 (check passes).
+
+**Still blocking any release claim:** the commit-pinned builders (`tools/build_*.py`, `qualify_*.py` with commit constants) still name pre-bump commits and need a re-pin after this bump merges (follow-up PR set); they are not executed end to end until then.
