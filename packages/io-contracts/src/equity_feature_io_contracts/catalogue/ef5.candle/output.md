@@ -16,6 +16,8 @@ Scope: internal, synthetic, pre-release. Authority: core frozen contract; on con
 | core commit | `487284cfe86b155330fca80dced74bc556acba12` |
 | sha256 (LF bytes) | `bcc0d674126404736882c8121cfb18501aae325ecd3866e44b2d6eaada34042e` |
 
+Amendment rulings not extracted (see core amendment, commit+sha256; core marks the amendments proposed): `docs/ef5/EF5_SHARED_AMENDMENT.json` commit `7ae80c8576fc4e572af1fef0659de07f5f43b0b0` sha256 `972b0cdb483a46117f7e42f60572e4cec5f48b3e9a5df99b6e32c3eae4d84780`.
+
 ## 1. Feature ids (7)
 
 | Feature id | dtype | unit | scale | available when | other core fields |

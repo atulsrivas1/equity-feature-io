@@ -16,6 +16,8 @@ Scope: internal, synthetic, pre-release. Authority: core frozen contract; on con
 | core commit | `cfb4ce1eaa8ebe104364603979deb8a91d1e5dd2` |
 | sha256 (LF bytes) | `b80f7369a3c40f00679b1c261f34b501fb4c79dde3a318b94396ee5fb35dd948` |
 
+Amendment rulings not extracted (see core amendment, commit+sha256; core marks the amendments proposed): `docs/ef3/EF3_SHARED_AMENDMENT.json` commit `01c4d6d81633ccb53d95bc1a8a1826c5cc6631f7` sha256 `36d8704e914b58acc3277fa2fadf3a6415a734c03cf4b14f47672376d0e9c885`.
+
 ## 1. Roles and slots (library order)
 
 | Slot | Role | Batch kind | Nullable |
@@ -110,6 +112,6 @@ The core contract states no separate refusal order; refusal fixtures and codes a
 
 ## 7. Adapter API
 
-- io module: `equity_feature_duckdb.breadth_adaptive`
+- reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.breadth_adaptive`
 - call API: [docs/api/EF3_BREADTH_ADAPTIVE_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF3_BREADTH_ADAPTIVE_INPUTS.md)
 - source checkpoint: `docs/EF3_BREADTH_ADAPTIVE_IO.md`

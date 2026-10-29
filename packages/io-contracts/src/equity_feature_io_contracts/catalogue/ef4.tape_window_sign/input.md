@@ -16,6 +16,8 @@ Scope: internal, synthetic, pre-release. Authority: core frozen contract; on con
 | core commit | `e25b44d82bc41bdaa911cd997d8ae533503f635a` |
 | sha256 (LF bytes) | `fc68a02ea2904ebf338ac4e92725b6020445f601d97a7fb0b50e9f04d42d72c3` |
 
+Amendment rulings not extracted (see core amendment, commit+sha256; core marks the amendments proposed): `docs/ef4/EF4_SHARED_AMENDMENT.json` commit `932b1ca0641cab60316c97e1f0f779dfc7ed2b7b` sha256 `252f58cb2b75574e03b698591968f9082ffc411efc8d1c97237f77aa0b1f8fcf`.
+
 ## 1. Roles and slots (library order)
 
 | Slot | Role | Batch kind | Nullable |
@@ -62,6 +64,6 @@ The core contract states no separate refusal order; refusal fixtures and codes a
 
 ## 7. Adapter API
 
-- io module: `equity_feature_duckdb.tape`
+- reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.tape`
 - call API: [docs/api/EF4_TAPE_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF4_TAPE_INPUTS.md)
 - source checkpoint: `docs/EF4_TAPE_IO.md`

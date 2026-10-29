@@ -16,6 +16,8 @@ Scope: internal, synthetic, pre-release. Authority: core frozen contract; on con
 | core commit | `609d16e9da056163c607fe14c9d2301d66923912` |
 | sha256 (LF bytes) | `5a8decfa55ccb4066a6be145e89871f22cd92428b14a7b4124c8be7e4b03a05b` |
 
+Amendment rulings not extracted (see core amendment, commit+sha256; core marks the amendments proposed): `docs/ef4/EF4_SHARED_AMENDMENT.json` commit `932b1ca0641cab60316c97e1f0f779dfc7ed2b7b` sha256 `252f58cb2b75574e03b698591968f9082ffc411efc8d1c97237f77aa0b1f8fcf`.
+
 ## 1. Roles and slots (library order)
 
 | Slot | Role | Batch kind | Nullable |
@@ -155,6 +157,6 @@ Parameters are listed as the core contract states them. Where core states a defa
 
 ## 7. Adapter API
 
-- io module: `equity_feature_duckdb.ef4_projections`
+- reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.ef4_projections`
 - call API: [docs/api/EF4_PROJECTIONS_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF4_PROJECTIONS_INPUTS.md)
 - source checkpoint: `docs/EF4_PROJECTIONS_IO.md`

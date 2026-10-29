@@ -16,6 +16,8 @@ Scope: internal, synthetic, pre-release. Authority: core frozen contract; on con
 | core commit | `487284cfe86b155330fca80dced74bc556acba12` |
 | sha256 (LF bytes) | `bcc0d674126404736882c8121cfb18501aae325ecd3866e44b2d6eaada34042e` |
 
+Amendment rulings not extracted (see core amendment, commit+sha256; core marks the amendments proposed): `docs/ef5/EF5_SHARED_AMENDMENT.json` commit `7ae80c8576fc4e572af1fef0659de07f5f43b0b0` sha256 `972b0cdb483a46117f7e42f60572e4cec5f48b3e9a5df99b6e32c3eae4d84780`.
+
 ## 1. Roles and slots (library order)
 
 | Slot | Role | Batch kind | Nullable |
@@ -100,6 +102,6 @@ Parameters are listed as the core contract states them. Where core states a defa
 
 ## 7. Adapter API
 
-- io module: `equity_feature_duckdb.price_structures`
+- reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.price_structures`
 - call API: [docs/api/EF5_PRICE_STRUCTURES_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF5_PRICE_STRUCTURES_INPUTS.md)
 - source checkpoint: `docs/EF5_PRICE_STRUCTURES_IO.md`

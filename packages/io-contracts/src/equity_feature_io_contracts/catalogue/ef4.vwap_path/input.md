@@ -16,6 +16,8 @@ Scope: internal, synthetic, pre-release. Authority: core frozen contract; on con
 | core commit | `46d38e294bf4b0744905ce4eec6f34dfef87ab7a` |
 | sha256 (LF bytes) | `31954d7843a70f4258fddeec15bc32892565f1229e7f1a2de9dbb0c84fa98b57` |
 
+Amendment rulings not extracted (see core amendment, commit+sha256; core marks the amendments proposed): `docs/ef4/EF4_SHARED_AMENDMENT.json` commit `932b1ca0641cab60316c97e1f0f779dfc7ed2b7b` sha256 `252f58cb2b75574e03b698591968f9082ffc411efc8d1c97237f77aa0b1f8fcf`.
+
 ## 1. Roles and slots (library order)
 
 | Slot | Role | Batch kind | Nullable |
@@ -113,6 +115,6 @@ Parameters are listed as the core contract states them. Where core states a defa
 
 ## 7. Adapter API
 
-- io module: `equity_feature_duckdb.quote_vwap`
+- reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.quote_vwap`
 - call API: [docs/api/EF4_QUOTE_VWAP_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF4_QUOTE_VWAP_INPUTS.md)
 - source checkpoint: `docs/EF4_QUOTE_VWAP_IO.md`

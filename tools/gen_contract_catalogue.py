@@ -236,6 +236,8 @@ def banner(view: dict[str, Any], title: str) -> list[str]:
         f"| schema_version | `{view['schema_version']}` |", f"| status | {view['status']} (core text: {cell(view['source_status'])}) |",
         f"| source core path | [{s['core_path']}]({s['core_link']}) |", f"| core commit | `{s['core_commit']}` |",
         f"| sha256 (LF bytes) | `{s['sha256_lf']}` |", "",
+        "Amendment rulings not extracted (see core amendment, commit+sha256; core marks the amendments proposed): "
+        + "; ".join(f"`{r['core_path']}` commit `{r['core_commit']}` sha256 `{r['sha256_lf']}`" for r in s["related_core_files_not_extracted"]) + ".", "",
     ]
 
 
@@ -260,7 +262,7 @@ def input_md(v: dict[str, Any]) -> bytes:
     ref = {k: x for k, x in v["rules"].items() if k in ("refusal_precedence", "refusal_model", "shared_validator_split")}
     L += render_value(ref) if ref else ["The core contract states no separate refusal order; refusal fixtures and codes are in the core file."]
     a = v["adapter"]
-    L += ["", "## 7. Adapter API", "", f"- io module: `{a['io_module']}`", f"- call API: [{a['api_page']}]({a['api_link']})", f"- source checkpoint: `{a['checkpoint']}`", ""]
+    L += ["", "## 7. Adapter API", "", f"- reference storage module (the project's own storage package; never the data supplier): `{a['io_module']}`", f"- call API: [{a['api_page']}]({a['api_link']})", f"- source checkpoint: `{a['checkpoint']}`", ""]
     return "\n".join(L).encode("ascii") if False else ("\n".join(L)).encode("utf-8")
 
 

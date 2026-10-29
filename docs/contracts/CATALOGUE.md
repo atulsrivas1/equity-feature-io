@@ -32,6 +32,12 @@ The catalogue is a generated, read-only view of what each producer takes in (inp
 
 `contract_version` (core `policy_version`), `status`, source core path, core commit (the last core commit that touched the file, as of the ref used), sha256 of the LF bytes of the source, and the authority line. `status` is read only from the leading words of the core `coordinator_freeze` text: `Frozen as ...` gives `frozen`, `Proposed freeze ...` gives `proposed`. The core status text is kept verbatim as `source_status`. Amendment files named in `related_core_files_not_extracted` (the shared amendments of EF3, EF4 and EF5) are referenced with commit and sha256 but their rulings are not extracted in this version; read them in core.
 
+Amendment rulings are not extracted in this version, and core marks those amendments as proposed; each page says so. Extracting them is a later story.
+
+Four producers show `proposed` because core's freeze text still reads "Proposed freeze", although they are implemented and accepted: `ef4.tape_window_sign`, `ef4.trade_top_k_notional`, `ef4.quote_dynamics`, `ef4.vwap_path`. The catalogue shows core's text as is and adds no status map. Core wins on conflict; when core corrects its text, regeneration picks it up.
+
+The adapter module on each page is labelled the reference storage module: the project's own storage package, never the supplier of data.
+
 ## What is not in the views
 
 Every core top-level key is either parsed into a view, listed under `excluded_core_keys` in `index.json` with a reason (calculation semantics, decision record, test evidence, process, per-source matrix), or listed as unparsed. Unparsed keys are never dropped. The gate fails on any unparsed key, so a new core key forces an explicit decision in the extractor.
