@@ -149,6 +149,28 @@ Parameters are listed as the core contract states them. Where core states a defa
   - **data**: producer rules over otherwise valid data: cross-fact BOUNDS (leg start not before end) and checked-sum OVERFLOW of a published int64
   - **rule**: A refusal raises the code of the first stage, in this order, that has a fault; a later stage is not evaluated for a row that failed an earlier one (so a row rejected by the shared validator is not also reported as a grid mismatch). Every refusal fixture is a single-fault recipe: exactly one defect, in the stage recorded in `stage`, and no other check fires on the mutated input (an independent reviewer audit collects every trigger, not only the first). A row that carries two defects is not a refusal fixture.
 
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | shared validator | BPR11, BPR15 | negative volume |
+| `DUPLICATE` | shared validator | BPR13 | bar 1 delivered with the (instrument, session, start, end) identity of bar 0 |
+| `INCOMPATIBLE_VERSION` | library | BPR04 | unsupported policy label |
+| `INCONSISTENT_IDENTITY` | producer admission | BPR16 | bar 0 carries session S0 inside the S1 reset epoch |
+| `INVALID_CONFIG` | library | BPR01, BPR02, BPR03 | an unknown parameter (window) is supplied: the epoch-to-date projection has no window |
+| `INVALID_ORDER` | shared validator | BPR14 | bars 1 and 2 delivered in swapped order (each interval is a governed slot) |
+| `INVALID_SCHEMA` | producer admission | BPR10 | float volume |
+| `INVALID_SCHEMA` | shared validator | BPR05, BPR06, BPR07, BPR08, BPR09 | high below low |
+| `INVALID_UNIT` | producer admission | BPR17, BPR18, BPR19 | batch price scale differs from the config price unit scale (role bars) |
+| `OVERFLOW` | producer admission | BPR12 | two up bars of 2^62 shares each: up_volume 2^63 exceeds int64 when up_volume is the selected output |
+| `UNKNOWN_FEATURE` | library | BPR21 | an extra requested feature id outside this producer's header set (the selected outputs stay requested) |
+| `UNSUPPORTED_ADJUSTMENT` | producer admission | BPR20 | batch adjustment basis differs from the config adjustment (role bars) |
+| `UNSUPPORTED_CAPABILITY` | library | BPR22, BPR23, BPR24 | update is not a supported capability (batch and full replay only) |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
+
 ## 7. Adapter API
 
 - reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.ef4_projections`

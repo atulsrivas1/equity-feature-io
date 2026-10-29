@@ -171,5 +171,114 @@
       "worker_614": "routes each selected output to its own operands only (a sector gap never blocks a market comparison; a missing count never blocks a volume rate), shares bounded closures and facts, keeps independent readiness, executes one config per complete result, binds inputs and the config digest and persists the library result unchanged; direct, adapter, worker and stored results must be identical, including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "SPR12"
+      ],
+      "example": "daily row 2 delivered with the (instrument, session) identity of row 1 (DAILY rows are unique per instrument and session)"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": "library",
+      "fixture_ids": [
+        "SPR07"
+      ],
+      "example": "unsupported policy label"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "SPR14"
+      ],
+      "example": "daily row 2 carries instrument Y in the single-instrument daily role"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": "library",
+      "fixture_ids": [
+        "SPR01",
+        "SPR02",
+        "SPR03",
+        "SPR04",
+        "SPR05",
+        "SPR06"
+      ],
+      "example": "window missing"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "SPR13"
+      ],
+      "example": "daily rows 2 and 3 delivered in swapped order (distinct sessions, the second starts before the first ends)"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "SPR10"
+      ],
+      "example": "float close"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "SPR08",
+        "SPR09"
+      ],
+      "example": "zero close"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "SPR15",
+        "SPR16",
+        "SPR17"
+      ],
+      "example": "batch price scale differs from the config price unit scale (role daily)"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "SPR11"
+      ],
+      "example": "close 2^63 exceeds int64"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "SPR19"
+      ],
+      "example": "an extra requested feature id outside this producer's header set (the selected outputs stay requested)"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "SPR18"
+      ],
+      "example": "batch adjustment basis differs from the config adjustment (role daily)"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "SPR20",
+        "SPR21",
+        "SPR22"
+      ],
+      "example": "update is not a supported capability (batch and full replay only)"
+    }
+  ]
 }

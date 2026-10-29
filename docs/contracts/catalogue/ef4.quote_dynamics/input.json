@@ -130,5 +130,163 @@
       "worker_ef4": "routes selected outputs, shares one admitted interval or prepared series across outputs and configs, keeps independent readiness, executes one config per complete result, binds inputs and the config digest and persists the library result unchanged; direct, adapter, worker and stored results identical including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ05",
+        "RQ06"
+      ],
+      "example": "row event_ns before the interval start"
+    },
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RQ07",
+        "RQ08",
+        "RQ09"
+      ],
+      "example": "interval bounds fact with start >= end"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RQ01",
+        "RQ02",
+        "RQ25"
+      ],
+      "example": "two quote rows with the same event_id"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ34"
+      ],
+      "example": "unsupported policy_version label"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ22",
+        "RQ23",
+        "RQ24",
+        "RQ26",
+        "RQ27"
+      ],
+      "example": "row instrument differs from the target entity"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ28",
+        "RQ29",
+        "RQ30",
+        "RQ31",
+        "RQ32",
+        "RQ33"
+      ],
+      "example": "evidence_limit above 10000"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RQ03",
+        "RQ04"
+      ],
+      "example": "rows not ordered by (event_ns, order_key)"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ12",
+        "RQ13"
+      ],
+      "example": "quotes role holding a TRADE batch"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RQ10",
+        "RQ11"
+      ],
+      "example": "float price in the bid column"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ16"
+      ],
+      "example": "batch scale differs from the config price unit"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RQ15"
+      ],
+      "example": "quote batch without a price unit"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RQ14"
+      ],
+      "example": "bid above int64"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ35"
+      ],
+      "example": "feature id that is not one of the nine quote_dynamics headers"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ17"
+      ],
+      "example": "adjustment basis differs from the config"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ36"
+      ],
+      "example": "update, restore or merge requested"
+    },
+    {
+      "error_code": "UNSUPPORTED_SAMPLING",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RQ19",
+        "RQ20",
+        "RQ21"
+      ],
+      "example": "trade-snapshot quotes never satisfy a continuous requirement"
+    },
+    {
+      "error_code": "UNSUPPORTED_SAMPLING",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RQ18"
+      ],
+      "example": "quote batch with sampling 'none'"
+    }
+  ]
 }

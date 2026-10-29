@@ -142,5 +142,175 @@
   "rules": {
     "reset_mode": "epoch reset mode only"
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB09",
+        "RB24",
+        "RO09",
+        "RO13",
+        "RA05",
+        "RA15"
+      ],
+      "example": "negative cumulative volume in the price column"
+    },
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RB11"
+      ],
+      "example": "membership interval with end <= start"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB03",
+        "RA02"
+      ],
+      "example": "ordered_history: member b has two stints that overlap in time (even if only one contains C): same identity at the same time, extension of contract E RF12"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RB01",
+        "RB02",
+        "RO01",
+        "RA01"
+      ],
+      "example": "declared population lists member a twice (same instrument, session, reference_id): contract E RF12 / OQ-7"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB20",
+        "RO11",
+        "RA10"
+      ],
+      "example": "policy_version other than ef3-breadth1"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB04",
+        "RB05",
+        "RB06",
+        "RB07",
+        "RB25",
+        "RO02",
+        "RO08",
+        "RA04",
+        "RA13"
+      ],
+      "example": "a fact role carries a row for member z that is not declared in the population (never silently dropped)"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB16",
+        "RB17",
+        "RB18",
+        "RB19",
+        "RB29",
+        "RO03",
+        "RO04",
+        "RO05",
+        "RO06",
+        "RO15",
+        "RA08",
+        "RA09",
+        "RA16",
+        "RA17"
+      ],
+      "example": "near_high tolerance 5/4 (above 1)"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RA03"
+      ],
+      "example": "sequence decreases while event time increases"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RB08",
+        "RA14"
+      ],
+      "example": "ordered_history: the stints of ONE member are not in (effective_start_ns, reference_id) order. The shared validator checks order per (instrument, session) group, so a one-row-per-member role (instrument_id = member) can never raise INVALID_ORDER; the check applies to multi-stint membership intervals and to the adaptive stream only"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB13",
+        "RB14",
+        "RB15",
+        "RB28",
+        "RB26",
+        "RO07",
+        "RO14",
+        "RA07",
+        "RA12"
+      ],
+      "example": "a role carries a fact_kind of another role"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "shared compatibility check",
+      "fixture_ids": [
+        "RB12",
+        "RB30",
+        "RO10"
+      ],
+      "example": "two roles declare different PriceUnit (scale or currency)"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB23",
+        "RB27"
+      ],
+      "example": "sum of advancing members volumes above 2^63-1 with up_volume selected (published value out of int64; whole request refused)"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB21"
+      ],
+      "example": "selected feature id not produced by session_breadth"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RB10",
+        "RA06"
+      ],
+      "example": "vwap factor_den = 0 (rational factors must be positive)"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RB22",
+        "RO12",
+        "RA11"
+      ],
+      "example": "update, restore or merge requested (no state capability in v1)"
+    }
+  ]
 }

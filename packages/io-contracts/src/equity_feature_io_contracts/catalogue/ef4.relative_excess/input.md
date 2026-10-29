@@ -159,6 +159,28 @@ Parameters are listed as the core contract states them. Where core states a defa
   - **data**: producer rules over otherwise valid data: cross-fact BOUNDS (leg start not before end) and checked-sum OVERFLOW of a published int64
   - **rule**: A refusal raises the code of the first stage, in this order, that has a fault; a later stage is not evaluated for a row that failed an earlier one (so a row rejected by the shared validator is not also reported as a grid mismatch). Every refusal fixture is a single-fault recipe: exactly one defect, in the stage recorded in `stage`, and no other check fires on the mutated input (an independent reviewer audit collects every trigger, not only the first). A row that carries two defects is not a refusal fixture.
 
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | producer admission | RXR19 | start witness time not before the end witness time (cross-fact check of one leg) |
+| `DUPLICATE` | producer admission | RXR28 | two membership facts for the same instrument (distinct caller reference_ids, so the library detects it) |
+| `DUPLICATE` | shared validator | RXR20 | two prior_close start facts for X: the expansion derives reference_id from (kind, profile, slot), so both carry the same reference_id |
+| `INCOMPATIBLE_VERSION` | library | RXR14 | unsupported policy label |
+| `INCONSISTENT_IDENTITY` | library | RXR15, RXR16, RXR17 | self-benchmark: primary_benchmark_id equals the instrument X (X start and end facts already exist) |
+| `INCONSISTENT_IDENTITY` | producer admission | RXR18 | a leg fact for an instrument that is neither the target nor a declared benchmark |
+| `INVALID_CONFIG` | library | RXR01, RXR02, RXR03, RXR04, RXR05, RXR06 (+7 more) | primary_benchmark_id missing while a primary output is selected (the primary benchmark facts are removed so the config is the only fault) |
+| `INVALID_SCHEMA` | producer admission | RXR21, RXR22, RXR23, RXR24, RXR25, RXR26 (+1 more) | zero start price |
+| `INVALID_UNIT` | producer admission | RXR30, RXR31, RXR32 | batch price scale differs from the config price unit scale (role legs) |
+| `OVERFLOW` | producer admission | RXR27 | end price 2^63 exceeds int64 |
+| `UNKNOWN_FEATURE` | library | RXR34 | an extra requested feature id outside this producer's header set (the selected outputs stay requested) |
+| `UNSUPPORTED_ADJUSTMENT` | producer admission | RXR33 | batch adjustment basis differs from the config adjustment (role legs) |
+| `UNSUPPORTED_CAPABILITY` | library | RXR35, RXR36, RXR37 | update is not a supported capability (batch and full replay only) |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
+
 ## 7. Adapter API
 
 - reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.ef4_projections`

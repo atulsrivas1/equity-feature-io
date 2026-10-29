@@ -145,6 +145,21 @@ def parameters(entry: dict[str, Any]) -> list[dict[str, Any]]:
     return [{"name": None, "text": s} for s in raw]
 
 
+def refusal_codes(contract: dict[str, Any], producer: str) -> list[dict[str, Any]]:
+    """Distinct (error_code, raised_by) pairs of the core refusal fixtures, with their fixture ids; nothing is added."""
+    items = contract.get("refusal_fixtures")
+    if items is None and isinstance(contract.get("fixtures"), dict):
+        items = contract["fixtures"].get("refusals")
+    groups: dict[tuple[str, str | None], dict[str, Any]] = {}
+    for item in items or []:
+        if "producer" in item and item["producer"] != producer:
+            continue
+        key = (str(item["error_code"]), item.get("raised_by"))
+        g = groups.setdefault(key, {"error_code": key[0], "raised_by": key[1], "fixture_ids": [], "example": item.get("description")})
+        g["fixture_ids"].append(item["id"])
+    return sorted(groups.values(), key=lambda g: (g["error_code"], str(g["raised_by"])))
+
+
 def provenance(contract_key: str, spec: dict[str, Any], contract: dict[str, Any], sha: str, commit: str, related: list[dict[str, str]]) -> dict[str, Any]:
     return {
         "core_path": spec["path"], "core_commit": commit, "sha256_lf": sha, "core_link": f"{CORE_BLOB}{commit}/{spec['path']}",
@@ -173,6 +188,7 @@ def build_producer(contract_key: str, spec: dict[str, Any], contract: dict[str, 
     input_view = {
         **head, "view": "input", "adapter": adapter, "roles": roles, "reference_fact_schemas": contract.get("reference_fact_schemas"),
         "config_parameters": parameters(entry), "rules": rules, "unparsed_producer_keys": unknown,
+        "grain": entry.get("grain", contract.get("grain")), "refusal_codes": refusal_codes(contract, name),
     }
     mine = [h for h in contract["headers"] if h.get("producer") == name]
     headers = []
@@ -260,7 +276,15 @@ def input_md(v: dict[str, Any]) -> bytes:
     L += render_value(rules) if rules else ["No such rules are stated outside the role text."]
     L += ["", "## 6. Input-stage refusals", ""]
     ref = {k: x for k, x in v["rules"].items() if k in ("refusal_precedence", "refusal_model", "shared_validator_split")}
-    L += render_value(ref) if ref else ["The core contract states no separate refusal order; refusal fixtures and codes are in the core file."]
+    L += render_value(ref) if ref else ["The core contract states no separate refusal order."]
+    if v["refusal_codes"]:
+        L += ["", "Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):", "",
+              "| Code | Raised by | Fixtures | Example (core text) |", "| --- | --- | --- | --- |"]
+        for g in v["refusal_codes"]:
+            ids = g["fixture_ids"]
+            shown = ", ".join(ids[:6]) + (f" (+{len(ids) - 6} more)" if len(ids) > 6 else "")
+            L.append(f"| `{g['error_code']}` | {cell(g['raised_by']) if g['raised_by'] else 'not stated'} | {shown} | {cell(g['example']) if g['example'] else ''} |")
+    L += ["", "## 6b. Grain", "", "Core states: " + (cell(v["grain"]) if v["grain"] else "no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).")]
     a = v["adapter"]
     L += ["", "## 7. Adapter API", "", f"- reference storage module (the project's own storage package; never the data supplier): `{a['io_module']}`", f"- call API: [{a['api_page']}]({a['api_link']})", f"- source checkpoint: `{a['checkpoint']}`", ""]
     return "\n".join(L).encode("ascii") if False else ("\n".join(L)).encode("utf-8")
@@ -317,6 +341,8 @@ def generate(core_root: Path, ref: str) -> dict[str, bytes]:
         raw, commit = read_core(core_root, ref, spec["path"])
         sha = hashlib.sha256(raw).hexdigest()
         contract = json.loads(raw.decode("utf-8"))
+        if "grain" in raw.decode("utf-8").lower() and "grain" not in contract:
+            problems.append(f"{contract_key}: the word 'grain' now occurs in core text; extend the extractor (grain line says it does not occur)")
         related = []
         for rel in spec["amendments"]:
             data, c = read_core(core_root, ref, rel)

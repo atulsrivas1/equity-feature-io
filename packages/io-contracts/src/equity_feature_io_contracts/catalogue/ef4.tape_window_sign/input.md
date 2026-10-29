@@ -60,7 +60,33 @@ Parameters are listed as the core contract states them. Where core states a defa
 
 ## 6. Input-stage refusals
 
-The core contract states no separate refusal order; refusal fixtures and codes are in the core file.
+The core contract states no separate refusal order.
+
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | shared validator | RF01, RF02, RF19, RF34, RF58, RF73 | print at event_ns == C (100): cutoff is exclusive |
+| `DUPLICATE` | library | RF59 | the same event_id retained in two partials |
+| `DUPLICATE` | shared validator | RF04, RF05, RF56 | two rows with the same (event_ns, order_key) and different ids |
+| `INCOMPATIBLE_VERSION` | library | RF29, RF53, RF66 | unsupported policy_version label |
+| `INCONSISTENT_IDENTITY` | library | RF11, RF12, RF15, RF17, RF37, RF38 (+4 more) | a row for a different instrument than the requested entity |
+| `INVALID_CONFIG` | library | RF16, RF20, RF21, RF22, RF23, RF24 (+16 more) | trade scope eligibility_policy differs from the config Parameter |
+| `INVALID_ORDER` | library | RF69 | a supplied partial whose rows are not in rank order |
+| `INVALID_ORDER` | shared validator | RF03 | order_key decreasing inside one nanosecond |
+| `INVALID_SCHEMA` | library | RF18, RF32, RF33, RF35, RF36 | a QUOTE batch supplied as trades |
+| `INVALID_SCHEMA` | shared constructor | RF10 | a bool size is not an int64 cell (a float price behaves the same) |
+| `INVALID_SCHEMA` | shared validator | RF06, RF07, RF08 | eligible print with price 0 |
+| `INVALID_UNIT` | library | RF13, RF70, RF61 | batch price scale differs from ConfigSpec.price_unit |
+| `OVERFLOW` | library | RF39, RF40, RF74 | window volume 2^62 + 2^62 = 2^63 exceeds int64 when tape.window.volume is selected |
+| `OVERFLOW` | shared constructor | RF09, RF57 | price 2^63 does not fit int64 |
+| `UNKNOWN_FEATURE` | library | RF44, RF45, RF46 | feature id outside the producer headers |
+| `UNSUPPORTED_ADJUSTMENT` | library | RF14, RF71, RF62 | batch adjustment evidence differs from the config |
+| `UNSUPPORTED_CAPABILITY` | library | RF41, RF42, RF43, RF54, RF55 | update requested on the window producer |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
 
 ## 7. Adapter API
 

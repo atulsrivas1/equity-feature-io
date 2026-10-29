@@ -131,5 +131,165 @@
       "worker": "routes selected outputs with exact window closure, executes a bounded pattern window without future data, preserves correction and replay scope, persists the library result unchanged; direct, adapter, worker and stored results are identical including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF09",
+        "RF10"
+      ],
+      "example": "bar ends after the market cutoff (a forming bar delivered as a row)"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF07",
+        "RF17"
+      ],
+      "example": "bar 1 delivered with the identity of bar 0"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": "policy label",
+      "fixture_ids": [
+        "RF44"
+      ],
+      "example": "policy_version ef5-candle0"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "admission",
+      "fixture_ids": [
+        "RF59"
+      ],
+      "example": "one bar delivered without its per-slot coverage while the chunk declares coverage for others (partial coverage; all-undeclared stays RF15)"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "RF45",
+        "RF46",
+        "RF47",
+        "RF48",
+        "RF49"
+      ],
+      "example": "bar 1 starts one second late: off the governed grid"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": "ConfigSpec",
+      "fixture_ids": [
+        "RF18",
+        "RF19",
+        "RF20",
+        "RF21",
+        "RF22",
+        "RF23",
+        "RF24",
+        "RF25",
+        "RF26",
+        "RF27",
+        "RF28",
+        "RF29",
+        "RF30",
+        "RF31",
+        "RF32",
+        "RF33",
+        "RF34",
+        "RF35",
+        "RF36",
+        "RF37",
+        "RF58"
+      ],
+      "example": "evidence_limit missing: no default"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF08",
+        "RF51"
+      ],
+      "example": "bars 2 and 3 delivered swapped"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF11",
+        "RF12",
+        "RF13",
+        "RF14",
+        "RF15",
+        "RF16"
+      ],
+      "example": "high below low"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "wire",
+      "fixture_ids": [
+        "RF01",
+        "RF02",
+        "RF03",
+        "RF04",
+        "RF06",
+        "RF50"
+      ],
+      "example": "a non-integer OHLC cell (10.5)"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "ConfigSpec",
+      "fixture_ids": [
+        "RF39",
+        "RF40"
+      ],
+      "example": "price scale 19"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "wire",
+      "fixture_ids": [
+        "RF05"
+      ],
+      "example": "a coefficient above int64"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": "ConfigSpec",
+      "fixture_ids": [
+        "RF38"
+      ],
+      "example": "unknown feature id"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": "ConfigSpec",
+      "fixture_ids": [
+        "RF41",
+        "RF52",
+        "RF53",
+        "RF54",
+        "RF55",
+        "RF56",
+        "RF57"
+      ],
+      "example": "adjustment dividend_adjusted not in the v1 vocabulary"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": "ConfigSpec",
+      "fixture_ids": [
+        "RF42",
+        "RF43"
+      ],
+      "example": "incremental update call"
+    }
+  ]
 }

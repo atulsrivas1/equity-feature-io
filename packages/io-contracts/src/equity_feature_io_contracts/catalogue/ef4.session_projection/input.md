@@ -150,6 +150,27 @@ Parameters are listed as the core contract states them. Where core states a defa
   - **data**: producer rules over otherwise valid data: cross-fact BOUNDS (leg start not before end) and checked-sum OVERFLOW of a published int64
   - **rule**: A refusal raises the code of the first stage, in this order, that has a fault; a later stage is not evaluated for a row that failed an earlier one (so a row rejected by the shared validator is not also reported as a grid mismatch). Every refusal fixture is a single-fault recipe: exactly one defect, in the stage recorded in `stage`, and no other check fires on the mutated input (an independent reviewer audit collects every trigger, not only the first). A row that carries two defects is not a refusal fixture.
 
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `DUPLICATE` | shared validator | SPR12 | daily row 2 delivered with the (instrument, session) identity of row 1 (DAILY rows are unique per instrument and session) |
+| `INCOMPATIBLE_VERSION` | library | SPR07 | unsupported policy label |
+| `INCONSISTENT_IDENTITY` | producer admission | SPR14 | daily row 2 carries instrument Y in the single-instrument daily role |
+| `INVALID_CONFIG` | library | SPR01, SPR02, SPR03, SPR04, SPR05, SPR06 | window missing |
+| `INVALID_ORDER` | shared validator | SPR13 | daily rows 2 and 3 delivered in swapped order (distinct sessions, the second starts before the first ends) |
+| `INVALID_SCHEMA` | producer admission | SPR10 | float close |
+| `INVALID_SCHEMA` | shared validator | SPR08, SPR09 | zero close |
+| `INVALID_UNIT` | producer admission | SPR15, SPR16, SPR17 | batch price scale differs from the config price unit scale (role daily) |
+| `OVERFLOW` | producer admission | SPR11 | close 2^63 exceeds int64 |
+| `UNKNOWN_FEATURE` | library | SPR19 | an extra requested feature id outside this producer's header set (the selected outputs stay requested) |
+| `UNSUPPORTED_ADJUSTMENT` | producer admission | SPR18 | batch adjustment basis differs from the config adjustment (role daily) |
+| `UNSUPPORTED_CAPABILITY` | library | SPR20, SPR21, SPR22 | update is not a supported capability (batch and full replay only) |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
+
 ## 7. Adapter API
 
 - reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.ef4_projections`

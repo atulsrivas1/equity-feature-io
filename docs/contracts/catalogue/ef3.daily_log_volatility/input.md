@@ -56,7 +56,25 @@ Parameters are listed as the core contract states them. Where core states a defa
 
 ## 6. Input-stage refusals
 
-The core contract states no separate refusal order; refusal fixtures and codes are in the core file.
+The core contract states no separate refusal order.
+
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `DUPLICATE` | not stated | RF28 | two rows for the same interval (duplicate identity is instrument, session, start, end) |
+| `INCOMPATIBLE_VERSION` | not stated | RF25 | policy_version other than ef3-dlv1 |
+| `INCONSISTENT_IDENTITY` | not stated | RF31 | batch carries rows of two different instrument_ids |
+| `INVALID_CONFIG` | not stated | RF22, RF23, RF24 | period < 2 or > 4096, or bool, float or text |
+| `INVALID_ORDER` | not stated | RF27 | rows not in governed grid order across sessions: a producer-admission check against the context grid order, NOT validate_batch (the shared BAR order_group is (instrument, session)) |
+| `INVALID_SCHEMA` | not stated | RF26 | close equal to 0 or negative |
+| `INVALID_UNIT` | not stated | RF29 | producer admission: batch price unit (scale or currency) differs from the config PriceUnit (as R17 _admission.py: meta.price_unit != config.price_unit raises INVALID_UNIT) |
+| `UNSUPPORTED_ADJUSTMENT` | not stated | RF30 | producer admission: batch adjustment declaration differs from the config adjustment (as R17 _admission.py: meta.adjustment != config.adjustment raises UNSUPPORTED_ADJUSTMENT) |
+| `UNSUPPORTED_CAPABILITY` | not stated | RF32 | update, restore or merge requested |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
 
 ## 7. Adapter API
 

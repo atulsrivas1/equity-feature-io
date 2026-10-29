@@ -84,5 +84,202 @@
       "worker_ef4": "routes selected outputs with their row closure, keeps per-identity tape order and the sign carry, runs independent partitions and merges only the declared compatible partials, executes one config per complete result, binds inputs and the config digest and persists the library result unchanged; direct, adapter, worker and stored results are identical including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF01",
+        "RF02",
+        "RF19",
+        "RF34",
+        "RF58",
+        "RF73"
+      ],
+      "example": "print at event_ns == C (100): cutoff is exclusive"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF59"
+      ],
+      "example": "the same event_id retained in two partials"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF04",
+        "RF05",
+        "RF56"
+      ],
+      "example": "two rows with the same (event_ns, order_key) and different ids"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF29",
+        "RF53",
+        "RF66"
+      ],
+      "example": "unsupported policy_version label"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF11",
+        "RF12",
+        "RF15",
+        "RF17",
+        "RF37",
+        "RF38",
+        "RF72",
+        "RF63",
+        "RF64",
+        "RF65"
+      ],
+      "example": "a row for a different instrument than the requested entity"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF16",
+        "RF20",
+        "RF21",
+        "RF22",
+        "RF23",
+        "RF24",
+        "RF25",
+        "RF26",
+        "RF27",
+        "RF28",
+        "RF30",
+        "RF31",
+        "RF75",
+        "RF47",
+        "RF48",
+        "RF49",
+        "RF50",
+        "RF51",
+        "RF52",
+        "RF60",
+        "RF67",
+        "RF68"
+      ],
+      "example": "trade scope eligibility_policy differs from the config Parameter"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF69"
+      ],
+      "example": "a supplied partial whose rows are not in rank order"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF03"
+      ],
+      "example": "order_key decreasing inside one nanosecond"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF18",
+        "RF32",
+        "RF33",
+        "RF35",
+        "RF36"
+      ],
+      "example": "a QUOTE batch supplied as trades"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RF10"
+      ],
+      "example": "a bool size is not an int64 cell (a float price behaves the same)"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF06",
+        "RF07",
+        "RF08"
+      ],
+      "example": "eligible print with price 0"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF13",
+        "RF70",
+        "RF61"
+      ],
+      "example": "batch price scale differs from ConfigSpec.price_unit"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF39",
+        "RF40",
+        "RF74"
+      ],
+      "example": "window volume 2^62 + 2^62 = 2^63 exceeds int64 when tape.window.volume is selected"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RF09",
+        "RF57"
+      ],
+      "example": "price 2^63 does not fit int64"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF44",
+        "RF45",
+        "RF46"
+      ],
+      "example": "feature id outside the producer headers"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF14",
+        "RF71",
+        "RF62"
+      ],
+      "example": "batch adjustment evidence differs from the config"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF41",
+        "RF42",
+        "RF43",
+        "RF54",
+        "RF55"
+      ],
+      "example": "update requested on the window producer"
+    }
+  ]
 }

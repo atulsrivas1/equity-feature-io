@@ -159,5 +159,164 @@
       "worker_ef4": "routes selected outputs, shares one admitted interval or prepared series across outputs and configs, keeps independent readiness, executes one config per complete result, binds inputs and the config digest and persists the library result unchanged; direct, adapter, worker and stored results identical including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV08",
+        "RV09",
+        "RV15",
+        "RV16",
+        "RV18",
+        "RV44"
+      ],
+      "example": "trade before the anchor (interval start)"
+    },
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RV12",
+        "RV17"
+      ],
+      "example": "negative bar volume"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RV01",
+        "RV02",
+        "RV03",
+        "RV05"
+      ],
+      "example": "two trade rows with the same event_id"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV39"
+      ],
+      "example": "unsupported policy_version label"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV04",
+        "RV25",
+        "RV26",
+        "RV27",
+        "RV28",
+        "RV29",
+        "RV30",
+        "RV31"
+      ],
+      "example": "two proof facts with different reference_ids"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV32",
+        "RV33",
+        "RV34",
+        "RV35",
+        "RV36",
+        "RV37",
+        "RV38"
+      ],
+      "example": "series_source outside trade, bar, prepared_window"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RV06",
+        "RV07"
+      ],
+      "example": "trade rows not ordered by (event_ns, order_key)"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV13",
+        "RV20"
+      ],
+      "example": "positive-volume bar with nonpositive actual notional when no OHLC columns are delivered"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RV19"
+      ],
+      "example": "float price"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RV10",
+        "RV11",
+        "RV14",
+        "RV42",
+        "RV43"
+      ],
+      "example": "eligible trade with price 0"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV23"
+      ],
+      "example": "batch scale differs from the config price unit"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RV22"
+      ],
+      "example": "bar batch without a price unit"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RV21"
+      ],
+      "example": "trade size above int64"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV40"
+      ],
+      "example": "feature id outside the seven vwap headers"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV24"
+      ],
+      "example": "bars with a different adjustment basis than the config"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RV41"
+      ],
+      "example": "update, restore or merge requested"
+    }
+  ]
 }

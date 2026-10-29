@@ -74,5 +74,94 @@
       "worker_612": "routes selected outputs with exact warm-up closure, shares per-pair preparation within resource bounds, executes one config per complete result, binds inputs and the config digest, persists the library result unchanged; direct, worker and stored results identical including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "BOUNDS",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF42",
+        "RF43"
+      ],
+      "example": "negative volume"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF45"
+      ],
+      "example": "two rows for the same interval (duplicate identity is instrument, session, start, end)"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF39"
+      ],
+      "example": "policy_version other than ef3-rv1"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF33",
+        "RF34",
+        "RF35",
+        "RF36",
+        "RF37"
+      ],
+      "example": "annualization_factor missing when intraday.realized_volatility is selected"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF44"
+      ],
+      "example": "rows not in governed grid order across sessions: a producer-admission check against the context grid order, NOT validate_batch (the shared BAR order_group is (instrument, session))"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF40",
+        "RF41"
+      ],
+      "example": "positive-volume bar with null or non-positive close (existing BAR validation); close equal to 0"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF46"
+      ],
+      "example": "producer admission: batch price unit (scale or currency) differs from the config PriceUnit (as R17 _admission.py: meta.price_unit != config.price_unit raises INVALID_UNIT)"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF47"
+      ],
+      "example": "producer admission: batch adjustment declaration differs from the config adjustment (as R17 _admission.py: meta.adjustment != config.adjustment raises UNSUPPORTED_ADJUSTMENT)"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF48"
+      ],
+      "example": "update, restore or merge requested"
+    },
+    {
+      "error_code": "UNSUPPORTED_SAMPLING",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF38"
+      ],
+      "example": "sampling other than every_governed_slot (coarser step, resampling, subsampling)"
+    }
+  ]
 }

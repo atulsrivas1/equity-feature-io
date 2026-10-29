@@ -81,5 +81,99 @@
       "worker_612": "routes selected outputs with exact warm-up closure, shares per-pair preparation within resource bounds, executes one config per complete result, binds inputs and the config digest, persists the library result unchanged; direct, worker and stored results identical including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF18"
+      ],
+      "example": "two rows for the same interval (duplicate identity is instrument, session, start, end)"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF10"
+      ],
+      "example": "policy_version other than ef3-rel1 (for example a future log-basis label)"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF11",
+        "RF12",
+        "RF13",
+        "RF14"
+      ],
+      "example": "benchmark role instrument_id differs from config benchmark_id"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF01",
+        "RF02",
+        "RF03",
+        "RF04",
+        "RF05",
+        "RF06",
+        "RF07",
+        "RF08",
+        "RF09"
+      ],
+      "example": "window < 2 or > 4096"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF17"
+      ],
+      "example": "rows not in governed grid order across sessions: a producer-admission check against the context grid order, NOT validate_batch (the shared BAR order_group is (instrument, session))"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF19"
+      ],
+      "example": "close equal to 0 or negative (positive prices only, validation.py)"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF15"
+      ],
+      "example": "instrument and benchmark price scale, currency or unit differ (require_compatible_inputs raises INVALID_UNIT; no conversion, ruling O4) (batch versus batch, require_compatible_inputs)"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF21"
+      ],
+      "example": "a feature id not produced by this producer (for example history.return_volatility)"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF16"
+      ],
+      "example": "instrument and benchmark declare different adjustment basis, policy or anchor (batch versus batch, require_compatible_inputs)"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": null,
+      "fixture_ids": [
+        "RF20"
+      ],
+      "example": "update, restore or merge requested"
+    }
+  ]
 }

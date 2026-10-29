@@ -190,5 +190,123 @@
       "worker_614": "routes each selected output to its own operands only (a sector gap never blocks a market comparison; a missing count never blocks a volume rate), shares bounded closures and facts, keeps independent readiness, executes one config per complete result, binds inputs and the config digest and persists the library result unchanged; direct, adapter, worker and stored results must be identical, including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "RPR19"
+      ],
+      "example": "leg start witness time not before its end witness time (cross-fact check)"
+    },
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RPR16"
+      ],
+      "example": "operand window with effective_start_ns equal to effective_end_ns (REFERENCE bounds)"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RPR17",
+        "RPR23"
+      ],
+      "example": "two count operands for the same window: reference_id x1:B(window_id#count) is identical"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RPR10"
+      ],
+      "example": "unsupported policy label"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "RPR22"
+      ],
+      "example": "leg fact for another instrument"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RPR01",
+        "RPR02",
+        "RPR03",
+        "RPR04",
+        "RPR05",
+        "RPR06",
+        "RPR07",
+        "RPR08",
+        "RPR09"
+      ],
+      "example": "window_ns 0"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "RPR11",
+        "RPR12",
+        "RPR13",
+        "RPR18",
+        "RPR20",
+        "RPR21"
+      ],
+      "example": "count operand text with a leading zero (canonical decimal required)"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "RPR24",
+        "RPR25",
+        "RPR26"
+      ],
+      "example": "batch price scale differs from the config price unit scale (role tape)"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "RPR14",
+        "RPR15"
+      ],
+      "example": "count operand 2^63 exceeds int64"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RPR28"
+      ],
+      "example": "an extra requested feature id outside this producer's header set (the selected outputs stay requested)"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": "producer admission",
+      "fixture_ids": [
+        "RPR27"
+      ],
+      "example": "batch adjustment basis differs from the config adjustment (role tape)"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RPR29",
+        "RPR30",
+        "RPR31"
+      ],
+      "example": "update is not a supported capability (batch and full replay only)"
+    }
+  ]
 }

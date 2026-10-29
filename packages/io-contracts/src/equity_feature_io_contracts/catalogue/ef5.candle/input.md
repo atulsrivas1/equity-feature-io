@@ -100,6 +100,29 @@ Parameters are listed as the core contract states them. Where core states a defa
   - **identity**: INCONSISTENT_IDENTITY: instrument, session, interval not a governed slot, adjustment basis differing from the config
   - **rule**: a refusal raises the code of the first stage, in this order, that has a fault; a row that fails an earlier stage is not evaluated by a later one; every refusal fixture is a single-fault recipe and the independent expander audits that exactly one (stage, code) pair fires
 
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | shared validator | RF09, RF10 | bar ends after the market cutoff (a forming bar delivered as a row) |
+| `DUPLICATE` | shared validator | RF07, RF17 | bar 1 delivered with the identity of bar 0 |
+| `INCOMPATIBLE_VERSION` | policy label | RF44 | policy_version ef5-candle0 |
+| `INCONSISTENT_IDENTITY` | admission | RF59 | one bar delivered without its per-slot coverage while the chunk declares coverage for others (partial coverage; all-undeclared stays RF15) |
+| `INCONSISTENT_IDENTITY` | producer admission | RF45, RF46, RF47, RF48, RF49 | bar 1 starts one second late: off the governed grid |
+| `INVALID_CONFIG` | ConfigSpec | RF18, RF19, RF20, RF21, RF22, RF23 (+15 more) | evidence_limit missing: no default |
+| `INVALID_ORDER` | shared validator | RF08, RF51 | bars 2 and 3 delivered swapped |
+| `INVALID_SCHEMA` | shared validator | RF11, RF12, RF13, RF14, RF15, RF16 | high below low |
+| `INVALID_SCHEMA` | wire | RF01, RF02, RF03, RF04, RF06, RF50 | a non-integer OHLC cell (10.5) |
+| `INVALID_UNIT` | ConfigSpec | RF39, RF40 | price scale 19 |
+| `OVERFLOW` | wire | RF05 | a coefficient above int64 |
+| `UNKNOWN_FEATURE` | ConfigSpec | RF38 | unknown feature id |
+| `UNSUPPORTED_ADJUSTMENT` | ConfigSpec | RF41, RF52, RF53, RF54, RF55, RF56 (+1 more) | adjustment dividend_adjusted not in the v1 vocabulary |
+| `UNSUPPORTED_CAPABILITY` | ConfigSpec | RF42, RF43 | incremental update call |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
+
 ## 7. Adapter API
 
 - reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.price_structures`

@@ -155,6 +155,27 @@ Parameters are listed as the core contract states them. Where core states a defa
   - **data**: producer rules over otherwise valid data: cross-fact BOUNDS (leg start not before end) and checked-sum OVERFLOW of a published int64
   - **rule**: A refusal raises the code of the first stage, in this order, that has a fault; a later stage is not evaluated for a row that failed an earlier one (so a row rejected by the shared validator is not also reported as a grid mismatch). Every refusal fixture is a single-fault recipe: exactly one defect, in the stage recorded in `stage`, and no other check fires on the mutated input (an independent reviewer audit collects every trigger, not only the first). A row that carries two defects is not a refusal fixture.
 
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | producer admission | RPR19 | leg start witness time not before its end witness time (cross-fact check) |
+| `BOUNDS` | shared validator | RPR16 | operand window with effective_start_ns equal to effective_end_ns (REFERENCE bounds) |
+| `DUPLICATE` | shared validator | RPR17, RPR23 | two count operands for the same window: reference_id x1:B(window_id#count) is identical |
+| `INCOMPATIBLE_VERSION` | library | RPR10 | unsupported policy label |
+| `INCONSISTENT_IDENTITY` | producer admission | RPR22 | leg fact for another instrument |
+| `INVALID_CONFIG` | library | RPR01, RPR02, RPR03, RPR04, RPR05, RPR06 (+3 more) | window_ns 0 |
+| `INVALID_SCHEMA` | producer admission | RPR11, RPR12, RPR13, RPR18, RPR20, RPR21 | count operand text with a leading zero (canonical decimal required) |
+| `INVALID_UNIT` | producer admission | RPR24, RPR25, RPR26 | batch price scale differs from the config price unit scale (role tape) |
+| `OVERFLOW` | producer admission | RPR14, RPR15 | count operand 2^63 exceeds int64 |
+| `UNKNOWN_FEATURE` | library | RPR28 | an extra requested feature id outside this producer's header set (the selected outputs stay requested) |
+| `UNSUPPORTED_ADJUSTMENT` | producer admission | RPR27 | batch adjustment basis differs from the config adjustment (role tape) |
+| `UNSUPPORTED_CAPABILITY` | library | RPR29, RPR30, RPR31 | update is not a supported capability (batch and full replay only) |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
+
 ## 7. Adapter API
 
 - reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.ef4_projections`

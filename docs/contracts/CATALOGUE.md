@@ -28,6 +28,25 @@ The catalogue is a generated, read-only view of what each producer takes in (inp
 
 1. feature ids with dtype, unit, scale, availability rule and order; 2. quality vocabulary, readiness and evidence bounds; 3. reasons reached (fixture ids in core); then refused outcomes, known limits and unit additions where core states them; and the headers as `FeatureHeader` values (`feature_id`, `algorithm_version`, `dtype`, `unit`, `schema_version`; `dtype` is the `ValueType` string value).
 
+## Reading a page from the installed package
+
+`FeatureHeader` is in `equity_feature_io_contracts`; its `dtype` is a `ValueType`, which comes from core `equity_feature_contracts` (install it, it is already a dependency). Example (reads data only; no lookup module yet):
+
+    import json
+    from importlib.resources import files
+    from equity_feature_contracts import ValueType
+    from equity_feature_io_contracts import FeatureHeader
+
+    root = files("equity_feature_io_contracts") / "catalogue"
+    index = json.loads((root / "index.json").read_text("utf-8"))
+    producer = index["by_feature_id"]["tape.window.count"]            # a result column to its producer
+    output = json.loads((root / producer / "output.json").read_text("utf-8"))
+    h = next(x for x in output["headers"] if x["feature_id"] == "tape.window.count")["feature_header_value"]
+    header = FeatureHeader(h["feature_id"], h["algorithm_version"], ValueType(h["dtype"]), h["unit"], h["schema_version"])
+    print(producer, header)
+
+`catalogue.producers()`, `catalogue.by_feature_id()` as functions, `check_input` and `check_output` are not part of S1; they come in later stories (S6 and S8), and the structural checks will never compute or judge values.
+
 ## Provenance, on every page and every JSON
 
 `contract_version` (core `policy_version`), `status`, source core path, core commit (the last core commit that touched the file, as of the ref used), sha256 of the LF bytes of the source, and the authority line. `status` is read only from the leading words of the core `coordinator_freeze` text: `Frozen as ...` gives `frozen`, `Proposed freeze ...` gives `proposed`. The core status text is kept verbatim as `source_status`. Amendment files named in `related_core_files_not_extracted` (the shared amendments of EF3, EF4 and EF5) are referenced with commit and sha256 but their rulings are not extracted in this version; read them in core.

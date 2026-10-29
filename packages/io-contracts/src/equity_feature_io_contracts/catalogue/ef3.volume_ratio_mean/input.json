@@ -126,5 +126,189 @@
       "worker_612": "routes selected outputs and bounded shared histories, executes one config per complete result, binds inputs and config digest, persists the library result unchanged; direct, adapter, worker and stored results identical including refusal class"
     }
   },
-  "unparsed_producer_keys": []
+  "unparsed_producer_keys": [],
+  "grain": null,
+  "refusal_codes": [
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF40"
+      ],
+      "example": "grid whose first edge is not 0 or with equal offsets (non-positive bucket)"
+    },
+    {
+      "error_code": "BOUNDS",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF03",
+        "RF06",
+        "RF07",
+        "RF14"
+      ],
+      "example": "negative volume"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF48"
+      ],
+      "example": "two ef3.session.excluded facts on one session (distinct reference_id, so not caught by the shared identity check)"
+    },
+    {
+      "error_code": "DUPLICATE",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF01",
+        "RF12"
+      ],
+      "example": "two DAILY rows for the same (instrument, session)"
+    },
+    {
+      "error_code": "INCOMPATIBLE_VERSION",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF29"
+      ],
+      "example": "unsupported policy_version label"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF32",
+        "RF33",
+        "RF34",
+        "RF35",
+        "RF36",
+        "RF37",
+        "RF38",
+        "RF39",
+        "RF42",
+        "RF45",
+        "RF44"
+      ],
+      "example": "target instrument is not a declared population member"
+    },
+    {
+      "error_code": "INCONSISTENT_IDENTITY",
+      "raised_by": "shared require_compatible_inputs",
+      "fixture_ids": [
+        "RF11"
+      ],
+      "example": "roles with different namespaces"
+    },
+    {
+      "error_code": "INVALID_CONFIG",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF17",
+        "RF18",
+        "RF19",
+        "RF20",
+        "RF21",
+        "RF22",
+        "RF23",
+        "RF24",
+        "RF25",
+        "RF26",
+        "RF27",
+        "RF28",
+        "RF47"
+      ],
+      "example": "window 0"
+    },
+    {
+      "error_code": "INVALID_ORDER",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF02",
+        "RF13"
+      ],
+      "example": "DAILY rows with start earlier than the previous end for one instrument"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF41",
+        "RF46"
+      ],
+      "example": "ef3.session.excluded or an unknown fact_kind supplied to the mean producer"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RF16"
+      ],
+      "example": "float or bool in the volume column"
+    },
+    {
+      "error_code": "INVALID_SCHEMA",
+      "raised_by": "shared validator",
+      "fixture_ids": [
+        "RF04",
+        "RF05"
+      ],
+      "example": "zero-volume row with a non-null supplied price"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF43"
+      ],
+      "example": "price field scale or currency differs from ConfigSpec.price_unit"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RF08"
+      ],
+      "example": "DAILY or BAR batch without a price unit"
+    },
+    {
+      "error_code": "INVALID_UNIT",
+      "raised_by": "shared require_compatible_inputs",
+      "fixture_ids": [
+        "RF09"
+      ],
+      "example": "series and cohort_values with different price scale or currency"
+    },
+    {
+      "error_code": "OVERFLOW",
+      "raised_by": "shared constructor",
+      "fixture_ids": [
+        "RF15"
+      ],
+      "example": "volume 2^63 in an int64 column"
+    },
+    {
+      "error_code": "UNKNOWN_FEATURE",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF30"
+      ],
+      "example": "feature id outside the 13 headers"
+    },
+    {
+      "error_code": "UNSUPPORTED_ADJUSTMENT",
+      "raised_by": "shared require_compatible_inputs",
+      "fixture_ids": [
+        "RF10"
+      ],
+      "example": "series and cohort_values with different adjustment basis"
+    },
+    {
+      "error_code": "UNSUPPORTED_CAPABILITY",
+      "raised_by": "library",
+      "fixture_ids": [
+        "RF31"
+      ],
+      "example": "update, restore or merge requested"
+    }
+  ]
 }

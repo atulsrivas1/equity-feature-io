@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -50,6 +51,10 @@ def main() -> int:
     for c in index["contracts"]:
         if c["unparsed_top_level_keys"] or c["unparsed_producer_keys"]:
             errors.append(f"unparsed core keys in {c['contract_key']}: {c['unparsed_top_level_keys']} {c['unparsed_producer_keys']}")
+    listing = gen.git(args.core_root, "ls-tree", "-r", "--name-only", args.core_ref).decode("utf-8").split()
+    known = {spec["path"] for spec in gen.CONTRACTS.values()}
+    for path in sorted(p for p in listing if re.fullmatch(r"docs/[a-z0-9_]+/(?:[A-Z0-9_]+_CONTRACT_PROPOSAL|CONTRACT)\.json", p) and p not in known):
+        print(f"not yet catalogued: {path} (core contract file with no catalogue entry; later story)")
     if errors:
         print("contract catalogue drift:")
         for e in errors:

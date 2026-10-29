@@ -75,6 +75,28 @@ Parameters are listed as the core contract states them. Where core states a defa
   - **data**: producer rules over otherwise valid data: cross-fact BOUNDS (leg start not before end) and checked-sum OVERFLOW of a published int64
   - **rule**: A refusal raises the code of the first stage, in this order, that has a fault; a later stage is not evaluated for a row that failed an earlier one (so a row rejected by the shared validator is not also reported as a grid mismatch). Every refusal fixture is a single-fault recipe: exactly one defect, in the stage recorded in `stage`, and no other check fires on the mutated input (an independent reviewer audit collects every trigger, not only the first). A row that carries two defects is not a refusal fixture.
 
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | shared validator | PR04, PR05, PR06 | bar 2 with start_ns equal to end_ns |
+| `DUPLICATE` | shared validator | PR01 | bar 2 delivered with the (instrument, session, start, end) identity of bar 1 |
+| `INCOMPATIBLE_VERSION` | library | PR31 | unsupported policy label ef4-path2 |
+| `INCONSISTENT_IDENTITY` | producer admission | PR03, PR16, PR17 | bar 2 starts one second late: not a governed slot bound of the R17 context (a distinct grid mismatch; it overlaps nothing) |
+| `INVALID_CONFIG` | library | PR18, PR19, PR20, PR21, PR22, PR23 (+7 more) | window missing |
+| `INVALID_ORDER` | shared validator | PR02 | bars 2 and 3 delivered in swapped order (each interval is a governed slot, the second starts before the first ends) |
+| `INVALID_SCHEMA` | producer admission | PR12, PR13, PR14 | non-integer (float) price coefficient |
+| `INVALID_SCHEMA` | shared validator | PR07, PR08, PR09, PR10, PR11 | high below low |
+| `INVALID_UNIT` | producer admission | PR32, PR33, PR34 | batch price scale differs from the config price unit scale (role bars) |
+| `OVERFLOW` | producer admission | PR15 | close coefficient 2^63 exceeds int64 |
+| `UNKNOWN_FEATURE` | library | PR36 | an extra requested feature id outside this producer's header set (the selected outputs stay requested) |
+| `UNSUPPORTED_ADJUSTMENT` | producer admission | PR35 | batch adjustment basis differs from the config adjustment (role bars) |
+| `UNSUPPORTED_CAPABILITY` | library | PR37, PR38, PR39 | update is not a supported capability (batch and full replay only) |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
+
 ## 7. Adapter API
 
 - reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.path_efficiency`

@@ -92,7 +92,35 @@ Parameters are listed as the core contract states them. Where core states a defa
 
 ## 6. Input-stage refusals
 
-The core contract states no separate refusal order; refusal fixtures and codes are in the core file.
+The core contract states no separate refusal order.
+
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | library | RF40 | grid whose first edge is not 0 or with equal offsets (non-positive bucket) |
+| `BOUNDS` | shared validator | RF03, RF06, RF07, RF14 | negative volume |
+| `DUPLICATE` | library | RF48 | two ef3.session.excluded facts on one session (distinct reference_id, so not caught by the shared identity check) |
+| `DUPLICATE` | shared validator | RF01, RF12 | two DAILY rows for the same (instrument, session) |
+| `INCOMPATIBLE_VERSION` | library | RF29 | unsupported policy_version label |
+| `INCONSISTENT_IDENTITY` | library | RF32, RF33, RF34, RF35, RF36, RF37 (+5 more) | target instrument is not a declared population member |
+| `INCONSISTENT_IDENTITY` | shared require_compatible_inputs | RF11 | roles with different namespaces |
+| `INVALID_CONFIG` | library | RF17, RF18, RF19, RF20, RF21, RF22 (+7 more) | window 0 |
+| `INVALID_ORDER` | shared validator | RF02, RF13 | DAILY rows with start earlier than the previous end for one instrument |
+| `INVALID_SCHEMA` | library | RF41, RF46 | ef3.session.excluded or an unknown fact_kind supplied to the mean producer |
+| `INVALID_SCHEMA` | shared constructor | RF16 | float or bool in the volume column |
+| `INVALID_SCHEMA` | shared validator | RF04, RF05 | zero-volume row with a non-null supplied price |
+| `INVALID_UNIT` | library | RF43 | price field scale or currency differs from ConfigSpec.price_unit |
+| `INVALID_UNIT` | shared constructor | RF08 | DAILY or BAR batch without a price unit |
+| `INVALID_UNIT` | shared require_compatible_inputs | RF09 | series and cohort_values with different price scale or currency |
+| `OVERFLOW` | shared constructor | RF15 | volume 2^63 in an int64 column |
+| `UNKNOWN_FEATURE` | library | RF30 | feature id outside the 13 headers |
+| `UNSUPPORTED_ADJUSTMENT` | shared require_compatible_inputs | RF10 | series and cohort_values with different adjustment basis |
+| `UNSUPPORTED_CAPABILITY` | library | RF31 | update, restore or merge requested |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
 
 ## 7. Adapter API
 

@@ -57,7 +57,26 @@ Parameters are listed as the core contract states them. Where core states a defa
 
 ## 6. Input-stage refusals
 
-The core contract states no separate refusal order; refusal fixtures and codes are in the core file.
+The core contract states no separate refusal order.
+
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | not stated | RF42, RF43 | negative volume |
+| `DUPLICATE` | not stated | RF45 | two rows for the same interval (duplicate identity is instrument, session, start, end) |
+| `INCOMPATIBLE_VERSION` | not stated | RF39 | policy_version other than ef3-rv1 |
+| `INVALID_CONFIG` | not stated | RF33, RF34, RF35, RF36, RF37 | annualization_factor missing when intraday.realized_volatility is selected |
+| `INVALID_ORDER` | not stated | RF44 | rows not in governed grid order across sessions: a producer-admission check against the context grid order, NOT validate_batch (the shared BAR order_group is (instrument, session)) |
+| `INVALID_SCHEMA` | not stated | RF40, RF41 | positive-volume bar with null or non-positive close (existing BAR validation); close equal to 0 |
+| `INVALID_UNIT` | not stated | RF46 | producer admission: batch price unit (scale or currency) differs from the config PriceUnit (as R17 _admission.py: meta.price_unit != config.price_unit raises INVALID_UNIT) |
+| `UNSUPPORTED_ADJUSTMENT` | not stated | RF47 | producer admission: batch adjustment declaration differs from the config adjustment (as R17 _admission.py: meta.adjustment != config.adjustment raises UNSUPPORTED_ADJUSTMENT) |
+| `UNSUPPORTED_CAPABILITY` | not stated | RF48 | update, restore or merge requested |
+| `UNSUPPORTED_SAMPLING` | not stated | RF38 | sampling other than every_governed_slot (coarser step, resampling, subsampling) |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
 
 ## 7. Adapter API
 

@@ -113,6 +113,31 @@ Parameters are listed as the core contract states them. Where core states a defa
     - positive notional on positive volume when no OHLC columns are delivered (INVALID_SCHEMA)
     - all identity, grid, proof, role, sampling, unit, basis and config checks
 
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | library | RV08, RV09, RV15, RV16, RV18, RV44 | trade before the anchor (interval start) |
+| `BOUNDS` | shared validator | RV12, RV17 | negative bar volume |
+| `DUPLICATE` | shared validator | RV01, RV02, RV03, RV05 | two trade rows with the same event_id |
+| `INCOMPATIBLE_VERSION` | library | RV39 | unsupported policy_version label |
+| `INCONSISTENT_IDENTITY` | library | RV04, RV25, RV26, RV27, RV28, RV29 (+2 more) | two proof facts with different reference_ids |
+| `INVALID_CONFIG` | library | RV32, RV33, RV34, RV35, RV36, RV37 (+1 more) | series_source outside trade, bar, prepared_window |
+| `INVALID_ORDER` | shared validator | RV06, RV07 | trade rows not ordered by (event_ns, order_key) |
+| `INVALID_SCHEMA` | library | RV13, RV20 | positive-volume bar with nonpositive actual notional when no OHLC columns are delivered |
+| `INVALID_SCHEMA` | shared constructor | RV19 | float price |
+| `INVALID_SCHEMA` | shared validator | RV10, RV11, RV14, RV42, RV43 | eligible trade with price 0 |
+| `INVALID_UNIT` | library | RV23 | batch scale differs from the config price unit |
+| `INVALID_UNIT` | shared constructor | RV22 | bar batch without a price unit |
+| `OVERFLOW` | shared constructor | RV21 | trade size above int64 |
+| `UNKNOWN_FEATURE` | library | RV40 | feature id outside the seven vwap headers |
+| `UNSUPPORTED_ADJUSTMENT` | library | RV24 | bars with a different adjustment basis than the config |
+| `UNSUPPORTED_CAPABILITY` | library | RV41 | update, restore or merge requested |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
+
 ## 7. Adapter API
 
 - reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.quote_vwap`

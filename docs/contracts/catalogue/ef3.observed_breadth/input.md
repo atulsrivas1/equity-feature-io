@@ -116,7 +116,31 @@ Parameters are listed as the core contract states them. Where core states a defa
 
 ## 6. Input-stage refusals
 
-The core contract states no separate refusal order; refusal fixtures and codes are in the core file.
+The core contract states no separate refusal order.
+
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | library | RB09, RB24, RO09, RO13, RA05, RA15 | negative cumulative volume in the price column |
+| `BOUNDS` | shared validator | RB11 | membership interval with end <= start |
+| `DUPLICATE` | library | RB03, RA02 | ordered_history: member b has two stints that overlap in time (even if only one contains C): same identity at the same time, extension of contract E RF12 |
+| `DUPLICATE` | shared validator | RB01, RB02, RO01, RA01 | declared population lists member a twice (same instrument, session, reference_id): contract E RF12 / OQ-7 |
+| `INCOMPATIBLE_VERSION` | library | RB20, RO11, RA10 | policy_version other than ef3-breadth1 |
+| `INCONSISTENT_IDENTITY` | library | RB04, RB05, RB06, RB07, RB25, RO02 (+3 more) | a fact role carries a row for member z that is not declared in the population (never silently dropped) |
+| `INVALID_CONFIG` | library | RB16, RB17, RB18, RB19, RB29, RO03 (+8 more) | near_high tolerance 5/4 (above 1) |
+| `INVALID_ORDER` | library | RA03 | sequence decreases while event time increases |
+| `INVALID_ORDER` | shared validator | RB08, RA14 | ordered_history: the stints of ONE member are not in (effective_start_ns, reference_id) order. The shared validator checks order per (instrument, session) group, so a one-row-per-member role (instrument_id = member) can never raise INVALID_ORDER; the check applies to multi-stint membership intervals and to the adaptive stream only |
+| `INVALID_SCHEMA` | library | RB13, RB14, RB15, RB28, RB26, RO07 (+3 more) | a role carries a fact_kind of another role |
+| `INVALID_UNIT` | shared compatibility check | RB12, RB30, RO10 | two roles declare different PriceUnit (scale or currency) |
+| `OVERFLOW` | library | RB23, RB27 | sum of advancing members volumes above 2^63-1 with up_volume selected (published value out of int64; whole request refused) |
+| `UNKNOWN_FEATURE` | library | RB21 | selected feature id not produced by session_breadth |
+| `UNSUPPORTED_ADJUSTMENT` | shared validator | RB10, RA06 | vwap factor_den = 0 (rational factors must be positive) |
+| `UNSUPPORTED_CAPABILITY` | library | RB22, RO12, RA11 | update, restore or merge requested (no state capability in v1) |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
 
 ## 7. Adapter API
 

@@ -105,6 +105,32 @@ Parameters are listed as the core contract states them. Where core states a defa
     - positive notional on positive volume when no OHLC columns are delivered (INVALID_SCHEMA)
     - all identity, grid, proof, role, sampling, unit, basis and config checks
 
+Refusal codes the core contract records for this producer (distinct code and raising layer; fixture ids are core ids):
+
+| Code | Raised by | Fixtures | Example (core text) |
+| --- | --- | --- | --- |
+| `BOUNDS` | library | RQ05, RQ06 | row event_ns before the interval start |
+| `BOUNDS` | shared validator | RQ07, RQ08, RQ09 | interval bounds fact with start >= end |
+| `DUPLICATE` | shared validator | RQ01, RQ02, RQ25 | two quote rows with the same event_id |
+| `INCOMPATIBLE_VERSION` | library | RQ34 | unsupported policy_version label |
+| `INCONSISTENT_IDENTITY` | library | RQ22, RQ23, RQ24, RQ26, RQ27 | row instrument differs from the target entity |
+| `INVALID_CONFIG` | library | RQ28, RQ29, RQ30, RQ31, RQ32, RQ33 | evidence_limit above 10000 |
+| `INVALID_ORDER` | shared validator | RQ03, RQ04 | rows not ordered by (event_ns, order_key) |
+| `INVALID_SCHEMA` | library | RQ12, RQ13 | quotes role holding a TRADE batch |
+| `INVALID_SCHEMA` | shared constructor | RQ10, RQ11 | float price in the bid column |
+| `INVALID_UNIT` | library | RQ16 | batch scale differs from the config price unit |
+| `INVALID_UNIT` | shared constructor | RQ15 | quote batch without a price unit |
+| `OVERFLOW` | shared constructor | RQ14 | bid above int64 |
+| `UNKNOWN_FEATURE` | library | RQ35 | feature id that is not one of the nine quote_dynamics headers |
+| `UNSUPPORTED_ADJUSTMENT` | library | RQ17 | adjustment basis differs from the config |
+| `UNSUPPORTED_CAPABILITY` | library | RQ36 | update, restore or merge requested |
+| `UNSUPPORTED_SAMPLING` | library | RQ19, RQ20, RQ21 | trade-snapshot quotes never satisfy a continuous requirement |
+| `UNSUPPORTED_SAMPLING` | shared constructor | RQ18 | quote batch with sampling 'none' |
+
+## 6b. Grain
+
+Core states: no grain (the word does not occur in the core contract). The scope of a result is described only by the role texts in section 2 (target entity, session or slot).
+
 ## 7. Adapter API
 
 - reference storage module (the project's own storage package; never the data supplier): `equity_feature_duckdb.quote_vwap`
