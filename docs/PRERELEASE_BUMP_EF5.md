@@ -36,3 +36,10 @@ version are history and skipped). An altered README fails; stale statements in t
 **Ran and passed (io):** build_foundation, build_bundles, build_duckdb_sink, build_parquet, build_extensions, build_acquisition, build_files (the installed-file fingerprint
 count of the acquisition and files builders is now 123).
 **Not run (io):** build_duckdb (obsolete: it snapshots `packages/duckdb` from core, which moved here), build_matrix (accepted archive matrix at fixed historical commits, deliberately unchanged).
+
+## Known limits of the README version gate
+
+`tools/verify_versions.py` checks version statements of the forms `name==V`, ``name`V`` and `shortV` (for example `contracts0.0.4a5`) in package READMEs. It does not cover: a wrong version in a
+heading (a heading that names an older version opens a section treated as history and skipped); names glued to a version without a separator that the patterns do not know (for example
+`workers0.1.0a12`, `workera17`, `MCP0.1.0a1`); versions in prose without the distribution name; and README text outside `packages/*/README.md`. Treat the gate as a net for the common current-pin
+statements, not as proof that every README is current. One stale pin of this kind in the io acquisition README was corrected by hand.
