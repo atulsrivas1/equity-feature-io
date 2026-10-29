@@ -22,7 +22,7 @@ from _versions import CONTRACTS, FEATURES, EVIDENCE, OWN
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'dist/bundles'
-CORE_HEAD='710fe05b812d4acc06d7e828c96ac1922e3203dc'
+CORE_HEAD='98778e79f9422904bbb043d067a7ce9e77675311'
 EPOCH=1700000000
 PACKAGES={'contracts':('equity_feature_contracts',CONTRACTS),
     'features':('equity_features',FEATURES),'evidence':('equity_feature_evidence',EVIDENCE),

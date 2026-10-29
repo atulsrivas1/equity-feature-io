@@ -12,7 +12,7 @@ import tempfile
 from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot, IO_CONTRACTS, IO_SDK
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE = '710fe05b812d4acc06d7e828c96ac1922e3203dc'
+CORE = '98778e79f9422904bbb043d067a7ce9e77675311'
 PATHS = ('packages/acquisition','packages/io-contracts','tests/acquisition',
          'tests/acquisition_goldens.json','tests/acquisition_probe.py',
          'examples/acquisition_consumer.py','tools/build_acquisition.py',
