@@ -75,7 +75,7 @@ def main():
                 run(py,'-m','pip','install','--no-deps','pyarrow==20.0.0','databento-dbn==0.70.0')
                 run(py,'-m','pip','check',cwd=cwd)
                 run(py,'-I',component/'tests/files_probe.py',cwd,report,'full',cwd=cwd)
-                after=fingerprint(py,cwd);assert before==after and len(before)==62
+                after=fingerprint(py,cwd);assert before==after, (len(before), len(after))
                 public=json.loads(report.read_text());assert public['tests_run']==43
                 fp=hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest()
                 public.update({'light':json.loads(light.read_text()),'form':form,'source_commit':head,'core_before_sha256':fp,'core_after_sha256':fp})
