@@ -1,4 +1,8 @@
-"""Repeat optional adapter/core artifacts and qualify both installed forms."""
+"""RETIRED (PO final status 2026-10-29; docs/RETIRED_BUILDERS.md): the adapter/core archive qualification.
+
+It snapshotted `packages/duckdb` from the core repository, which moved here (ADR-1); the builder cannot be ported without reintroducing that path.
+`inspect_adapter` stays because tests/duckdb/test_packaging.py uses it; `main()` refuses to run. Original description: repeat optional
+adapter/core artifacts and qualify both installed forms."""
 import argparse
 import hashlib
 import json
@@ -129,6 +133,10 @@ print('Pure core registry executes with DuckDB forbidden')
 
 
 def main():
+    raise SystemExit('tools/build_duckdb.py is retired (adapter moved out of core); see docs/RETIRED_BUILDERS.md')
+
+
+def _retired_main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--core-root',type=Path,required=True)
     args=parser.parse_args()

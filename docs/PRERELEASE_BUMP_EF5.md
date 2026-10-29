@@ -35,7 +35,7 @@ version are history and skipped). An altered README fails; stale statements in t
 
 **Ran and passed (io):** build_foundation, build_bundles, build_duckdb_sink, build_parquet, build_extensions, build_acquisition, build_files (the installed-file fingerprint
 count of the acquisition and files builders is now 123).
-**Not run (io):** build_duckdb (obsolete: it snapshots `packages/duckdb` from core, which moved here), build_matrix (accepted archive matrix at fixed historical commits, deliberately unchanged).
+**Retired (io):** build_duckdb (see [RETIRED_BUILDERS.md](RETIRED_BUILDERS.md)). **Deferred, not blocking (io):** build_matrix (accepted archive matrix at fixed historical commits, deliberately unchanged).
 
 ## Known limits of the README version gate
 
