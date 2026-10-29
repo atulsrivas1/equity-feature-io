@@ -1,6 +1,6 @@
 # Experimental DuckDB adapter
 
-`equity-feature-duckdb`0.1.0a10 is an unreleased candidate and stays outside both pure packages.
+`equity-feature-duckdb`0.1.0a11 is an unreleased candidate and stays outside both pure packages.
 It resolves bounded catalog metadata and maps owned retained-source columns into
 canonical schema1. Bounded original-Parquet historical reads use caller-supplied
 sessions, explicit coverage policies and exact UTCns predicates. R4 is incomplete.

@@ -56,7 +56,7 @@ class EvidenceTests(unittest.TestCase):
         self.assertIn('original-read2:'+r.input_evidence_digest,r.source.mapping_version)
         self.assertEqual(r.availability,request.availability)
         self.assertEqual(r.coverage,Coverage(None,3,False))
-        self.assertEqual((r.schema,r.canonical_schema,r.adapter_version),('acquisition1',1,'0.1.0a10'))
+        self.assertEqual((r.schema,r.canonical_schema,r.adapter_version),('acquisition1',1,'0.1.0a11'))
         self.assertEqual(r.identity_digest,hashlib.sha256(json.dumps(asdict(r),sort_keys=True,separators=(',',':')).encode()).hexdigest())
         self.assertTrue(all(e.partition.admission=='unverified_legacy' for e in r.files))
         files=list(r.files);owned=replace(r,files=files);files.clear()

@@ -16,7 +16,7 @@ OWN = {
     "equity-feature-io-sdk": "0.1.0a3",
     "equity-feature-acquisition": "0.1.0a0",
     "equity-feature-files": "0.1.0a0",
-    "equity-feature-duckdb": "0.1.0a10",
+    "equity-feature-duckdb": "0.1.0a11",
     "equity-feature-duckdb-sink": "0.1.0a1",
     "equity-feature-parquet": "0.1.0a2",
     "equity-feature-bundles": "0.1.0a2",

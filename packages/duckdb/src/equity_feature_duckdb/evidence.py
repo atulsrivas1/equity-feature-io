@@ -68,7 +68,7 @@ class AcquisitionReceipt:
     pin_strength: str
     hash_bytes: int
     schema: str = field(default="acquisition1", init=False)
-    adapter_version: str = field(default="0.1.0a10", init=False)
+    adapter_version: str = field(default="0.1.0a11", init=False)
     canonical_schema: int = field(default=1, init=False)
 
     def __post_init__(self) -> None:

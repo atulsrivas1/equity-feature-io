@@ -1,3 +1,7 @@
+## Unreleased - coordinated pre-release bump for the EF5 layers
+
+duckdb 0.1.0a11 (EF5 price_structures adapter). Record: [docs/PRERELEASE_BUMP_EF5.md](docs/PRERELEASE_BUMP_EF5.md).
+
 ## Unreleased - EF4 C3: recorded Parquet round trip for notional cells
 
 `tools/verify_ef4_notional_cells.py` now also publishes a `tape.top_k_notional` result through `ParquetSink`, reads it back, and checks the stored `cells.parquet` cell wire and `evidence.parquet` rows are in notional order (a, b, c; size order would be b, a, c). Run on io main `106897a` with core main `3af2d99`, CPython 3.12.10, pyarrow 20.0.0, Windows: OK. Tool only; no package source changed.
