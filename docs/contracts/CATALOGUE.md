@@ -1,0 +1,45 @@
+# Contract catalogue (schema `ef-contract-catalogue1`)
+
+Internal, synthetic, pre-release. Authority: core frozen contract; on conflict core wins and the gate fails.
+
+The catalogue is a generated, read-only view of what each producer takes in (input view) and gives out (output view), taken from the core contract files. It states what an adapter supplies and what a consumer receives. It never says who supplies the data, and it computes nothing. This is catalogue story S1: EF3, EF4 and EF5 (8 core contract files, 21 producers, 126 feature ids). EF1 and EF2 are not present yet; `index.json` lists the families that are.
+
+## Where it is
+
+- Repository: [docs/contracts/catalogue/](catalogue/INDEX.md), start at `INDEX.md`.
+- Installed: the same bytes as data files in the `equity-feature-io-contracts` wheel, under `equity_feature_io_contracts/catalogue/`. The catalogue version is the package version. No Python lookup module ships in this version (planned as a later story), so read the files directly, for example with `importlib.resources.files("equity_feature_io_contracts") / "catalogue" / "index.json"`.
+
+## Layout (paths follow from the producer id)
+
+| Path | Content |
+| --- | --- |
+| `index.json` | schema, catalogue version, families present, per-contract provenance, per-producer entry (producer id, family, contract_version, status, adapter links, feature ids, paths), `by_feature_id` (feature id to producer id) |
+| `INDEX.md` | the same index for reading, grouped by family |
+| `<producer_id>/input.md`, `input.json` | input view for the producer |
+| `<producer_id>/output.md`, `output.json` | output view for the producer |
+
+`producer_id` is the core `config_identity`, for example `ef4.tape_window_sign`.
+
+## Input view, fixed order
+
+1. roles and slots in library order, with batch kind and nullability; 2. required columns and per-role rules (core states columns inside the role text; copied unchanged); 3. reference fact kinds and schemas; 4. config parameters (and any defaults position core states); 5. coverage, adjustment, scale, known_at and mode rules; 6. input-stage refusal order and codes; 7. adapter API link.
+
+## Output view, fixed order
+
+1. feature ids with dtype, unit, scale, availability rule and order; 2. quality vocabulary, readiness and evidence bounds; 3. reasons reached (fixture ids in core); then refused outcomes, known limits and unit additions where core states them; and the headers as `FeatureHeader` values (`feature_id`, `algorithm_version`, `dtype`, `unit`, `schema_version`; `dtype` is the `ValueType` string value).
+
+## Provenance, on every page and every JSON
+
+`contract_version` (core `policy_version`), `status`, source core path, core commit (the last core commit that touched the file, as of the ref used), sha256 of the LF bytes of the source, and the authority line. `status` is read only from the leading words of the core `coordinator_freeze` text: `Frozen as ...` gives `frozen`, `Proposed freeze ...` gives `proposed`. The core status text is kept verbatim as `source_status`. Amendment files named in `related_core_files_not_extracted` (the shared amendments of EF3, EF4 and EF5) are referenced with commit and sha256 but their rulings are not extracted in this version; read them in core.
+
+## What is not in the views
+
+Every core top-level key is either parsed into a view, listed under `excluded_core_keys` in `index.json` with a reason (calculation semantics, decision record, test evidence, process, per-source matrix), or listed as unparsed. Unparsed keys are never dropped. The gate fails on any unparsed key, so a new core key forces an explicit decision in the extractor.
+
+## Maintainers
+
+    python tools/gen_contract_catalogue.py --core-root <core checkout> [--core-ref origin/main]   # writes both copies
+    python tools/check_contract_catalogue.py --core-root <core checkout> [--core-ref origin/main] # drift gate: docs copy == package data == regeneration
+    python tools/verify_contract_catalogue.py                                                    # wording, markers, provenance, no provider names
+
+Generated files are never hand-edited. The generator reads core with `git show <ref>:<path>` so a dirty core working tree is not read. Adding a contract file means adding one entry (io module, API page, checkpoint) to `CONTRACTS` in the generator.
