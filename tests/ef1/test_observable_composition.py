@@ -22,7 +22,7 @@ from equity_feature_io_sdk import encode_result, prepare_publication, publish
 from equity_features.ef1 import compute_ef1
 
 PACKETS=Path(__file__).with_name('observable_publication_packets.json')
-PACKET_SHA='8404a1871c7841abbca8551e6c6b31e52dc3c4fd0a16eefead826d38bac9c3aa'
+PACKET_SHA='7e21d4eb997cd75c100d2f1da0af74fe59ed8d45262c470bdd9d5344443cd8b4'
 WORKER_ONLY={'X13-task-byte-bound','X15-evidence-bound'}
 
 def packets():
@@ -63,7 +63,7 @@ def calculate(packet):
 class ObservableCompositionTests(unittest.TestCase):
     def test_89_packets_58_exact_results_and_29_canonical_or_pure_errors(self):
         original_raw=PACKETS.with_name('observable_contract_packets.json').read_bytes()
-        self.assertEqual(hashlib.sha256(original_raw).hexdigest(),'1b7c4190290071c9469cf4ef4176019189b310c716d32c5102c2968eb2b6c539')
+        self.assertEqual(hashlib.sha256(original_raw).hexdigest(),'1d883a4d7d61593c0e8d9d2c8c0423933d07f3ff386e3775ccafe1aab0a0d2fd')
         original=json.loads(original_raw)
         amended=json.loads(PACKETS.read_bytes())
         changed=0

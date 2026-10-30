@@ -4,23 +4,23 @@
   "baseline_inventory": "docs/EQ122_EXTRACTION_INVENTORY.json",
   "canonical_baseline": "2cd51cd35c0a3081f88e1752c7c1c41ffe0e62af",
   "baseline_compared_files": 19,
-  "current_distribution_version": "0.1.0a11",
+  "current_distribution_version": "0.1.0a12",
   "allowed_version_marker_substitutions": {
     "packages/duckdb/src/equity_feature_duckdb/__init__.py": {
       "from": "0.1.0a7",
-      "to": "0.1.0a11",
+      "to": "0.1.0a12",
       "occurrences": 1,
       "reason": "Current package version; existing exports otherwise unchanged"
     },
     "packages/duckdb/src/equity_feature_duckdb/evidence.py": {
       "from": "0.1.0a7",
-      "to": "0.1.0a11",
+      "to": "0.1.0a12",
       "occurrences": 1,
       "reason": "Current acquisition receipt adapter stamp; schema and remaining fields unchanged"
     },
     "tests/duckdb/test_evidence.py": {
       "from": "0.1.0a7",
-      "to": "0.1.0a11",
+      "to": "0.1.0a12",
       "occurrences": 1,
       "reason": "Exact current receipt stamp assertion; historical expectations elsewhere preserved"
     }

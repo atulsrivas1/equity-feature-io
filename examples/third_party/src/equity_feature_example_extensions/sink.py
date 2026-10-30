@@ -42,7 +42,7 @@ class ExampleSink:
 
     def capabilities(self) -> SinkCapabilities:
         return SinkCapabilities(("1",), ("efio-json1",), ("efio-key1",), ("efio-content1",),
-                                ("0.0.4a5",), ("1",), ("v1",), "transactional", "single_writer",
+                                ("0.0.4a6",), ("1",), ("v1",), "transactional", "single_writer",
                                 True, True, True, 1, 100, 1048576, 10485760, 100000, 100000)
 
     def begin(self, envelope: PublicationEnvelope) -> _Session | CompletionReceipt:

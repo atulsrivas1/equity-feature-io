@@ -23,7 +23,7 @@ from equity_feature_io_sdk import encode_result, prepare_publication, publish
 from equity_features.ef1 import compute_ef1
 
 PACKETS = Path(__file__).with_name("reference_contract_packets.json")
-PACKET_SHA = "5b751632a5dba5bf53ac59cbf9602124ff2fb8f50e423a80f84a5346c107fa4e"
+PACKET_SHA = "7eb97ec61eb1a945d39be9551c5937b3e86c7647d854b1aa507d0a8f32728a1d"
 
 
 def document():

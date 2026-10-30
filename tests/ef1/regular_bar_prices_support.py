@@ -8,7 +8,7 @@ from equity_feature_contracts import (
 )
 from equity_feature_duckdb.regular_bar_prices import RegularBarPriceInputs, make_regular_bar_price_batch
 
-PACKET_SHA = "70fcaff8038d416f8cbc00340c7084fa106944c85a8e1ec4088d3b4b5149db96"
+PACKET_SHA = "bd057b4042e1274ae46a8653debae90e275087f6448780f491c33a2a691bbaf0"
 
 
 def packets():

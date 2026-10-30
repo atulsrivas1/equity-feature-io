@@ -47,7 +47,7 @@ class Composition(unittest.TestCase):
     def expected(self,result,values,namespace,session,unit,cutoff,source,scope):
         self.assertEqual({c.feature_id:c.values[0] for c in result.values},values)
         self.assertEqual({c.algorithm_version for c in result.values},{'v1'})
-        self.assertEqual(len(result.values),12);self.assertEqual(result.evidence,())
+        self.assertEqual(len(result.values),13);self.assertEqual(result.evidence,())
         for q in result.quality:
             self.assertEqual((q.expected,q.observed),(2,2))
             self.assertEqual((q.status,q.reasons),(Status.MISSING_INPUT,(Reason.ABSENT_INPUT,)) if values[q.feature_id] is None else (Status.AVAILABLE,()))
@@ -67,7 +67,7 @@ class Composition(unittest.TestCase):
         reference=encode_result(result)
         for sink in self.sinks(label):
             e=prepare_publication((result,),destination_scope='synthetic-conformance',generation_id=label,job_id='matrix',partition_id='one',limits=LIMITS)
-            receipt=publish(sink,e,(result,));self.assertEqual((receipt.result_count,receipt.cell_count,receipt.evidence_count),(1,12,0))
+            receipt=publish(sink,e,(result,));self.assertEqual((receipt.result_count,receipt.cell_count,receipt.evidence_count),(1,13,0))
             self.assertEqual(tuple(map(encode_result,sink.read(receipt))),(reference,))
             self.assertEqual(publish(sink,e,(result,)),receipt)
             self.assertEqual(sink.lookup(receipt.idempotency_key).receipt,receipt)
@@ -79,7 +79,7 @@ class Composition(unittest.TestCase):
             result=calculate(source)
             values={'session.bar.open':100.0,'session.bar.high':104.0,'session.bar.low':99.0,'session.bar.close':103.0,
               'session.bar.volume':500,'session.bar.notional':51200,'session.bar.close_weighted_price':102.6,
-              'session.price.open_close_return':3/100,'session.price.range_fraction':5/103,'session.price.close_location':4/5,
+              'session.price.open_close_return':3/100,'session.price.range_fraction':5/103,'session.price.range_over_open':5/100,'session.price.close_location':4/5,
               'session.price.overnight_gap':None,'session.price.close_close_return':None}
             from equity_feature_contracts import SourceBinding
             self.expected(result,values,'demo','S',PriceUnit(0,'USD'),(200,210,210),SourceBinding('synthetic','snapshot1','map1','bars1'),(100,200,'example-v1'))
@@ -101,7 +101,7 @@ class Composition(unittest.TestCase):
         result=compute_bars(batch,config,entity=EntityKey('A','S1'))
         expected={'session.bar.open':10.0,'session.bar.high':14.0,'session.bar.low':9.0,'session.bar.close':12.0,
           'session.bar.volume':8,'session.bar.notional':None,'session.bar.close_weighted_price':11.625,
-          'session.price.open_close_return':.2,'session.price.range_fraction':5/12,'session.price.close_location':.6,
+          'session.price.open_close_return':.2,'session.price.range_fraction':5/12,'session.price.range_over_open':5/10,'session.price.close_location':.6,
           'session.price.overnight_gap':None,'session.price.close_close_return':None}
         self.expected(result,expected,'sdk','S1',PriceUnit(2,'USD'),(120000000000,)*3,batch.metadata.source,(0,120000000000,'synthetic1'))
         self.roundtrip(result,'minute')

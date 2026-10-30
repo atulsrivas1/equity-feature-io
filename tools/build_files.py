@@ -12,8 +12,8 @@ import tempfile
 from build_foundation import build, fingerprint, git, inspect, install, run, sha, snapshot, IO_SDK
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE = '98778e79f9422904bbb043d067a7ce9e77675311'
-INVARIANT_FILES = 123  # installed files fingerprinted before and after the run (core, I/O contracts, SDK, this distribution)
+CORE = '967d13df5cc080ef85c5bdeb96b1bca983836561'
+INVARIANT_FILES = 130  # installed files fingerprinted before and after the run (core, I/O contracts, SDK, this distribution)
 PATHS = ('packages/files','packages/acquisition','packages/io-contracts','packages/io-sdk',
          'tests/files','tests/file_goldens.json','tests/files_probe.py','examples/files_consumer.py',
          'tools/build_files.py','tools/build_foundation.py','tools/_versions.py','requirements-dev.txt')

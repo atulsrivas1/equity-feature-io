@@ -8,18 +8,18 @@ Historical receipts, release records and frozen archive baselines keep the versi
 from __future__ import annotations
 
 # Core distributions this repository is built and tested against (their sibling repository owns them).
-CORE = {"equity-feature-contracts": "0.0.4a5", "equity-features": "0.0.4a6", "equity-feature-evidence": "0.1.0a3"}
+CORE = {"equity-feature-contracts": "0.0.4a6", "equity-features": "0.0.4a7", "equity-feature-evidence": "0.1.0a4"}
 
 # Distributions owned by this repository (examples included).
 OWN = {
-    "equity-feature-io-contracts": "0.1.0a4",
+    "equity-feature-io-contracts": "0.1.0a5",
     "equity-feature-io-sdk": "0.1.0a3",
     "equity-feature-acquisition": "0.1.0a0",
     "equity-feature-files": "0.1.0a0",
-    "equity-feature-duckdb": "0.1.0a11",
+    "equity-feature-duckdb": "0.1.0a12",
     "equity-feature-duckdb-sink": "0.1.0a1",
     "equity-feature-parquet": "0.1.0a2",
-    "equity-feature-bundles": "0.1.0a2",
+    "equity-feature-bundles": "0.1.0a3",
     "equity-feature-example-extensions": "0.1.0a1",
     "equity-feature-factory-fixture": "0.1.0a2",
 }
