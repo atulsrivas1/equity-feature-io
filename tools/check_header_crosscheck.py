@@ -17,6 +17,9 @@ Every MISMATCH is printed with file and line. Exit status 1 when any MISMATCH ex
 schema_version are not stated as literals next to the identities in the code, so they are not compared (stated in the output).
 
     python tools/check_header_crosscheck.py [--workers-root PATH_TO_WORKERS_CHECKOUT]
+
+Exit codes: 0 no mismatch among the declarations that exist; 1 at least one MISMATCH; 2 usage or input error (fail closed: a
+``--workers-root`` that is not an existing directory with a ``packages`` directory, or a layer with no Python source to scan).
 """
 from __future__ import annotations
 
@@ -88,9 +91,12 @@ def scan(paths: list[Path], base: Path, producers: list[dict[str, object]], vers
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--workers-root", type=Path, default=None)
     args = parser.parse_args()
+    if args.workers_root is not None and not (args.workers_root / "packages").is_dir():
+        print(f"error: --workers-root {args.workers_root} is not a workers checkout (no 'packages' directory); refusing to report NOT_DECLARED for a layer that was not read", file=sys.stderr)
+        return 2
     index = json.loads((ROOT / "docs/contracts/catalogue/index.json").read_text(encoding="utf-8"))
     producers = []
     for p in index["producers"]:
@@ -99,7 +105,11 @@ def main() -> int:
     versions = {str(p["algorithm_version"]) for p in producers}
     layers = {"io": scan(sources([ROOT / "packages", ROOT / "examples"]), ROOT, producers, versions)}
     if args.workers_root is not None:
-        layers["workers"] = scan(sources([args.workers_root / "packages"]), args.workers_root, producers, versions)
+        workers_sources = sources([args.workers_root / "packages"])
+        if not workers_sources:
+            print(f"error: no Python source found under {args.workers_root / 'packages'}", file=sys.stderr)
+            return 2
+        layers["workers"] = scan(workers_sources, args.workers_root, producers, versions)
     bad = 0
     print(f"catalogue {index['catalogue_version']}: {len(producers)} producers, {len(index['by_feature_id'])} feature ids; layers: {', '.join(layers)}")
     print(f"{'producer':34} " + " ".join(f"{name:>13}" for name in layers))
