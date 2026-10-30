@@ -2,7 +2,7 @@
 
 This optional companion reuses `AcquisitionRequest`, canonical `SourceErrorCode`
 and the accepted I/O `CredentialProvider`. It performs no operation on import and
-registers no source. Calculations, `equity-feature-io-contracts==0.1.0a4`, I/O SDK0.1.0a3 and workers0.1.0a17 are
+registers no source. Calculations, `equity-feature-io-contracts==0.1.0a5`, I/O SDK0.1.0a3 and workers0.1.0a17 are
 unchanged. CPython3.12 Windows/Linux qualification is required before delivery.
 
 `AcquisitionScope(request, provider, dataset, endpoint, mode, source_revision,

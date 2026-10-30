@@ -52,7 +52,7 @@ class Extensions(unittest.TestCase):
             expected={'session.bar.open':100.0,'session.bar.high':104.0,'session.bar.low':99.0,
                       'session.bar.close':103.0,'session.bar.volume':500,'session.bar.notional':51200,
                       'session.bar.close_weighted_price':102.6,'session.price.open_close_return':3/100,
-                      'session.price.range_fraction':5/103,'session.price.close_location':4/5,
+                      'session.price.range_fraction':5/103,'session.price.range_over_open':5/100,'session.price.close_location':4/5,
                       'session.price.overnight_gap':None,'session.price.close_close_return':None}
             self.assertEqual(values,expected)
             qualities={q.feature_id:q for q in result.quality}
@@ -72,7 +72,7 @@ class Extensions(unittest.TestCase):
             self.assertEqual(units['session.bar.volume'],'shares');self.assertEqual(units['session.bar.notional'],'currency coefficient / 10^price_scale')
             self.assertEqual(units['session.bar.close_weighted_price'],'currency/share; proxy')
             self.assertEqual(tuple(map(encode_result,readback)),(encode_result(result),))
-            self.assertEqual((receipt.result_count,receipt.cell_count,receipt.evidence_count),(1,12,0))
+            self.assertEqual((receipt.result_count,receipt.cell_count,receipt.evidence_count),(1,13,0))
 
     def test_source_literal_delivery_and_no_acquisition_during_admission(self):
         request=example_request();creds=Credentials();sources=SourceRegistry();sources.register('custom.bars',SourceFactory())

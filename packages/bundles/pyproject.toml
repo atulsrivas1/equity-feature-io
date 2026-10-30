@@ -4,17 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "equity-feature-bundles"
-version = "0.1.0a2"
+version = "0.1.0a3"
 description = "Data-only reproduction bundles with explicit trusted replay"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{name = "Atul Srivastava"}]
-dependencies = ["equity-feature-contracts==0.0.4a5", "equity-feature-evidence==0.1.0a3"]
+dependencies = ["equity-feature-contracts==0.0.4a6", "equity-feature-evidence==0.1.0a4"]
 
 [project.optional-dependencies]
-replay = ["equity-features==0.0.4a6"]
+replay = ["equity-features==0.0.4a7"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -8,7 +8,7 @@ from equity_feature_contracts import (
 )
 from equity_feature_duckdb.gap_endpoint import GapEndpointInputs, make_gap_endpoint_batch
 
-PACKET_SHA = "ca32e6c890697a09d1ba6450748085a4b03d2bff2eb8e711d8c79371289aede3"
+PACKET_SHA = "22d23e4c57fe1382c25b30aba50bde70eff002d85a9a4dc27f96b13df6b210b2"
 
 
 def packets():
@@ -44,5 +44,5 @@ def packet_inputs(packet):
 def causal_packets():
     # Root-approved two-quality-leaf correction; original bytes remain immutable.
     raw = Path(__file__).with_name("gap_endpoint_causal_contract_packets.json").read_bytes()
-    assert hashlib.sha256(raw).hexdigest() == "ded050dc98f29a45d9f4bcbb47a3b3c0e415e93f381282500b3f1f8c72a1a0b5"
+    assert hashlib.sha256(raw).hexdigest() == "8ff3cce116c71dbe50c8e3e8d455dd4203acddfcc9604bbc092aa85e2ca2b781"
     return json.loads(raw)["packets"]

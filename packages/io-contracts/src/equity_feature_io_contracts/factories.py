@@ -14,7 +14,7 @@ PublicConfig: TypeAlias = Mapping[str, ConfigValue]
 _T_co = TypeVar("_T_co", covariant=True)
 
 # The one canonical equity-feature-contracts distribution version this I/O v1 admits (tools/verify_versions.py checks it).
-CANONICAL_PACKAGE_VERSION = "0.0.4a5"
+CANONICAL_PACKAGE_VERSION = "0.0.4a6"
 
 
 class CredentialProvider(Protocol):

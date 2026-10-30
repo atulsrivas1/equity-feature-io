@@ -9,7 +9,7 @@ from equity_feature_contracts import (
 from equity_feature_duckdb.ef1 import DailyObservationsInputs, make_daily_observations_batch
 
 PACKETS = Path(__file__).with_name('daily_observations_contract_packets.json')
-PACKET_SHA = 'eab22b6e2f5adf82e0437f1d3aaf845d4d4dcd66e5a561600a2ccb9172573ff2'
+PACKET_SHA = '50257a0d648809c7987ce49d710812afdd5f1ff6dd4ddf1c65c0fafb8c121f15'
 
 
 def packets():

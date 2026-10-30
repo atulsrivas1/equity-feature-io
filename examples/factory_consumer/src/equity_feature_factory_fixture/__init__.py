@@ -42,7 +42,7 @@ class SyntheticCapabilities:
     codec_versions: tuple[str, ...] = ("efio-json1",)
     identity_versions: tuple[str, ...] = ("efio-key1",)
     digest_versions: tuple[str, ...] = ("efio-content1",)
-    canonical_package_versions: tuple[str, ...] = ("0.0.4a5",)
+    canonical_package_versions: tuple[str, ...] = ("0.0.4a6",)
     canonical_schema_versions: tuple[str, ...] = ("1",)
     math_policy_versions: tuple[str, ...] = ("v1",)
     visibility: str = "manifest_last"
