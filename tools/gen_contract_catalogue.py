@@ -25,6 +25,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _versions import IO_CONTRACTS  # noqa: E402
+from catalogue_maps import MAPS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS_DIR = ROOT / "docs" / "contracts" / "catalogue"
@@ -53,6 +54,19 @@ CONTRACTS: dict[str, dict[str, Any]] = {
                             "api": "docs/api/EF4_PATH_EFFICIENCY_INPUTS.md", "checkpoint": "docs/EF4_PATH_EFFICIENCY_IO.md", "amendments": ["docs/ef4/EF4_SHARED_AMENDMENT.json"]},
     "ef4.path_projections": {"family": "EF4", "path": "docs/ef4/PATH_PROJECTIONS_CONTRACT_PROPOSAL.json", "module": "ef4_projections",
                              "api": "docs/api/EF4_PROJECTIONS_INPUTS.md", "checkpoint": "docs/EF4_PROJECTIONS_IO.md", "amendments": ["docs/ef4/EF4_SHARED_AMENDMENT.json"]},
+    # EF2 and EF1: each core file has its own layout; tools/catalogue_maps.py holds one map per file ("map" key).
+    "ef2.channels": {"family": "EF2", "path": "docs/ef2/ICHIMOKU_CHANNELS_CONTRACT_PROPOSAL.json", "module": "channels", "map": "ef2.channels",
+                     "api": "docs/api/EF2_CHANNELS_INPUTS.md", "checkpoint": "docs/EF2_CHANNELS_IO.md", "amendments": ["docs/ef2/PRODUCER_SET_AMENDMENT.json"]},
+    "ef2.momentum": {"family": "EF2", "path": "docs/ef2/MOMENTUM_TREND_CONTRACT_PROPOSAL.json", "module": "momentum", "map": "ef2.momentum",
+                     "api": "docs/api/EF2_MOMENTUM_INPUTS.md", "checkpoint": "docs/EF2_MOMENTUM_IO.md", "amendments": ["docs/ef2/PRODUCER_SET_AMENDMENT.json"]},
+    "ef2.money_flow_retracement": {"family": "EF2", "path": "docs/ef2/MONEYFLOW_RETRACEMENT_CONTRACT_PROPOSAL.json", "module": "money_flow",
+                                   "producer_modules": {"retracement_level": "retracement"}, "map": "ef2.money_flow_retracement",
+                                   "api": "docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md", "checkpoint": "docs/EF2_MONEY_FLOW_RETRACEMENT_IO.md",
+                                   "amendments": ["docs/ef2/PRODUCER_SET_AMENDMENT.json"]},
+    "ef1.close_reconciliation": {"family": "EF1", "path": "docs/ef1/CLOSE_RECONCILIATION_CONTRACT_PROPOSAL.json", "module": "reference_close", "map": "ef1.close_reconciliation",
+                                 "api": "docs/api/EF1_REFERENCE_CLOSE_INPUTS.md", "checkpoint": "docs/EF1_CLOSE_RECONCILIATION_IO.md", "amendments": ["docs/ef1/PRODUCER_SET_AMENDMENT.json"]},
+    "ef1.multivenue_status": {"family": "EF1", "path": "docs/ef1/MULTI_VENUE_STATUS_CONTRACT_PROPOSAL.json", "module": "venue_status", "map": "ef1.multivenue_status",
+                              "api": "docs/api/EF1_VENUE_STATUS_INPUTS.md", "checkpoint": "docs/EF1_VENUE_STATUS_IO.md", "amendments": ["docs/ef1/PRODUCER_SET_AMENDMENT.json"]},
     "ef5.price_structures": {"family": "EF5", "path": "docs/ef5/PRICE_STRUCTURES_CONTRACT_PROPOSAL.json", "module": "price_structures",
                              "api": "docs/api/EF5_PRICE_STRUCTURES_INPUTS.md", "checkpoint": "docs/EF5_PRICE_STRUCTURES_IO.md", "amendments": ["docs/ef5/EF5_SHARED_AMENDMENT.json"]},
 }
@@ -62,8 +76,8 @@ META_KEYS = {"proposal_version", "status", "coordinator_freeze", "producers"}
 INPUT_ROLE_KEYS = {"roles", "reference_fact_schemas"}
 INPUT_RULE_KEYS = ("mode_rule", "reset_mode", "knowledge_readiness", "refusal_precedence", "refusal_model", "shared_validator_split",
                    "grid_context", "interval_kind_rule", "population_kind_rule", "seed_kind_rule", "defaults_ledger",
-                   "shared_rules_and_terms", "layer_responsibilities")
-OUTPUT_KEYS = ("header_order", "quality", "reasons_reached", "refused_definition", "known_limits", "unit_additions")
+                   "shared_rules_and_terms", "layer_responsibilities", "context", "capability", "selection", "slot_rule")
+OUTPUT_KEYS = ("header_order", "quality", "reasons_reached", "refused_definition", "known_limits", "unit_additions", "header_rules")
 OUTPUT_OTHER_KEYS = {"headers"}
 # Out of scope for the input and output views; listed with the reason so a reader knows where to look in core.
 EXCLUDED: dict[str, str] = {
@@ -82,7 +96,19 @@ EXCLUDED: dict[str, str] = {
 }
 FIXTURE_KEY = re.compile(r".*_fixtures$")
 PRODUCER_KEYS = {"config_identity", "algorithm_version", "schema_version", "policy_version", "parameters", "roles", "roles_in_slot_order"}
-PRODUCER_EXCLUDED = {"policy": "calculation semantics", "ticket": "process", "story": "process"}
+PRODUCER_EXCLUDED = {"policy": "calculation semantics", "ticket": "process", "story": "process", "package": "process", "status": "decision record",
+                     "config_status": "decision record", "convention_version": "calculation semantics",
+                     "header_prefix": "naming prefix of the feature ids (restated by the output view)"}
+
+# Core EF1 contract files that are in the repository but not catalogued yet: each is stated as 'proposed_not_frozen' in its own status
+# field and has no role or producer table of the common layout. Listed (never dropped) in index.json and INDEX.md.
+DEFERRED_EF1: dict[str, str] = {
+    "docs/ef1/CONTRACT.json": "original EF1 contract (proposed_not_frozen); canonical_input_roles layout",
+    "docs/ef1/OBSERVABLE_CONTRACT_PROPOSAL.json": "observable layer; no role or producer table",
+    "docs/ef1/PATH_CONTRACT_PROPOSAL.json": "path layer; no role or producer table",
+    "docs/ef1/PERIOD_PHASE_CONTRACT_PROPOSAL.json": "period phase layer; no role or producer table",
+    "docs/ef1/REFERENCE_CONTRACT_PROPOSAL.json": "reference layer; roles keyed by name, status proposed_not_frozen",
+}
 
 
 def git(core_root: Path, *args: str) -> bytes:
@@ -108,14 +134,14 @@ def freeze_status(contract: dict[str, Any]) -> str:
     raise SystemExit("coordinator_freeze text starts with a recognised freeze statement: " + text[:80])
 
 
-def classify_keys(contract: dict[str, Any]) -> tuple[dict[str, list[str]], list[str]]:
+def classify_keys(contract: dict[str, Any], extra: dict[str, str] | None = None) -> tuple[dict[str, list[str]], list[str]]:
     excluded: dict[str, list[str]] = {}
     unparsed: list[str] = []
     parsed = META_KEYS | INPUT_ROLE_KEYS | set(INPUT_RULE_KEYS) | set(OUTPUT_KEYS) | OUTPUT_OTHER_KEYS
     for key in contract:
         if key in parsed:
             continue
-        reason = "test evidence" if FIXTURE_KEY.fullmatch(key) else EXCLUDED.get(key)
+        reason = "test evidence" if FIXTURE_KEY.fullmatch(key) else (extra or {}).get(key, EXCLUDED.get(key))
         if reason is None:
             unparsed.append(key)
         else:
@@ -177,7 +203,7 @@ def build_producer(contract_key: str, spec: dict[str, Any], contract: dict[str, 
         "algorithm_version": entry["algorithm_version"], "schema_version": entry["schema_version"], "status": status,
         "source_status": contract["status"], "source": prov,
     }
-    adapter = {"io_module": "equity_feature_duckdb." + spec["module"], "api_page": spec["api"], "api_link": IO_BLOB + spec["api"], "checkpoint": spec["checkpoint"]}
+    adapter = {"io_module": "equity_feature_duckdb." + spec.get("producer_modules", {}).get(name, spec["module"]), "api_page": spec["api"], "api_link": IO_BLOB + spec["api"], "checkpoint": spec["checkpoint"]}
     defs = role_defs(contract, name)
     by_name = {str(d["role"]): d for d in defs}
     roles = []
@@ -262,6 +288,8 @@ def input_md(v: dict[str, Any]) -> bytes:
     L += ["## 1. Roles and slots (library order)", "", "| Slot | Role | Batch kind | Nullable |", "| --- | --- | --- | --- |"]
     for r in v["roles"]:
         L.append(f"| {r['slot']} | `{r['role']}` | {cell(r['kind']) if r['kind'] is not None else 'not stated'} | {cell(r['nullable']) if r['nullable'] is not None else 'not stated'} |")
+    if not v["roles"]:
+        L += ["", "The core contract states no role table for this producer; its supplied inputs are described only by the rules in section 5 and by the adapter API page in section 7."]
     L += ["", "## 2. Required columns and per-role rules", "", "Core states required columns inside the role text; it is copied unchanged.", ""]
     for r in v["roles"]:
         L.append(f"- `{r['role']}`: {r['contract'] if r['contract'] is not None else 'no role text in the core contract; see the reference fact schemas'}")
@@ -269,7 +297,7 @@ def input_md(v: dict[str, Any]) -> bytes:
     rfs = v["reference_fact_schemas"]
     L += render_value(rfs) if rfs else ["The core contract states no reference fact schemas."]
     L += ["", "The schemas are listed for the whole core contract file, that is for all of its producers.", "", "## 4. Config parameters, defaults and who supplies them", ""]
-    L += [f"- {p['text'] if p['name'] is None else '`' + p['name'] + '`: ' + str(p['text'])}" for p in v["config_parameters"]] or ["No parameters listed."]
+    L += [f"- {p['text'] if p['name'] is None else '`' + p['name'] + '`: ' + (p['text'] if isinstance(p['text'], str) else json.dumps(p['text'], ensure_ascii=True))}" for p in v["config_parameters"]] or ["No parameters listed."]
     L += ["", "Parameters are listed as the core contract states them. Where core states a defaults position it is in the parameter text or under rules (`defaults_ledger`); the catalogue adds none.", ""]
     L += ["## 5. Coverage, adjustment, scale, known_at and mode rules", ""]
     rules = {k: x for k, x in v["rules"].items() if k not in ("refusal_precedence", "refusal_model", "shared_validator_split")}
@@ -323,7 +351,11 @@ def index_md(index: dict[str, Any]) -> bytes:
                 pid = p["producer_id"]
                 L.append(f"| `{pid}` | `{p['contract_version']}` | {p['status']} | [input]({pid}/input.md) | [output]({pid}/output.md) | [{p['adapter']['api_page'].split('/')[-1]}]({p['adapter']['api_link']}) | {len(p['feature_ids'])} |")
         L.append("")
-    L += ["## Find a producer from a feature id", "", "`index.json` holds `by_feature_id`, a map from each feature id to its producer id.", ""]
+    L += ["## Core contract files not catalogued yet", "",
+          "These core contract files exist but are not in the catalogue; the EF1 family is therefore partly present. Each is listed with its own core status text (core wins).", "",
+          "| Core file | Core status text | Reason |", "| --- | --- | --- |"]
+    L += [f"| `{d['core_path']}` | {cell(d['core_status_text'])} | {cell(d['reason'])} |" for d in index["not_catalogued_core_files"]]
+    L += ["", "## Find a producer from a feature id", "", "`index.json` holds `by_feature_id`, a map from each feature id to its producer id.", ""]
     return "\n".join(L).encode("utf-8")
 
 
@@ -341,6 +373,9 @@ def generate(core_root: Path, ref: str) -> dict[str, bytes]:
         raw, commit = read_core(core_root, ref, spec["path"])
         sha = hashlib.sha256(raw).hexdigest()
         contract = json.loads(raw.decode("utf-8"))
+        map_excluded: dict[str, str] = {}
+        if "map" in spec:
+            contract, map_excluded = MAPS[spec["map"]](contract)
         if "grain" in raw.decode("utf-8").lower() and "grain" not in contract:
             problems.append(f"{contract_key}: the word 'grain' now occurs in core text; extend the extractor (grain line says it does not occur)")
         related = []
@@ -348,7 +383,7 @@ def generate(core_root: Path, ref: str) -> dict[str, bytes]:
             data, c = read_core(core_root, ref, rel)
             related.append({"core_path": rel, "core_commit": c, "sha256_lf": hashlib.sha256(data).hexdigest()})
         status = freeze_status(contract)
-        excluded, unparsed = classify_keys(contract)
+        excluded, unparsed = classify_keys(contract, map_excluded)
         prov = provenance(contract_key, spec, contract, sha, commit, related)
         unparsed_producers: dict[str, list[str]] = {}
         for name, entry in contract["producers"].items():
@@ -369,12 +404,17 @@ def generate(core_root: Path, ref: str) -> dict[str, bytes]:
             })
         contracts_index.append({"contract_key": contract_key, "family": spec["family"], "status": status, "source": prov,
                                 "excluded_core_keys": excluded, "unparsed_top_level_keys": unparsed, "unparsed_producer_keys": unparsed_producers})
+    deferred = []
+    for rel, note in DEFERRED_EF1.items():
+        data, c = read_core(core_root, ref, rel)
+        status_text = str(json.loads(data.decode("utf-8")).get("status", ""))
+        deferred.append({"core_path": rel, "core_commit": c, "sha256_lf": hashlib.sha256(data).hexdigest(), "core_status_text": status_text[:200], "reason": note})
     if problems:
         raise SystemExit("\n".join(problems))
     producers_index.sort(key=lambda p: p["producer_id"])
     families = sorted({p["family"] for p in producers_index})
     index = {"schema": SCHEMA, "generated": GENERATED, "wording": WORDING, "authority": AUTHORITY, "catalogue_version": IO_CONTRACTS,
-             "families_present": families, "contracts": contracts_index, "producers": producers_index, "by_feature_id": dict(sorted(by_feature.items()))}
+             "families_present": families, "contracts": contracts_index, "not_catalogued_core_files": deferred, "producers": producers_index, "by_feature_id": dict(sorted(by_feature.items()))}
     files["index.json"] = dumps(index)
     files["INDEX.md"] = index_md(index)
     return dict(sorted(files.items()))
