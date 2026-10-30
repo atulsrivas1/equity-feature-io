@@ -15,3 +15,11 @@ role of the EF5 producers and builds their closed configuration envelopes. It pe
 - `Ef5Inputs`: the nullable `bars` role holder; `EF5_FEATURES` and `EF5_UNITS` list the 15 outputs and their units.
 
 The library (`equity_features_intraday.compute_ef5`) performs every admission, decision and refusal.
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef5.candle`: [input](../contracts/catalogue/ef5.candle/input.md), [output](../contracts/catalogue/ef5.candle/output.md)
+- `ef5.structure`: [input](../contracts/catalogue/ef5.structure/input.md), [output](../contracts/catalogue/ef5.structure/output.md)
+- `ef5.technical`: [input](../contracts/catalogue/ef5.technical/input.md), [output](../contracts/catalogue/ef5.technical/output.md)

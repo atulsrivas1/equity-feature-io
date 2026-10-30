@@ -67,3 +67,10 @@ instants `0` and null.
 
 [Executable synthetic example](../../examples/ef2_money_flow_retracement.py). See
 [validation and remaining gates](../EF2_MONEY_FLOW_RETRACEMENT_IO.md).
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef2.money_flow`: [input](../contracts/catalogue/ef2.money_flow/input.md), [output](../contracts/catalogue/ef2.money_flow/output.md)
+- `ef2.retracement_level`: [input](../contracts/catalogue/ef2.retracement_level/input.md), [output](../contracts/catalogue/ef2.retracement_level/output.md)

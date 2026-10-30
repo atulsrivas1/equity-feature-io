@@ -65,3 +65,9 @@ there is verified only when executed.
 
 [Executable synthetic example](../../examples/ef1_reference_close.py) uses `.slots`
 with `compute_ef1`. See [validation and remaining gates](../EF1_CLOSE_RECONCILIATION_IO.md).
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef1.reference_close`: [input](../contracts/catalogue/ef1.reference_close/input.md), [output](../contracts/catalogue/ef1.reference_close/output.md)

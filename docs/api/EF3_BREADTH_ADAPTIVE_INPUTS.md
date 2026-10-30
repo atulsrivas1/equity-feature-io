@@ -19,3 +19,11 @@ result = compute_ef3_breadth(case.slots, case.config(features), entity=case.enti
 ```
 
 Limits: no rounding, sorting by value, filling, rescaling or inference of supplied values. Rows are ordered by `(effective_start_ns, reference_id)` only as the shared validator requires.
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef3.adaptive_volume`: [input](../contracts/catalogue/ef3.adaptive_volume/input.md), [output](../contracts/catalogue/ef3.adaptive_volume/output.md)
+- `ef3.observed_breadth`: [input](../contracts/catalogue/ef3.observed_breadth/input.md), [output](../contracts/catalogue/ef3.observed_breadth/output.md)
+- `ef3.session_breadth`: [input](../contracts/catalogue/ef3.session_breadth/input.md), [output](../contracts/catalogue/ef3.session_breadth/output.md)

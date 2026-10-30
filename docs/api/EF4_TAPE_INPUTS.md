@@ -34,3 +34,10 @@ Limits: no sorting, rounding, filling, rescaling or inference of supplied values
 - RF69 (a supplied partial whose rows arrive in the delivered order): the adapter has no supplied-partial input. The runner reorders a computed partial's cell rows to the delivered order and the library's merge refuses with `INVALID_ORDER`. This is exercised by the runner, not through the adapter.
 - Known limit: the `bundles` package carries only the `session.compute_trades.v1` shape (EF4 results are refused `unsupported_version` at write), and its decoder (`equity_feature_bundles/_typed.py`) rebuilds `TopKTrades` through the shared constructor and refuses notional-ordered cells. The Parquet round trip of notional top-K cells passes (see the Refresh section of the checkpoint).
 - Codec: the io-sdk decoder reads a notional-ordered cell only for a `tape.top_k_notional` column (checked by feature id) and refuses an out-of-rank cell `INVALID_CONTENT`; all other top-K cells keep the shared size-order constructor.
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef4.tape_window_sign`: [input](../contracts/catalogue/ef4.tape_window_sign/input.md), [output](../contracts/catalogue/ef4.tape_window_sign/output.md)
+- `ef4.trade_top_k_notional`: [input](../contracts/catalogue/ef4.trade_top_k_notional/input.md), [output](../contracts/catalogue/ef4.trade_top_k_notional/output.md)
