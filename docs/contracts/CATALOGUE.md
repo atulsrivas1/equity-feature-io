@@ -7,7 +7,7 @@ The catalogue is a generated, read-only view of what each producer takes in (inp
 ## Where it is
 
 - Repository: [docs/contracts/catalogue/](catalogue/INDEX.md), start at `INDEX.md`.
-- Installed: the same bytes as data files in the `equity-feature-io-contracts` wheel, under `equity_feature_io_contracts/catalogue/`. The catalogue version is the package version. No Python lookup module ships in this version (planned as a later story), so read the files directly, for example with `importlib.resources.files("equity_feature_io_contracts") / "catalogue" / "index.json"`.
+- Installed: the same bytes as data files in the `equity-feature-io-contracts` wheel, under `equity_feature_io_contracts/catalogue/`. The catalogue version is the package version. The module `equity_feature_io_contracts.catalogue` reads them (S6 part 2): `producers()` returns every producer, `by_feature_id(feature_id)` returns the producer whose output carries that feature id (raises `UnknownFeatureId`, a `KeyError`, for an unknown id), and `version()` returns the catalogue version, the families present and each producer's `contract_version`. Each `Producer` carries the producer id, family, contract key, contract_version, status, feature ids and the catalogue paths of its four pages. The module imports only the standard library and reads the packaged data; it imports no core or workers code, validates nothing and computes nothing. The files can still be read directly, for example with `importlib.resources.files("equity_feature_io_contracts") / "catalogue" / "index.json"`.
 
 ## Layout (paths follow from the producer id)
 
@@ -30,22 +30,22 @@ The catalogue is a generated, read-only view of what each producer takes in (inp
 
 ## Reading a page from the installed package
 
-`FeatureHeader` is in `equity_feature_io_contracts`; its `dtype` is a `ValueType`, which comes from core `equity_feature_contracts` (install it, it is already a dependency). Example (reads data only; no lookup module yet):
+`FeatureHeader` is in `equity_feature_io_contracts`; its `dtype` is a `ValueType`, which comes from core `equity_feature_contracts` (install it, it is already a dependency). Example (reads data only):
 
     import json
     from importlib.resources import files
     from equity_feature_contracts import ValueType
-    from equity_feature_io_contracts import FeatureHeader
+    from equity_feature_io_contracts import FeatureHeader, catalogue
 
     root = files("equity_feature_io_contracts") / "catalogue"
-    index = json.loads((root / "index.json").read_text("utf-8"))
-    producer = index["by_feature_id"]["tape.window.count"]            # a result column to its producer
+    producer = catalogue.by_feature_id("tape.window.count").producer_id   # a result column to its producer
+    print(catalogue.version().catalogue_version, len(catalogue.producers()))
     output = json.loads((root / producer / "output.json").read_text("utf-8"))
     h = next(x for x in output["headers"] if x["feature_id"] == "tape.window.count")["feature_header_value"]
     header = FeatureHeader(h["feature_id"], h["algorithm_version"], ValueType(h["dtype"]), h["unit"], h["schema_version"])
     print(producer, header)
 
-`catalogue.producers()`, `catalogue.by_feature_id()` as functions, `check_input` and `check_output` are not part of S1; they come in later stories (S6 and S8), and the structural checks will never compute or judge values.
+`check_input` and `check_output` are not part of this version; they come in a later story (S8), and the structural checks will never compute or judge values.
 
 ## Provenance, on every page and every JSON
 
