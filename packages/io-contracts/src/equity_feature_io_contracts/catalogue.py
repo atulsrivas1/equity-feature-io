@@ -144,21 +144,21 @@ def check_input(producer_id: str, roles: Mapping[str, str | None]) -> CheckResul
     ``roles`` maps a role name to the batch kind supplied for it (for example ``"trade"``) or ``None`` for an absent
     delivery. A role left out of the mapping is an absent delivery. Rules (all from the input view, ``roles``):
     ``input.role.unknown`` (a role the producer does not declare), ``input.role.kind`` (a kind other than the one
-    declared; a role with no declared kind is not checked), ``input.role.required`` (a role declared not nullable is
-    absent). A nullable role that is absent is not a finding: the library reports it as ``absent_input``. Columns, rows
+    declared, compared without regard to case; a role with no declared kind is not checked), ``input.role.required`` (a role declared not nullable is
+    absent). A producer whose core contract states no role table has no roles to judge, so only the other rules apply. A nullable role that is absent is not a finding: the library reports it as ``absent_input``. Columns, rows
     and values are not looked at. Raises ``UnknownProducer`` for an unknown producer id.
     """
     view, page = _view(producer_id, "input")
     declared = {r["role"]: r for r in view["roles"]}
     findings: list[Finding] = []
-    for name in sorted(set(roles) - set(declared)):
+    for name in sorted(set(roles) - set(declared)) if declared else ():  # no role table in core: roles cannot be judged
         findings.append(Finding("input.role.unknown", name, f"role {name!r} is not declared; declared roles: {', '.join(declared)}", page))
     for name, role in declared.items():
         kind = roles.get(name)
         if kind is None:
             if role["nullable"] is False:
                 findings.append(Finding("input.role.required", name, f"role {name!r} is declared not nullable and must be supplied", page))
-        elif role["kind"] is not None and kind != role["kind"]:
+        elif role["kind"] is not None and kind.lower() != role["kind"].lower():  # core spells some kinds in capitals
             findings.append(Finding("input.role.kind", name, f"role {name!r} expects kind {role['kind']!r}, got {kind!r}", page))
     return CheckResult(producer_id, "input", tuple(findings))
 
@@ -178,7 +178,7 @@ def check_output(producer_id: str, headers: Iterable[Any], reasons: Iterable[str
     ``schema_version`` (a ``FeatureHeader`` works). Rules (from the output view, ``headers`` and ``quality``):
     ``output.header.field`` (a field is absent), ``output.feature_id.unknown`` (not an output of the producer),
     ``output.feature_id.duplicate``, ``output.header.value`` (a field differs from the catalogue
-    ``feature_header_value``), ``output.quality.reason`` (a reason name outside the quality vocabulary). Selecting only
+    ``feature_header_value``), ``output.quality.reason`` (a reason name outside the quality vocabulary the output view states; a producer whose core file states none is not judged on reasons). Selecting only
     some of the producer's feature ids is fine. Values, dtypes of cells and readiness are not looked at. Raises
     ``UnknownProducer`` for an unknown producer id.
     """
@@ -204,7 +204,11 @@ def check_output(producer_id: str, headers: Iterable[Any], reasons: Iterable[str
             got = _field(header, f)
             if got is not None and got != want[f]:
                 findings.append(Finding("output.header.value", f"{fid}.{f}", f"{f} is {got!r}, catalogue states {want[f]!r}", page))
-    vocabulary = set(view["quality"]["status_of_reason"])
-    for reason in sorted({str(r) for r in reasons} - vocabulary):
+    quality = view.get("quality") or {}
+    vocabulary: set[str] = set(quality["status_of_reason"]) if isinstance(quality.get("status_of_reason"), dict) else set()
+    for key in ("precedence", "reason_precedence", "reasons", "reasons_used"):
+        if isinstance(quality.get(key), list):
+            vocabulary |= {str(r) for r in quality[key]}
+    for reason in sorted({str(r) for r in reasons} - vocabulary) if vocabulary else ():  # no stated vocabulary: reasons are not judged
         findings.append(Finding("output.quality.reason", reason, f"reason {reason!r} is not in the quality vocabulary", page))
     return CheckResult(producer_id, "output", tuple(findings))

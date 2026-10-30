@@ -2,7 +2,7 @@
 
 Internal, synthetic, pre-release. Authority: core frozen contract; on conflict core wins and the gate fails.
 
-The catalogue is a generated, read-only view of what each producer takes in (input view) and gives out (output view), taken from the core contract files. It states what an adapter supplies and what a consumer receives. It never says who supplies the data, and it computes nothing. This is catalogue story S1: EF3, EF4 and EF5 (8 core contract files, 21 producers, 126 feature ids). EF1 and EF2 are not present yet; `index.json` lists the families that are.
+The catalogue is a generated, read-only view of what each producer takes in (input view) and gives out (output view), taken from the core contract files. It states what an adapter supplies and what a consumer receives. It never says who supplies the data, and it computes nothing. Families present: EF1 (partly), EF2, EF3, EF4 and EF5 (13 core contract files, 32 producers, 176 feature ids). EF1 is partly present: two of its seven core contract files are catalogued (reference close comparison, multi-venue status); the five others are listed in `INDEX.md` and `index.json` under "not catalogued" with their own core status text (they state `proposed_not_frozen` and have no role or producer table of the common layout). The EF1 and EF2 core files each use their own layout, so each has one small extraction map in `tools/catalogue_maps.py`; a map only renames and regroups core keys. The Ichimoku and channels file states no role table, so the input pages of its six producers say so and `check_input` does not judge roles for them.
 
 ## Where it is
 

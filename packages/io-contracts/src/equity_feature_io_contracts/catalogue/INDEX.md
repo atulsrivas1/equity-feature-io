@@ -4,9 +4,30 @@
 
 Scope: internal, synthetic, pre-release. Authority: core frozen contract; on conflict core wins and the gate fails.
 
-Catalogue version 0.1.0a6; families present: EF3, EF4, EF5. Schema `ef-contract-catalogue1`, described in [CATALOGUE.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/CATALOGUE.md).
+Catalogue version 0.1.0a6; families present: EF1, EF2, EF3, EF4, EF5. Schema `ef-contract-catalogue1`, described in [CATALOGUE.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/CATALOGUE.md).
 
 Each producer has an input view (what an adapter supplies) and an output view (what a consumer receives), as `.md` for reading and `.json` for programs, at `<producer_id>/input.*` and `<producer_id>/output.*`.
+
+## EF1
+
+| Producer | contract_version | status | Input | Output | Adapter API | Feature ids |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ef1.multivenue_status` | `ef1-multivenue-status1` | frozen | [input](ef1.multivenue_status/input.md) | [output](ef1.multivenue_status/output.md) | [EF1_VENUE_STATUS_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF1_VENUE_STATUS_INPUTS.md) | 7 |
+| `ef1.reference_close` | `ef1-close-compare1` | frozen | [input](ef1.reference_close/input.md) | [output](ef1.reference_close/output.md) | [EF1_REFERENCE_CLOSE_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF1_REFERENCE_CLOSE_INPUTS.md) | 4 |
+
+## EF2
+
+| Producer | contract_version | status | Input | Output | Adapter API | Feature ids |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ef2.band_width_percentile` | `ef2-v1` | frozen | [input](ef2.band_width_percentile/input.md) | [output](ef2.band_width_percentile/output.md) | [EF2_CHANNELS_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md) | 1 |
+| `ef2.bollinger_keltner_squeeze` | `ef2-v1` | frozen | [input](ef2.bollinger_keltner_squeeze/input.md) | [output](ef2.bollinger_keltner_squeeze/output.md) | [EF2_CHANNELS_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md) | 3 |
+| `ef2.donchian` | `ef2-v1` | frozen | [input](ef2.donchian/input.md) | [output](ef2.donchian/output.md) | [EF2_CHANNELS_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md) | 4 |
+| `ef2.ichimoku` | `ef2-v1` | frozen | [input](ef2.ichimoku/input.md) | [output](ef2.ichimoku/output.md) | [EF2_CHANNELS_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md) | 8 |
+| `ef2.keltner` | `ef2-v1` | frozen | [input](ef2.keltner/input.md) | [output](ef2.keltner/output.md) | [EF2_CHANNELS_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md) | 4 |
+| `ef2.money_flow` | `ef2-mf1` | frozen | [input](ef2.money_flow/input.md) | [output](ef2.money_flow/output.md) | [EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md) | 3 |
+| `ef2.pivot_levels` | `ef2-v1` | frozen | [input](ef2.pivot_levels/input.md) | [output](ef2.pivot_levels/output.md) | [EF2_CHANNELS_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md) | 5 |
+| `ef2.retracement_level` | `ef2-retrace1` | frozen | [input](ef2.retracement_level/input.md) | [output](ef2.retracement_level/output.md) | [EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md) | 1 |
+| `intraday.momentum.v1` | `ef2-conv1` | frozen | [input](intraday.momentum.v1/input.md) | [output](intraday.momentum.v1/output.md) | [EF2_MOMENTUM_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_MOMENTUM_INPUTS.md) | 10 |
 
 ## EF3
 
@@ -43,6 +64,18 @@ Each producer has an input view (what an adapter supplies) and an output view (w
 | `ef5.candle` | `ef5-candle1` | frozen | [input](ef5.candle/input.md) | [output](ef5.candle/output.md) | [EF5_PRICE_STRUCTURES_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF5_PRICE_STRUCTURES_INPUTS.md) | 7 |
 | `ef5.structure` | `ef5-structure1` | frozen | [input](ef5.structure/input.md) | [output](ef5.structure/output.md) | [EF5_PRICE_STRUCTURES_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF5_PRICE_STRUCTURES_INPUTS.md) | 4 |
 | `ef5.technical` | `ef5-technical1` | frozen | [input](ef5.technical/input.md) | [output](ef5.technical/output.md) | [EF5_PRICE_STRUCTURES_INPUTS.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF5_PRICE_STRUCTURES_INPUTS.md) | 4 |
+
+## Core contract files not catalogued yet
+
+These core contract files exist but are not in the catalogue; the EF1 family is therefore partly present. Each is listed with its own core status text (core wins).
+
+| Core file | Core status text | Reason |
+| --- | --- | --- |
+| `docs/ef1/CONTRACT.json` | proposed_not_frozen_not_executed | original EF1 contract (proposed_not_frozen); canonical_input_roles layout |
+| `docs/ef1/OBSERVABLE_CONTRACT_PROPOSAL.json` | proposed_not_frozen_not_executed | observable layer; no role or producer table |
+| `docs/ef1/PATH_CONTRACT_PROPOSAL.json` | proposed_not_frozen_not_executed | path layer; no role or producer table |
+| `docs/ef1/PERIOD_PHASE_CONTRACT_PROPOSAL.json` | proposed_not_frozen_not_admitted_not_executed | period phase layer; no role or producer table |
+| `docs/ef1/REFERENCE_CONTRACT_PROPOSAL.json` | proposed_not_frozen_not_ready_not_executed | reference layer; roles keyed by name, status proposed_not_frozen |
 
 ## Find a producer from a feature id
 

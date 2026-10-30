@@ -5,6 +5,8 @@
   "authority": "Authority: core frozen contract; on conflict core wins and the gate fails.",
   "catalogue_version": "0.1.0a6",
   "families_present": [
+    "EF1",
+    "EF2",
     "EF3",
     "EF4",
     "EF5"
@@ -362,6 +364,231 @@
       "unparsed_producer_keys": {}
     },
     {
+      "contract_key": "ef2.channels",
+      "family": "EF2",
+      "status": "frozen",
+      "source": {
+        "core_path": "docs/ef2/ICHIMOKU_CHANNELS_CONTRACT_PROPOSAL.json",
+        "core_commit": "c0e0180482accbd60df26cf77d9153e84f3a5178",
+        "sha256_lf": "88591e74184557112fdae6ba336c1bca582edd1870aa95b93572a5092e20bec7",
+        "core_link": "https://github.com/atulsrivas1/equity-features/blob/c0e0180482accbd60df26cf77d9153e84f3a5178/docs/ef2/ICHIMOKU_CHANNELS_CONTRACT_PROPOSAL.json",
+        "contract_key": "ef2.channels",
+        "core_proposal_version": "ef2-ichimoku-channels-proposal1",
+        "related_core_files_not_extracted": [
+          {
+            "core_path": "docs/ef2/PRODUCER_SET_AMENDMENT.json",
+            "core_commit": "c52fe91ad2ffb6015381f4b9a0a596e9a135d1aa",
+            "sha256_lf": "14223b782ba43d453bf713d76f1ceca2063b97a807263fdb0b0c6c363b3dfebb"
+          }
+        ]
+      },
+      "excluded_core_keys": {
+        "calculation semantics": [
+          "index_semantics",
+          "numeric_policy",
+          "operand_policy"
+        ],
+        "decision record": [
+          "conventions",
+          "coordinator_decisions",
+          "coordinator_rulings",
+          "non_goals"
+        ],
+        "process": [
+          "evidence_kind",
+          "frozen_contract_ref",
+          "ledger_to_be_applied",
+          "story"
+        ],
+        "test evidence": [
+          "coverage_map",
+          "fixture_counts",
+          "fixture_notation",
+          "fixtures",
+          "invariant_pairs",
+          "refusal_fixtures"
+        ]
+      },
+      "unparsed_top_level_keys": [],
+      "unparsed_producer_keys": {}
+    },
+    {
+      "contract_key": "ef2.momentum",
+      "family": "EF2",
+      "status": "frozen",
+      "source": {
+        "core_path": "docs/ef2/MOMENTUM_TREND_CONTRACT_PROPOSAL.json",
+        "core_commit": "32acd2bde0ff07c4c5ec8a16e343daed2891af38",
+        "sha256_lf": "466900cc1a0fa5f405ccc8c4aa78a9011a171c468b3a693729e37ff8b92bd09f",
+        "core_link": "https://github.com/atulsrivas1/equity-features/blob/32acd2bde0ff07c4c5ec8a16e343daed2891af38/docs/ef2/MOMENTUM_TREND_CONTRACT_PROPOSAL.json",
+        "contract_key": "ef2.momentum",
+        "core_proposal_version": "ef2-momentum-trend-proposal1",
+        "related_core_files_not_extracted": [
+          {
+            "core_path": "docs/ef2/PRODUCER_SET_AMENDMENT.json",
+            "core_commit": "c52fe91ad2ffb6015381f4b9a0a596e9a135d1aa",
+            "sha256_lf": "14223b782ba43d453bf713d76f1ceca2063b97a807263fdb0b0c6c363b3dfebb"
+          }
+        ]
+      },
+      "excluded_core_keys": {
+        "calculation semantics": [
+          "acceptance_rules",
+          "adx_expected_rule",
+          "mathematics",
+          "r17_operands"
+        ],
+        "decision record": [
+          "amendment_1",
+          "decisions_proposed",
+          "non_goals",
+          "open_questions"
+        ],
+        "process": [
+          "builds_on",
+          "evidence_kind",
+          "shared_contract_followup",
+          "stories"
+        ],
+        "test evidence": [
+          "coverage_map",
+          "fixture_counts",
+          "fixture_notation",
+          "fixtures",
+          "refusal_fixtures"
+        ]
+      },
+      "unparsed_top_level_keys": [],
+      "unparsed_producer_keys": {}
+    },
+    {
+      "contract_key": "ef2.money_flow_retracement",
+      "family": "EF2",
+      "status": "frozen",
+      "source": {
+        "core_path": "docs/ef2/MONEYFLOW_RETRACEMENT_CONTRACT_PROPOSAL.json",
+        "core_commit": "3469ec4ae90826f41a8834fca7c9a74f1a3da21d",
+        "sha256_lf": "d5095b7435eb2e5428ad637e299a96b12eecec02ecf9a5b77a91f09afe172d06",
+        "core_link": "https://github.com/atulsrivas1/equity-features/blob/3469ec4ae90826f41a8834fca7c9a74f1a3da21d/docs/ef2/MONEYFLOW_RETRACEMENT_CONTRACT_PROPOSAL.json",
+        "contract_key": "ef2.money_flow_retracement",
+        "core_proposal_version": "ef2-moneyflow-retracement-proposal1",
+        "related_core_files_not_extracted": [
+          {
+            "core_path": "docs/ef2/PRODUCER_SET_AMENDMENT.json",
+            "core_commit": "c52fe91ad2ffb6015381f4b9a0a596e9a135d1aa",
+            "sha256_lf": "14223b782ba43d453bf713d76f1ceca2063b97a807263fdb0b0c6c363b3dfebb"
+          }
+        ]
+      },
+      "excluded_core_keys": {
+        "calculation semantics": [
+          "mathematics"
+        ],
+        "decision record": [
+          "decisions",
+          "rulings"
+        ],
+        "process": [
+          "amendment_note",
+          "evidence_kind",
+          "frozen_contract_ref",
+          "story"
+        ],
+        "test evidence": [
+          "coverage_map",
+          "fixture_counts",
+          "fixture_notation",
+          "money_flow_fixtures",
+          "refusal_fixtures",
+          "retracement_fixtures"
+        ]
+      },
+      "unparsed_top_level_keys": [],
+      "unparsed_producer_keys": {}
+    },
+    {
+      "contract_key": "ef1.close_reconciliation",
+      "family": "EF1",
+      "status": "frozen",
+      "source": {
+        "core_path": "docs/ef1/CLOSE_RECONCILIATION_CONTRACT_PROPOSAL.json",
+        "core_commit": "2ff152cfe983260248fce219688439505d5f1ee9",
+        "sha256_lf": "25ccb29e27e58aad1ddbf4568fa66454a4ccf6e7f6c9c94907599288e775c149",
+        "core_link": "https://github.com/atulsrivas1/equity-features/blob/2ff152cfe983260248fce219688439505d5f1ee9/docs/ef1/CLOSE_RECONCILIATION_CONTRACT_PROPOSAL.json",
+        "contract_key": "ef1.close_reconciliation",
+        "core_proposal_version": "ef1-close-reconcile-proposal1",
+        "related_core_files_not_extracted": [
+          {
+            "core_path": "docs/ef1/PRODUCER_SET_AMENDMENT.json",
+            "core_commit": "523612e4841329e92bbf03fac5852c6992358235",
+            "sha256_lf": "ee3e13237d951318985a5867d70c151c1fa01a8e6ea58a71f510b1fac9752b74"
+          }
+        ]
+      },
+      "excluded_core_keys": {
+        "calculation semantics": [
+          "mathematics"
+        ],
+        "decision record": [
+          "amendment_1",
+          "coordinator_decisions",
+          "non_goals"
+        ],
+        "process": [
+          "evidence_kind",
+          "frozen_contract_ref",
+          "story"
+        ],
+        "test evidence": [
+          "coverage_map",
+          "fixture_counts",
+          "fixture_notation",
+          "fixtures",
+          "refusal_fixtures"
+        ]
+      },
+      "unparsed_top_level_keys": [],
+      "unparsed_producer_keys": {}
+    },
+    {
+      "contract_key": "ef1.multivenue_status",
+      "family": "EF1",
+      "status": "frozen",
+      "source": {
+        "core_path": "docs/ef1/MULTI_VENUE_STATUS_CONTRACT_PROPOSAL.json",
+        "core_commit": "37b44b55cdcdd8bd500f46fc387e9457d6605bb7",
+        "sha256_lf": "93f734ace99b10c383dc3e1871795889936b80e22a305f28a5e60cc8a6d05c78",
+        "core_link": "https://github.com/atulsrivas1/equity-features/blob/37b44b55cdcdd8bd500f46fc387e9457d6605bb7/docs/ef1/MULTI_VENUE_STATUS_CONTRACT_PROPOSAL.json",
+        "contract_key": "ef1.multivenue_status",
+        "core_proposal_version": "ef1-multivenue-proposal1",
+        "related_core_files_not_extracted": [
+          {
+            "core_path": "docs/ef1/PRODUCER_SET_AMENDMENT.json",
+            "core_commit": "523612e4841329e92bbf03fac5852c6992358235",
+            "sha256_lf": "ee3e13237d951318985a5867d70c151c1fa01a8e6ea58a71f510b1fac9752b74"
+          }
+        ]
+      },
+      "excluded_core_keys": {
+        "decision record": [
+          "coordinator_decisions"
+        ],
+        "process": [
+          "evidence_kind",
+          "frozen_contract",
+          "frozen_contract_sha256",
+          "story",
+          "supporting"
+        ],
+        "test evidence": [
+          "fixture_notation",
+          "fixtures"
+        ]
+      },
+      "unparsed_top_level_keys": [],
+      "unparsed_producer_keys": {}
+    },
+    {
       "contract_key": "ef5.price_structures",
       "family": "EF5",
       "status": "frozen",
@@ -421,7 +648,294 @@
       "unparsed_producer_keys": {}
     }
   ],
+  "not_catalogued_core_files": [
+    {
+      "core_path": "docs/ef1/CONTRACT.json",
+      "core_commit": "dd49150ef7d454f28f730e3eab785f0a41219886",
+      "sha256_lf": "ff576caace8e89491a634e913e946ac4b0f8cf656faf40745d24da7684c6fe14",
+      "core_status_text": "proposed_not_frozen_not_executed",
+      "reason": "original EF1 contract (proposed_not_frozen); canonical_input_roles layout"
+    },
+    {
+      "core_path": "docs/ef1/OBSERVABLE_CONTRACT_PROPOSAL.json",
+      "core_commit": "967d13df5cc080ef85c5bdeb96b1bca983836561",
+      "sha256_lf": "1d883a4d7d61593c0e8d9d2c8c0423933d07f3ff386e3775ccafe1aab0a0d2fd",
+      "core_status_text": "proposed_not_frozen_not_executed",
+      "reason": "observable layer; no role or producer table"
+    },
+    {
+      "core_path": "docs/ef1/PATH_CONTRACT_PROPOSAL.json",
+      "core_commit": "dd49150ef7d454f28f730e3eab785f0a41219886",
+      "sha256_lf": "04c2743559de751d22225a2d521bd4f69eb75318f2f7e276ecde8c1bdf80a616",
+      "core_status_text": "proposed_not_frozen_not_executed",
+      "reason": "path layer; no role or producer table"
+    },
+    {
+      "core_path": "docs/ef1/PERIOD_PHASE_CONTRACT_PROPOSAL.json",
+      "core_commit": "967d13df5cc080ef85c5bdeb96b1bca983836561",
+      "sha256_lf": "81ac55769bdd21074aacf83c8df8955a501979d22e813ccfeba55b9e5e9f9204",
+      "core_status_text": "proposed_not_frozen_not_admitted_not_executed",
+      "reason": "period phase layer; no role or producer table"
+    },
+    {
+      "core_path": "docs/ef1/REFERENCE_CONTRACT_PROPOSAL.json",
+      "core_commit": "967d13df5cc080ef85c5bdeb96b1bca983836561",
+      "sha256_lf": "7eb97ec61eb1a945d39be9551c5937b3e86c7647d854b1aa507d0a8f32728a1d",
+      "core_status_text": "proposed_not_frozen_not_ready_not_executed",
+      "reason": "reference layer; roles keyed by name, status proposed_not_frozen"
+    }
+  ],
   "producers": [
+    {
+      "producer_id": "ef1.multivenue_status",
+      "family": "EF1",
+      "contract_key": "ef1.multivenue_status",
+      "contract_version": "ef1-multivenue-status1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.venue_status",
+        "api_page": "docs/api/EF1_VENUE_STATUS_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF1_VENUE_STATUS_INPUTS.md",
+        "checkpoint": "docs/EF1_VENUE_STATUS_IO.md"
+      },
+      "feature_ids": [
+        "session.venue_status.aggregate_reason",
+        "session.venue_status.aggregate_state",
+        "session.venue_status.known_nontrading_count",
+        "session.venue_status.known_trading_count",
+        "session.venue_status.latest_event_ns",
+        "session.venue_status.quoting_any",
+        "session.venue_status.restriction_any"
+      ],
+      "paths": {
+        "input_json": "ef1.multivenue_status/input.json",
+        "input_md": "ef1.multivenue_status/input.md",
+        "output_json": "ef1.multivenue_status/output.json",
+        "output_md": "ef1.multivenue_status/output.md"
+      }
+    },
+    {
+      "producer_id": "ef1.reference_close",
+      "family": "EF1",
+      "contract_key": "ef1.close_reconciliation",
+      "contract_version": "ef1-close-compare1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.reference_close",
+        "api_page": "docs/api/EF1_REFERENCE_CLOSE_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF1_REFERENCE_CLOSE_INPUTS.md",
+        "checkpoint": "docs/EF1_CLOSE_RECONCILIATION_IO.md"
+      },
+      "feature_ids": [
+        "reference.close.absolute_difference_bps",
+        "reference.close.comparison_state",
+        "reference.close.supplied_price",
+        "reference.close.within_tolerance"
+      ],
+      "paths": {
+        "input_json": "ef1.reference_close/input.json",
+        "input_md": "ef1.reference_close/input.md",
+        "output_json": "ef1.reference_close/output.json",
+        "output_md": "ef1.reference_close/output.md"
+      }
+    },
+    {
+      "producer_id": "ef2.band_width_percentile",
+      "family": "EF2",
+      "contract_key": "ef2.channels",
+      "contract_version": "ef2-v1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.channels",
+        "api_page": "docs/api/EF2_CHANNELS_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md",
+        "checkpoint": "docs/EF2_CHANNELS_IO.md"
+      },
+      "feature_ids": [
+        "channel.band_width.percentile"
+      ],
+      "paths": {
+        "input_json": "ef2.band_width_percentile/input.json",
+        "input_md": "ef2.band_width_percentile/input.md",
+        "output_json": "ef2.band_width_percentile/output.json",
+        "output_md": "ef2.band_width_percentile/output.md"
+      }
+    },
+    {
+      "producer_id": "ef2.bollinger_keltner_squeeze",
+      "family": "EF2",
+      "contract_key": "ef2.channels",
+      "contract_version": "ef2-v1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.channels",
+        "api_page": "docs/api/EF2_CHANNELS_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md",
+        "checkpoint": "docs/EF2_CHANNELS_IO.md"
+      },
+      "feature_ids": [
+        "channel.squeeze.bollinger_inside_keltner",
+        "channel.squeeze.lower_gap",
+        "channel.squeeze.upper_gap"
+      ],
+      "paths": {
+        "input_json": "ef2.bollinger_keltner_squeeze/input.json",
+        "input_md": "ef2.bollinger_keltner_squeeze/input.md",
+        "output_json": "ef2.bollinger_keltner_squeeze/output.json",
+        "output_md": "ef2.bollinger_keltner_squeeze/output.md"
+      }
+    },
+    {
+      "producer_id": "ef2.donchian",
+      "family": "EF2",
+      "contract_key": "ef2.channels",
+      "contract_version": "ef2-v1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.channels",
+        "api_page": "docs/api/EF2_CHANNELS_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md",
+        "checkpoint": "docs/EF2_CHANNELS_IO.md"
+      },
+      "feature_ids": [
+        "channel.donchian.lower",
+        "channel.donchian.middle",
+        "channel.donchian.upper",
+        "channel.donchian.width_ratio"
+      ],
+      "paths": {
+        "input_json": "ef2.donchian/input.json",
+        "input_md": "ef2.donchian/input.md",
+        "output_json": "ef2.donchian/output.json",
+        "output_md": "ef2.donchian/output.md"
+      }
+    },
+    {
+      "producer_id": "ef2.ichimoku",
+      "family": "EF2",
+      "contract_key": "ef2.channels",
+      "contract_version": "ef2-v1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.channels",
+        "api_page": "docs/api/EF2_CHANNELS_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md",
+        "checkpoint": "docs/EF2_CHANNELS_IO.md"
+      },
+      "feature_ids": [
+        "trend.ichimoku.base_line",
+        "trend.ichimoku.conversion_line",
+        "trend.ichimoku.lagging_line_observed",
+        "trend.ichimoku.lagging_line_reference_close",
+        "trend.ichimoku.leading_span_a_displayed",
+        "trend.ichimoku.leading_span_a_observed",
+        "trend.ichimoku.leading_span_b_displayed",
+        "trend.ichimoku.leading_span_b_observed"
+      ],
+      "paths": {
+        "input_json": "ef2.ichimoku/input.json",
+        "input_md": "ef2.ichimoku/input.md",
+        "output_json": "ef2.ichimoku/output.json",
+        "output_md": "ef2.ichimoku/output.md"
+      }
+    },
+    {
+      "producer_id": "ef2.keltner",
+      "family": "EF2",
+      "contract_key": "ef2.channels",
+      "contract_version": "ef2-v1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.channels",
+        "api_page": "docs/api/EF2_CHANNELS_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md",
+        "checkpoint": "docs/EF2_CHANNELS_IO.md"
+      },
+      "feature_ids": [
+        "channel.keltner.lower",
+        "channel.keltner.middle",
+        "channel.keltner.upper",
+        "channel.keltner.width_ratio"
+      ],
+      "paths": {
+        "input_json": "ef2.keltner/input.json",
+        "input_md": "ef2.keltner/input.md",
+        "output_json": "ef2.keltner/output.json",
+        "output_md": "ef2.keltner/output.md"
+      }
+    },
+    {
+      "producer_id": "ef2.money_flow",
+      "family": "EF2",
+      "contract_key": "ef2.money_flow_retracement",
+      "contract_version": "ef2-mf1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.money_flow",
+        "api_page": "docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md",
+        "checkpoint": "docs/EF2_MONEY_FLOW_RETRACEMENT_IO.md"
+      },
+      "feature_ids": [
+        "intraday.ad_line",
+        "intraday.cmf",
+        "intraday.obv"
+      ],
+      "paths": {
+        "input_json": "ef2.money_flow/input.json",
+        "input_md": "ef2.money_flow/input.md",
+        "output_json": "ef2.money_flow/output.json",
+        "output_md": "ef2.money_flow/output.md"
+      }
+    },
+    {
+      "producer_id": "ef2.pivot_levels",
+      "family": "EF2",
+      "contract_key": "ef2.channels",
+      "contract_version": "ef2-v1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.channels",
+        "api_page": "docs/api/EF2_CHANNELS_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_CHANNELS_INPUTS.md",
+        "checkpoint": "docs/EF2_CHANNELS_IO.md"
+      },
+      "feature_ids": [
+        "channel.pivot.point",
+        "channel.pivot.resistance_1",
+        "channel.pivot.resistance_2",
+        "channel.pivot.support_1",
+        "channel.pivot.support_2"
+      ],
+      "paths": {
+        "input_json": "ef2.pivot_levels/input.json",
+        "input_md": "ef2.pivot_levels/input.md",
+        "output_json": "ef2.pivot_levels/output.json",
+        "output_md": "ef2.pivot_levels/output.md"
+      }
+    },
+    {
+      "producer_id": "ef2.retracement_level",
+      "family": "EF2",
+      "contract_key": "ef2.money_flow_retracement",
+      "contract_version": "ef2-retrace1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.retracement",
+        "api_page": "docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_MONEY_FLOW_RETRACEMENT_INPUTS.md",
+        "checkpoint": "docs/EF2_MONEY_FLOW_RETRACEMENT_IO.md"
+      },
+      "feature_ids": [
+        "retracement.level"
+      ],
+      "paths": {
+        "input_json": "ef2.retracement_level/input.json",
+        "input_md": "ef2.retracement_level/input.md",
+        "output_json": "ef2.retracement_level/output.json",
+        "output_md": "ef2.retracement_level/output.md"
+      }
+    },
     {
       "producer_id": "ef3.adaptive_volume",
       "family": "EF3",
@@ -988,6 +1502,37 @@
         "output_json": "ef5.technical/output.json",
         "output_md": "ef5.technical/output.md"
       }
+    },
+    {
+      "producer_id": "intraday.momentum.v1",
+      "family": "EF2",
+      "contract_key": "ef2.momentum",
+      "contract_version": "ef2-conv1",
+      "status": "frozen",
+      "adapter": {
+        "io_module": "equity_feature_duckdb.momentum",
+        "api_page": "docs/api/EF2_MOMENTUM_INPUTS.md",
+        "api_link": "https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/api/EF2_MOMENTUM_INPUTS.md",
+        "checkpoint": "docs/EF2_MOMENTUM_IO.md"
+      },
+      "feature_ids": [
+        "intraday.adx",
+        "intraday.dx",
+        "intraday.macd_histogram",
+        "intraday.macd_line",
+        "intraday.macd_signal",
+        "intraday.minus_di",
+        "intraday.plus_di",
+        "intraday.stoch_d",
+        "intraday.stoch_k",
+        "intraday.williams_r"
+      ],
+      "paths": {
+        "input_json": "intraday.momentum.v1/input.json",
+        "input_md": "intraday.momentum.v1/input.md",
+        "output_json": "intraday.momentum.v1/output.json",
+        "output_md": "intraday.momentum.v1/output.md"
+      }
     }
   ],
   "by_feature_id": {
@@ -1031,13 +1576,43 @@
     "candle.inside_bar": "ef5.candle",
     "candle.lower_shadow_fraction": "ef5.candle",
     "candle.upper_shadow_fraction": "ef5.candle",
+    "channel.band_width.percentile": "ef2.band_width_percentile",
+    "channel.donchian.lower": "ef2.donchian",
+    "channel.donchian.middle": "ef2.donchian",
+    "channel.donchian.upper": "ef2.donchian",
+    "channel.donchian.width_ratio": "ef2.donchian",
+    "channel.keltner.lower": "ef2.keltner",
+    "channel.keltner.middle": "ef2.keltner",
+    "channel.keltner.upper": "ef2.keltner",
+    "channel.keltner.width_ratio": "ef2.keltner",
+    "channel.pivot.point": "ef2.pivot_levels",
+    "channel.pivot.resistance_1": "ef2.pivot_levels",
+    "channel.pivot.resistance_2": "ef2.pivot_levels",
+    "channel.pivot.support_1": "ef2.pivot_levels",
+    "channel.pivot.support_2": "ef2.pivot_levels",
+    "channel.squeeze.bollinger_inside_keltner": "ef2.bollinger_keltner_squeeze",
+    "channel.squeeze.lower_gap": "ef2.bollinger_keltner_squeeze",
+    "channel.squeeze.upper_gap": "ef2.bollinger_keltner_squeeze",
     "cohort.percentile_rank": "ef3.robust_history",
     "cohort.rank": "ef3.robust_history",
     "core.benchmark_direction_agreement_fraction": "ef4.relative_excess",
     "core.benchmark_return_dispersion_fraction": "ef4.relative_excess",
     "history.log_return_volatility": "ef3.daily_log_volatility",
+    "intraday.ad_line": "ef2.money_flow",
+    "intraday.adx": "intraday.momentum.v1",
+    "intraday.cmf": "ef2.money_flow",
+    "intraday.dx": "intraday.momentum.v1",
+    "intraday.macd_histogram": "intraday.momentum.v1",
+    "intraday.macd_line": "intraday.momentum.v1",
+    "intraday.macd_signal": "intraday.momentum.v1",
+    "intraday.minus_di": "intraday.momentum.v1",
+    "intraday.obv": "ef2.money_flow",
+    "intraday.plus_di": "intraday.momentum.v1",
     "intraday.realized_variance": "ef3.intraday_realized_variance",
     "intraday.realized_volatility": "ef3.intraday_realized_variance",
+    "intraday.stoch_d": "intraday.momentum.v1",
+    "intraday.stoch_k": "intraday.momentum.v1",
+    "intraday.williams_r": "intraday.momentum.v1",
     "mean.baseline": "ef3.volume_ratio_mean",
     "mean.numerator": "ef3.volume_ratio_mean",
     "mean.ratio": "ef3.volume_ratio_mean",
@@ -1079,6 +1654,10 @@
     "rate.window.return_rate_difference": "ef4.rate_projection",
     "rate.window.share_volume_rate": "ef4.rate_projection",
     "rate.window.trade_rate": "ef4.rate_projection",
+    "reference.close.absolute_difference_bps": "ef1.reference_close",
+    "reference.close.comparison_state": "ef1.reference_close",
+    "reference.close.supplied_price": "ef1.reference_close",
+    "reference.close.within_tolerance": "ef1.reference_close",
     "relative.beta": "ef3.relative_stats",
     "relative.correlation": "ef3.relative_stats",
     "relative.residual_return": "ef3.relative_stats",
@@ -1088,10 +1667,18 @@
     "relative.session.secondary.window_excess_fraction": "ef4.relative_excess",
     "relative.session.sector.prior_close_excess_fraction": "ef4.relative_excess",
     "relative.session.sector.window_excess_fraction": "ef4.relative_excess",
+    "retracement.level": "ef2.retracement_level",
     "robust.mad": "ef3.robust_history",
     "robust.median": "ef3.robust_history",
     "robust.percentile_rank": "ef3.robust_history",
     "robust.quantile": "ef3.robust_history",
+    "session.venue_status.aggregate_reason": "ef1.multivenue_status",
+    "session.venue_status.aggregate_state": "ef1.multivenue_status",
+    "session.venue_status.known_nontrading_count": "ef1.multivenue_status",
+    "session.venue_status.known_trading_count": "ef1.multivenue_status",
+    "session.venue_status.latest_event_ns": "ef1.multivenue_status",
+    "session.venue_status.quoting_any": "ef1.multivenue_status",
+    "session.venue_status.restriction_any": "ef1.multivenue_status",
     "structure.last_swing_high_price": "ef5.structure",
     "structure.last_swing_low_price": "ef5.structure",
     "structure.swing_high_confirmed": "ef5.structure",
@@ -1110,6 +1697,14 @@
     "technical.price_velocity_fraction_per_second": "ef5.technical",
     "technical.session_return_fraction": "ef5.technical",
     "technical.signed_trend_window_count": "ef5.technical",
+    "trend.ichimoku.base_line": "ef2.ichimoku",
+    "trend.ichimoku.conversion_line": "ef2.ichimoku",
+    "trend.ichimoku.lagging_line_observed": "ef2.ichimoku",
+    "trend.ichimoku.lagging_line_reference_close": "ef2.ichimoku",
+    "trend.ichimoku.leading_span_a_displayed": "ef2.ichimoku",
+    "trend.ichimoku.leading_span_a_observed": "ef2.ichimoku",
+    "trend.ichimoku.leading_span_b_displayed": "ef2.ichimoku",
+    "trend.ichimoku.leading_span_b_observed": "ef2.ichimoku",
     "vwap.path.change_bps": "ef4.vwap_path",
     "vwap.path.last": "ef4.vwap_path",
     "vwap.path.maximum": "ef4.vwap_path",
