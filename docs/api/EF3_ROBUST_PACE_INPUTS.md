@@ -43,3 +43,11 @@ exclusion, unit, basis, namespace and identity, and every refusal is performed b
 
 Example: [examples/ef3_robust_pace.py](../../examples/ef3_robust_pace.py). Source checkpoint and remaining gates:
 [EF3_ROBUST_PACE_IO.md](../EF3_ROBUST_PACE_IO.md).
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef3.robust_history`: [input](../contracts/catalogue/ef3.robust_history/input.md), [output](../contracts/catalogue/ef3.robust_history/output.md)
+- `ef3.volume_pace_robust`: [input](../contracts/catalogue/ef3.volume_pace_robust/input.md), [output](../contracts/catalogue/ef3.volume_pace_robust/output.md)
+- `ef3.volume_ratio_mean`: [input](../contracts/catalogue/ef3.volume_ratio_mean/input.md), [output](../contracts/catalogue/ef3.volume_ratio_mean/output.md)

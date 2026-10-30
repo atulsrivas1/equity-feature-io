@@ -40,3 +40,10 @@ The module fixes only the namespace, source, snapshot (`snap`) and mapping label
 
 Results are published with `equity_feature_io_sdk.publication` (`prepare_publication`, `publish`) to
 `equity_feature_duckdb_sink.DuckDBSink`, one generation per result, and read back with `sink.read(receipt)`.
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef4.quote_dynamics`: [input](../contracts/catalogue/ef4.quote_dynamics/input.md), [output](../contracts/catalogue/ef4.quote_dynamics/output.md)
+- `ef4.vwap_path`: [input](../contracts/catalogue/ef4.vwap_path/input.md), [output](../contracts/catalogue/ef4.vwap_path/output.md)

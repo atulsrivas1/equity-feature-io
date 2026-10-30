@@ -54,3 +54,9 @@ volume and the listed OHLC field null (a positive-volume bar with a null OHLC ce
 
 [Executable synthetic example](../../examples/ef2_momentum.py). See
 [validation and remaining gates](../EF2_MOMENTUM_IO.md).
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `intraday.momentum.v1`: [input](../contracts/catalogue/intraday.momentum.v1/input.md), [output](../contracts/catalogue/intraday.momentum.v1/output.md)

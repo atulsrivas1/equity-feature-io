@@ -54,3 +54,14 @@ chunks with `IntradayContext.from_json`.
 
 [Executable synthetic example](../../examples/ef2_channels.py). See
 [validation and remaining gates](../EF2_CHANNELS_IO.md).
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef2.band_width_percentile`: [input](../contracts/catalogue/ef2.band_width_percentile/input.md), [output](../contracts/catalogue/ef2.band_width_percentile/output.md)
+- `ef2.bollinger_keltner_squeeze`: [input](../contracts/catalogue/ef2.bollinger_keltner_squeeze/input.md), [output](../contracts/catalogue/ef2.bollinger_keltner_squeeze/output.md)
+- `ef2.donchian`: [input](../contracts/catalogue/ef2.donchian/input.md), [output](../contracts/catalogue/ef2.donchian/output.md)
+- `ef2.ichimoku`: [input](../contracts/catalogue/ef2.ichimoku/input.md), [output](../contracts/catalogue/ef2.ichimoku/output.md)
+- `ef2.keltner`: [input](../contracts/catalogue/ef2.keltner/input.md), [output](../contracts/catalogue/ef2.keltner/output.md)
+- `ef2.pivot_levels`: [input](../contracts/catalogue/ef2.pivot_levels/input.md), [output](../contracts/catalogue/ef2.pivot_levels/output.md)

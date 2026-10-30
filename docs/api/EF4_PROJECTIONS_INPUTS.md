@@ -47,3 +47,12 @@ g = request.grid
 grid = ef4.BarGrid(g.instrument_id, g.calendar_id, g.grid_id, g.revision, g.session, g.bar_ns, g.bar_count, g.target_index)
 result = ef4.compute_ef4_path_projections(request.batches, request.config, features=features, grid=grid)
 ```
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef4.bar_projection`: [input](../contracts/catalogue/ef4.bar_projection/input.md), [output](../contracts/catalogue/ef4.bar_projection/output.md)
+- `ef4.rate_projection`: [input](../contracts/catalogue/ef4.rate_projection/input.md), [output](../contracts/catalogue/ef4.rate_projection/output.md)
+- `ef4.relative_excess`: [input](../contracts/catalogue/ef4.relative_excess/input.md), [output](../contracts/catalogue/ef4.relative_excess/output.md)
+- `ef4.session_projection`: [input](../contracts/catalogue/ef4.session_projection/input.md), [output](../contracts/catalogue/ef4.session_projection/output.md)

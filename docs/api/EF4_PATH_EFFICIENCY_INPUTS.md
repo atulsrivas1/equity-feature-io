@@ -32,3 +32,9 @@ refusal order follows the contract: shape, range and unit faults before the poli
 
 [Executable supplied-input example](../../examples/ef4_path_efficiency.py). See
 [validation and remaining gates](../EF4_PATH_EFFICIENCY_IO.md).
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef4.path_efficiency`: [input](../contracts/catalogue/ef4.path_efficiency/input.md), [output](../contracts/catalogue/ef4.path_efficiency/output.md)

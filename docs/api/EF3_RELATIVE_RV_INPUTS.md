@@ -45,3 +45,11 @@ non-negative, duplicate interval identity).
 
 Example: [examples/ef3_relative_rv.py](../../examples/ef3_relative_rv.py). Source checkpoint and remaining gates:
 [EF3_RELATIVE_RV_IO.md](../EF3_RELATIVE_RV_IO.md).
+
+## Contract catalogue
+
+Internal, synthetic, pre-release. Generated input and output contract pages for the producers this page covers (core wins on conflict; the catalogue computes nothing and names no data supplier). Overview: [catalogue INDEX](../contracts/catalogue/INDEX.md); use: [CATALOGUE.md](../contracts/CATALOGUE.md).
+
+- `ef3.daily_log_volatility`: [input](../contracts/catalogue/ef3.daily_log_volatility/input.md), [output](../contracts/catalogue/ef3.daily_log_volatility/output.md)
+- `ef3.intraday_realized_variance`: [input](../contracts/catalogue/ef3.intraday_realized_variance/input.md), [output](../contracts/catalogue/ef3.intraday_realized_variance/output.md)
+- `ef3.relative_stats`: [input](../contracts/catalogue/ef3.relative_stats/input.md), [output](../contracts/catalogue/ef3.relative_stats/output.md)
