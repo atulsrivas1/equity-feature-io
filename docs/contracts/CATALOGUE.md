@@ -45,7 +45,30 @@ The catalogue is a generated, read-only view of what each producer takes in (inp
     header = FeatureHeader(h["feature_id"], h["algorithm_version"], ValueType(h["dtype"]), h["unit"], h["schema_version"])
     print(producer, header)
 
-`check_input` and `check_output` are not part of this version; they come in a later story (S8), and the structural checks will never compute or judge values.
+## Checking a sample input and a sample output (structural checks)
+
+`check_input` and `check_output` are structural checks. They compare the shape of what you supply or receive with the catalogue page and cite the rule and page that failed. They do not look at values, compute nothing, and do not replace a library refusal: the library stays the authority, and a clean check does not say the values are right. They need only the installed `equity-feature-io-contracts` wheel (no workers code, and nothing you import yourself from core).
+
+    from equity_feature_io_contracts import catalogue
+
+    # Input: map each role to the batch kind you supply for it (None or left out = absent delivery).
+    result = catalogue.check_input("ef4.tape_window_sign", {"trades": "trade", "seed": "reference"})
+    print(result.ok)                                    # True
+    result = catalogue.check_input("ef4.tape_window_sign", {"trades": "bar", "extra": "bar"})
+    for f in result.findings:
+        print(f.rule, f.subject, "-", f.detail, "-", f.page)
+    # input.role.unknown extra - role 'extra' is not declared; declared roles: trades, seed - ef4.tape_window_sign/input.md
+    # input.role.kind trades - role 'trades' expects kind 'trade', got 'bar' - ef4.tape_window_sign/input.md
+
+    # Output: pass the result headers (mappings, or FeatureHeader objects), and optionally the reason names you saw.
+    headers = [{"feature_id": "tape.window.count", "algorithm_version": "ef4-tape-window-v1",
+                "dtype": "int64", "unit": "trades", "schema_version": "1"}]
+    print(catalogue.check_output("ef4.tape_window_sign", headers).ok)    # a unit or dtype that differs is a finding
+    bad = catalogue.check_output("ef4.tape_window_sign", [{**headers[0], "unit": "shares"}], reasons=["absent_input", "nope"])
+    for f in bad.findings:
+        print(f.rule, f.subject, "-", f.detail)
+
+Rules cited (each is a part of the catalogue page named in `Finding.page`): `input.role.unknown`, `input.role.kind`, `input.role.required` (input view, roles: a role declared not nullable is absent; a nullable role that is absent is not a finding, the library reports `absent_input`); `output.header.field`, `output.feature_id.unknown`, `output.feature_id.duplicate`, `output.header.value` (output view, headers) and `output.quality.reason` (output view, quality vocabulary). Selecting only some of a producer's feature ids is fine. An unknown producer id raises `UnknownProducer`. The unit string in the example is the one the catalogue states for that feature id; read it from the page rather than assuming it.
 
 ## Provenance, on every page and every JSON
 
