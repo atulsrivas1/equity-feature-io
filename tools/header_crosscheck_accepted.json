@@ -1,0 +1,175 @@
+{
+ "note": "Internal, synthetic, pre-release. NOT_DECLARED (producer, layer) pairs of tools/check_header_crosscheck.py accepted without a code change, one record per pair with a reason. Accepted rather than declared because declaring a literal would edit packages or examples code, and RL-01-22 requires zero golden or hash churn. A pair that becomes OK, or disappears, must be removed (the tool fails on a stale record).",
+ "accepted": [
+  {
+   "producer_id": "ef1.multivenue_status",
+   "layer": "io",
+   "reason": "io code states the producer id but not an algorithm_version literal in the same tuple, list or dict (0 of 7 catalogue feature ids appear as literals and are checked); nothing further to compare without a code change"
+  },
+  {
+   "producer_id": "ef1.reference_close",
+   "layer": "io",
+   "reason": "io code states the producer id but not an algorithm_version literal in the same tuple, list or dict (0 of 4 catalogue feature ids appear as literals and are checked); nothing further to compare without a code change"
+  },
+  {
+   "producer_id": "ef2.band_width_percentile",
+   "layer": "io",
+   "reason": "io code does not state the producer id as a literal; it builds the headers from module feature-id tables (1 of 1 catalogue feature ids appear as literals and are checked); no identity-next-to-algorithm_version literal pair exists to compare"
+  },
+  {
+   "producer_id": "ef2.bollinger_keltner_squeeze",
+   "layer": "io",
+   "reason": "io code does not state the producer id as a literal; it builds the headers from module feature-id tables (3 of 3 catalogue feature ids appear as literals and are checked); no identity-next-to-algorithm_version literal pair exists to compare"
+  },
+  {
+   "producer_id": "ef2.donchian",
+   "layer": "io",
+   "reason": "io code does not state the producer id as a literal; it builds the headers from module feature-id tables (0 of 4 catalogue feature ids appear as literals and are checked); no identity-next-to-algorithm_version literal pair exists to compare"
+  },
+  {
+   "producer_id": "ef2.ichimoku",
+   "layer": "io",
+   "reason": "io code does not state the producer id as a literal; it builds the headers from module feature-id tables (0 of 8 catalogue feature ids appear as literals and are checked); no identity-next-to-algorithm_version literal pair exists to compare"
+  },
+  {
+   "producer_id": "ef2.keltner",
+   "layer": "io",
+   "reason": "io code does not state the producer id as a literal; it builds the headers from module feature-id tables (0 of 4 catalogue feature ids appear as literals and are checked); no identity-next-to-algorithm_version literal pair exists to compare"
+  },
+  {
+   "producer_id": "ef2.money_flow",
+   "layer": "io",
+   "reason": "io code states the producer id but not an algorithm_version literal in the same tuple, list or dict (3 of 3 catalogue feature ids appear as literals and are checked); nothing further to compare without a code change"
+  },
+  {
+   "producer_id": "ef2.pivot_levels",
+   "layer": "io",
+   "reason": "io code does not state the producer id as a literal; it builds the headers from module feature-id tables (0 of 5 catalogue feature ids appear as literals and are checked); no identity-next-to-algorithm_version literal pair exists to compare"
+  },
+  {
+   "producer_id": "ef2.retracement_level",
+   "layer": "io",
+   "reason": "io code states the producer id but not an algorithm_version literal in the same tuple, list or dict (0 of 1 catalogue feature ids appear as literals and are checked); nothing further to compare without a code change"
+  },
+  {
+   "producer_id": "ef4.path_efficiency",
+   "layer": "io",
+   "reason": "io code states the producer id but not an algorithm_version literal in the same tuple, list or dict (7 of 7 catalogue feature ids appear as literals and are checked); nothing further to compare without a code change"
+  },
+  {
+   "producer_id": "intraday.momentum.v1",
+   "layer": "io",
+   "reason": "io code states the producer id but not an algorithm_version literal in the same tuple, list or dict (10 of 10 catalogue feature ids appear as literals and are checked); nothing further to compare without a code change"
+  },
+  {
+   "producer_id": "ef1.multivenue_status",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 7 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef1.reference_close",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 4 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef2.band_width_percentile",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 1 of 1 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef2.bollinger_keltner_squeeze",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 3 of 3 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef2.donchian",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 4 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef2.ichimoku",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 8 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef2.keltner",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 4 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef2.pivot_levels",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 5 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef3.adaptive_volume",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 10 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef3.daily_log_volatility",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 1 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef3.intraday_realized_variance",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 2 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef3.observed_breadth",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 7 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef3.relative_stats",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 3 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef3.session_breadth",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 16 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef4.bar_projection",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 6 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef4.path_efficiency",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 7 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef4.rate_projection",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 5 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef4.relative_excess",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 8 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef4.session_projection",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 7 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef5.candle",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 7 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef5.structure",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 4 catalogue feature ids appear as literals and are checked"
+  },
+  {
+   "producer_id": "ef5.technical",
+   "layer": "workers",
+   "reason": "workers code never states this catalogue producer id as a literal (identity is owned by the io layer; workers runs the io producers); 0 of 4 catalogue feature ids appear as literals and are checked"
+  }
+ ]
+}
