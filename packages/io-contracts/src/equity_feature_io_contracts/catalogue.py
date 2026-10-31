@@ -138,26 +138,34 @@ def _view(producer_id: str, name: str) -> tuple[dict[str, Any], str]:
     raise UnknownProducer(producer_id)
 
 
-def check_input(producer_id: str, roles: Mapping[str, str | None]) -> CheckResult:
+def check_input(producer_id: str, roles: Mapping[str, str | None] | None) -> CheckResult:
     """Structural check of the roles an adapter supplies against the producer's input view.
 
     ``roles`` maps a role name to the batch kind supplied for it (for example ``"trade"``) or ``None`` for an absent
     delivery. A role left out of the mapping is an absent delivery. Rules (all from the input view, ``roles``):
     ``input.role.unknown`` (a role the producer does not declare), ``input.role.kind`` (a kind other than the one
     declared, compared without regard to case; a role with no declared kind is not checked), ``input.role.required`` (a role declared not nullable is
-    absent). A producer whose core contract states no role table has no roles to judge, so only the other rules apply. A nullable role that is absent is not a finding: the library reports it as ``absent_input``. Columns, rows
+    absent). ``roles=None`` is read as every role absent; a value that is not a mapping is one ``input.roles.type`` finding; a
+    kind that is not a string is an ``input.role.kind`` finding. Nothing raises for a malformed argument. A producer whose core contract states no role table has no roles to judge, so only the other rules apply. A nullable role that is absent is not a finding: the library reports it as ``absent_input``. Columns, rows
     and values are not looked at. Raises ``UnknownProducer`` for an unknown producer id.
     """
     view, page = _view(producer_id, "input")
     declared = {r["role"]: r for r in view["roles"]}
     findings: list[Finding] = []
-    for name in sorted(set(roles) - set(declared)) if declared else ():  # no role table in core: roles cannot be judged
-        findings.append(Finding("input.role.unknown", name, f"role {name!r} is not declared; declared roles: {', '.join(declared)}", page))
+    if roles is None:  # no mapping at all is the same as every role absent
+        roles = {}
+    elif not isinstance(roles, Mapping):
+        findings.append(Finding("input.roles.type", "roles", f"roles must be a mapping of role name to kind, got {type(roles).__name__}", page))
+        return CheckResult(producer_id, "input", tuple(findings))
+    for name in sorted((r for r in roles if r not in declared), key=str) if declared else ():  # no role table in core: roles cannot be judged
+        findings.append(Finding("input.role.unknown", str(name), f"role {name!r} is not declared; declared roles: {', '.join(declared)}", page))
     for name, role in declared.items():
         kind = roles.get(name)
         if kind is None:
             if role["nullable"] is False:
                 findings.append(Finding("input.role.required", name, f"role {name!r} is declared not nullable and must be supplied", page))
+        elif not isinstance(kind, str):
+            findings.append(Finding("input.role.kind", name, f"role {name!r} expects a kind name (str) or None, got {type(kind).__name__}", page))
         elif role["kind"] is not None and kind.lower() != role["kind"].lower():  # core spells some kinds in capitals
             findings.append(Finding("input.role.kind", name, f"role {name!r} expects kind {role['kind']!r}, got {kind!r}", page))
     return CheckResult(producer_id, "input", tuple(findings))
@@ -171,7 +179,7 @@ def _field(header: Any, name: str) -> Any:
     return getattr(value, "value", value) if name == "dtype" else value  # a ValueType enum compares by its string value
 
 
-def check_output(producer_id: str, headers: Iterable[Any], reasons: Iterable[str] = ()) -> CheckResult:
+def check_output(producer_id: str, headers: Iterable[Any] | None, reasons: Iterable[str] | str | None = ()) -> CheckResult:
     """Structural check of result headers (and, optionally, reason names) against the producer's output view.
 
     Each header is a mapping or an object with ``feature_id``, ``algorithm_version``, ``dtype``, ``unit`` and
@@ -180,14 +188,25 @@ def check_output(producer_id: str, headers: Iterable[Any], reasons: Iterable[str
     ``output.feature_id.duplicate``, ``output.header.value`` (a field differs from the catalogue
     ``feature_header_value``), ``output.quality.reason`` (a reason name outside the quality vocabulary the output view states; a producer whose core file states none is not judged on reasons). Selecting only
     some of the producer's feature ids is fine. Values, dtypes of cells and readiness are not looked at. Raises
-    ``UnknownProducer`` for an unknown producer id.
+    ``UnknownProducer`` for an unknown producer id. Malformed arguments are findings, never exceptions:
+    a ``feature_id`` that is not a string (including a non-hashable one) is ``output.feature_id.type`` and the header
+    is otherwise skipped; ``headers`` that is not an iterable of headers is ``output.headers.type``; ``reasons`` that is
+    a bare string is read as one reason name, ``None`` as none, and a non-iterable is ``output.reasons.type``.
     """
     view, page = _view(producer_id, "output")
     expected = {h["feature_id"]: h["feature_header_value"] for h in view["headers"]}
     findings: list[Finding] = []
     seen: set[str] = set()
+    if headers is None:
+        headers = ()
+    elif isinstance(headers, (str, bytes, Mapping)) or not isinstance(headers, Iterable):
+        findings.append(Finding("output.headers.type", "headers", f"headers must be an iterable of headers, got {type(headers).__name__}", page))
+        headers = ()
     for header in headers:
         fid = _field(header, "feature_id")
+        if fid is not None and not isinstance(fid, str):  # also covers non-hashable ids (list, dict)
+            findings.append(Finding("output.feature_id.type", "feature_id", f"feature id must be a str, got {type(fid).__name__}", page))
+            fid = None
         for f in (f for f in _HEADER_FIELDS if _field(header, f) is None):
             findings.append(Finding("output.header.field", f if fid is None else f"{fid}.{f}", f"header field {f!r} is absent", page))
         if fid is None:
@@ -209,6 +228,13 @@ def check_output(producer_id: str, headers: Iterable[Any], reasons: Iterable[str
     for key in ("precedence", "reason_precedence", "reasons", "reasons_used"):
         if isinstance(quality.get(key), list):
             vocabulary |= {str(r) for r in quality[key]}
+    if reasons is None:
+        reasons = ()
+    elif isinstance(reasons, str):  # a bare string is one reason name, not an iterable of characters
+        reasons = (reasons,)
+    elif not isinstance(reasons, Iterable):
+        findings.append(Finding("output.reasons.type", "reasons", f"reasons must be an iterable of reason names, got {type(reasons).__name__}", page))
+        reasons = ()
     for reason in sorted({str(r) for r in reasons} - vocabulary) if vocabulary else ():  # no stated vocabulary: reasons are not judged
         findings.append(Finding("output.quality.reason", reason, f"reason {reason!r} is not in the quality vocabulary", page))
     return CheckResult(producer_id, "output", tuple(findings))
