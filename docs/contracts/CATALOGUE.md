@@ -89,7 +89,7 @@ Every core top-level key is either parsed into a view, listed under `excluded_co
 Which design features the library serves, with each cited output id linked to its catalogue page or, where the catalogue has no page, to a typed pointer to a core document: see [coverage/COVERAGE.md](coverage/COVERAGE.md) (machine-readable [coverage.json](coverage/coverage.json), schema `ef-coverage1`). Each id has one `contract_status`: `frozen`, `proposed_not_frozen`, `core_registry` (implemented in the core registry; no io-published producer contract page) or `planned`. Generated from the core design coverage map; internal, synthetic, pre-release; not a release claim. This table is not part of the packaged catalogue data.
 
     python tools/gen_coverage_table.py --core-root <core checkout> [--core-ref origin/main]    # writes docs/contracts/coverage/
-    python tools/check_coverage_table.py --core-root <core checkout> [--self-test]             # R1-R4, wording, schema, docs copy == regeneration
+    python tools/check_coverage_table.py --core-root <core checkout> [--self-test]             # R1-R8, D2 marker, wording, schema, docs copy == regeneration
 
 ## Maintainers
 

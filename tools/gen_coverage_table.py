@@ -102,16 +102,27 @@ def sha(data: bytes) -> str:
 class Core:
     """Reads files of a core checkout at a fixed ref (LF bytes plus last touching commit)."""
 
+    _cache: dict[tuple[str, str, str], tuple[bytes, str]] = {}
+    _listing: dict[tuple[str, str], set[str]] = {}
+
     def __init__(self, root: Path, ref: str) -> None:
         self.root, self.ref = root, ref
-        self.cache: dict[str, tuple[bytes, str]] = {}
+        self.cache = Core._cache  # shared: the content at a fixed ref does not change within a run
+
+    def exists(self, path: str) -> bool:
+        key = (str(self.root), self.ref)
+        if key not in Core._listing:
+            out = subprocess.check_output(["git", "-C", str(self.root), "ls-tree", "-r", "--name-only", self.ref]).decode("utf-8")
+            Core._listing[key] = set(out.splitlines())
+        return path in Core._listing[key]
 
     def read(self, path: str) -> tuple[bytes, str]:
-        if path not in self.cache:
-            if not path or subprocess.run(["git", "-C", str(self.root), "cat-file", "-e", f"{self.ref}:{path}"], capture_output=True).returncode != 0:
+        key = (str(self.root), self.ref, path)
+        if key not in self.cache:
+            if not self.exists(path):
                 raise FileNotFoundError(f"{path} is not in core at {self.ref}")
-            self.cache[path] = cat.read_core(self.root, self.ref, path)
-        return self.cache[path]
+            self.cache[key] = cat.read_core(self.root, self.ref, path)
+        return self.cache[key]
 
     def text(self, path: str) -> str:
         return self.read(path)[0].decode("utf-8")
@@ -128,11 +139,11 @@ def manifest_rows(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
     """canonical name to {section, planned_delivery, accepted, implemented} for every manifest output."""
     rows: dict[str, dict[str, Any]] = {}
     for row in manifest["outputs"]:
-        rows[row["canonical_name"]] = {"section": "outputs", "planned_delivery": row["planned_delivery"], "accepted": bool(row.get("accepted"))}
+        rows[row["canonical_name"]] = {"section": "outputs", "planned_delivery": row["planned_delivery"], "accepted": bool(row.get("accepted")), "implemented": bool(row.get("implemented_by_this_packet"))}
     for key, value in manifest.items():
         if key.endswith("_delivered_outputs"):
             for row in value["entries"]:
-                rows[row["canonical_name"]] = {"section": key, "planned_delivery": row["planned_delivery"], "accepted": bool(row.get("accepted"))}
+                rows[row["canonical_name"]] = {"section": key, "planned_delivery": row["planned_delivery"], "accepted": bool(row.get("accepted")), "implemented": bool(row.get("implemented_by_this_packet"))}
     return rows
 
 
