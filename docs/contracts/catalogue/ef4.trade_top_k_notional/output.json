@@ -141,5 +141,16 @@
       "W11c",
       "W11d"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "V17",
+      "title": "Large prints at least $100k: count, share, size-weighted price versus VWAP",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "tape.top_k_notional"
+      ]
+    }
+  ]
 }

@@ -217,5 +217,16 @@
     },
     "aligned_with": "contract E reason table (DP-Q1): future_market is incomplete_coverage ordered after governed_gap; empty_universe precedes zero_denominator",
     "rule": "all applicable reasons retained lexically; status follows the first applicable reason in precedence; value null exactly when not available; available requires observed = expected"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "M9",
+      "title": "Broad advance at least 70%",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.observed.advance_fraction"
+      ]
+    }
+  ]
 }

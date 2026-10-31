@@ -103,3 +103,11 @@ The core contract states no reasons-reached table.
 | `candle.inside_bar` | `ef5-candle-v1` | bool | boolean | 1 |
 | `candle.lower_shadow_fraction` | `ef5-candle-v1` | float64 | fraction | 1 |
 | `candle.upper_shadow_fraction` | `ef5-candle-v1` | float64 | fraction | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| S1 | Candlestick presets (80 patterns) | partial | primary | `candle.body_fraction`, `candle.doji`, `candle.engulfing_bearish`, `candle.engulfing_bullish`, `candle.inside_bar`, `candle.lower_shadow_fraction`, `candle.upper_shadow_fraction` |

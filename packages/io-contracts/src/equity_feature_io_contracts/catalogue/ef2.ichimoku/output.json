@@ -225,5 +225,16 @@
       "missing_action_evidence"
     ],
     "counts": "expected = closure slot count R (or the stated formula); observed = unique closure slots whose required fields, coverage and knowledge qualify"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P12",
+      "title": "Stochastic, ROC, Keltner, pivots, Fibonacci, Ichimoku",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "trend.ichimoku.base_line"
+      ]
+    }
+  ]
 }

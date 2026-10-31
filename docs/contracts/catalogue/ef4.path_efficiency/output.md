@@ -121,3 +121,12 @@ Order: lexicographic by feature id within the producer; each output has its own 
 | `path.path_length` | `ef4-path-efficiency-v1` | float64 | currency/share | 1 |
 | `path.true_range_sum` | `ef4-path-efficiency-v1` | float64 | currency/share | 1 |
 | `path.window_range` | `ef4-path-efficiency-v1` | float64 | currency/share | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| P14 | Range so far at least X times the opening range | implemented (provisional) | operand | `path.window_range` |
+| P9 | Realized vol, range expansion, choppiness, trend efficiency, range position, drawdown | implemented | primary | `path.choppiness_fraction`, `path.efficiency_ratio`, `path.window_range` |

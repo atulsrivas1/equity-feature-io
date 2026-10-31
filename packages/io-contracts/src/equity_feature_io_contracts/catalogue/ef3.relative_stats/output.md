@@ -85,3 +85,15 @@ The core contract states no reasons-reached table.
 | `relative.beta` | `ef3-relative-stats-v1` | float64 | fraction | 1 |
 | `relative.correlation` | `ef3-relative-stats-v1` | float64 | fraction | 1 |
 | `relative.residual_return` | `ef3-relative-stats-v1` | float64 | fraction | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| P40 | Beta to SPY/QQQ over N sessions | differs | existing_differs | `relative.beta` |
+| P41 | Correlation to SPY/QQQ | differs | existing_differs | `relative.correlation` |
+| P42 | Beta and correlation to the sector fund | differs | existing_differs | `relative.beta`, `relative.correlation` |
+| P8 | Relative strength vs SPY/QQQ/sector, residual, top/bottom decile | implemented | primary | `relative.residual_return` |
+| S5 | Relative strength (12) and cross-sectional deciles (10) | implemented | primary | `relative.residual_return` |

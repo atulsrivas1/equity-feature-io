@@ -268,5 +268,18 @@
     "zero_denominator": [
       "V21"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P5",
+      "title": "VWAP: above/below, reclaim, slope, deviation",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "vwap.path.last",
+        "vwap.slope.endpoint",
+        "vwap.slope.ols"
+      ]
+    }
+  ]
 }

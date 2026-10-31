@@ -412,5 +412,100 @@
     },
     "aligned_with": "contract E reason table (DP-Q1): future_market is incomplete_coverage ordered after governed_gap; empty_universe precedes zero_denominator",
     "rule": "all applicable reasons retained lexically; status follows the first applicable reason in precedence; value null exactly when not available; available requires observed = expected"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "M1",
+      "title": "Net advancing",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.direction_net_count"
+      ]
+    },
+    {
+      "design_id": "M2",
+      "title": "Advance/decline ratio with a 75% coverage gate",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.advance_decline_ratio",
+        "breadth.session.prior_reference_coverage_fraction"
+      ]
+    },
+    {
+      "design_id": "M3",
+      "title": "Up/down volume ratio",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.up_down_volume_ratio"
+      ]
+    },
+    {
+      "design_id": "M4",
+      "title": "Share above VWAP",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.above_vwap_fraction"
+      ]
+    },
+    {
+      "design_id": "M5",
+      "title": "Share with positive 5-minute momentum",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.positive_momentum_fraction"
+      ]
+    },
+    {
+      "design_id": "M6",
+      "title": "Share near the session high",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.near_high_fraction"
+      ]
+    },
+    {
+      "design_id": "M7",
+      "title": "Share near the session low",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.near_low_fraction"
+      ]
+    },
+    {
+      "design_id": "M8",
+      "title": "Breadth coverage gate",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.prior_reference_coverage_fraction"
+      ]
+    },
+    {
+      "design_id": "M9",
+      "title": "Broad advance at least 70%",
+      "status": "implemented",
+      "role": "operand",
+      "feature_ids": [
+        "breadth.session.advancing_count",
+        "breadth.session.selected_member_count"
+      ]
+    },
+    {
+      "design_id": "S10",
+      "title": "Breadth-regime presets (thrust)",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "breadth.session.advance_decline_ratio",
+        "breadth.session.up_down_volume_ratio"
+      ]
+    }
+  ]
 }

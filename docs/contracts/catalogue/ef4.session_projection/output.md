@@ -169,3 +169,15 @@ Order: lexicographic by feature id within a producer; each output has its own re
 | `projection.drawdown_fraction` | `ef4-session-projection-v1` | float64 | fraction | 1 |
 | `projection.max_drawdown_fraction` | `ef4-session-projection-v1` | float64 | fraction | 1 |
 | `projection.up_session_fraction` | `ef4-session-projection-v1` | float64 | fraction | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| P11 | Mean reversion: N ATR or z-score from mean/VWAP; pullback in uptrend | partial | primary | `projection.close_vs_sma_fraction` |
+| P3 | Moving average state: above/below SMA or EMA, reclaim, rejection, stack | implemented | primary | `projection.close_above_sma`, `projection.close_vs_sma_fraction` |
+| P9 | Realized vol, range expansion, choppiness, trend efficiency, range position, drawdown | implemented | primary | `projection.distance_from_low_fraction`, `projection.drawdown_fraction`, `projection.max_drawdown_fraction` |
+| S6 | Mean-reversion presets (10) | partial | primary | `projection.close_vs_sma_fraction` |
+| V13 | Setup components (momentum, retest, pullbacks, SPY 5d, dollar volume) | partial | primary | `projection.drawdown_fraction` |

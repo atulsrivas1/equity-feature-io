@@ -148,3 +148,11 @@ Order: lexicographic by feature_id within a producer; each output has its own re
 | `quote.microprice.mean` | `ef4-quote-dynamics-v1` | float64 | currency/share | 1 |
 | `quote.sampled.maximum_midpoint_bps` | `ef4-quote-dynamics-v1` | float64 | bps | 1 |
 | `quote.sampled.maximum_spread` | `ef4-quote-dynamics-v1` | float64 | currency/share | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| V14 | Average trade size, spread, book imbalance | partial | primary | `quote.microprice.last` |

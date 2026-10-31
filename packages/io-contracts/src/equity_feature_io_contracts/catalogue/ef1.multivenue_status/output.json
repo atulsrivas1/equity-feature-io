@@ -181,5 +181,18 @@
     "complete_set": "all seven for the homogeneous producer; no subset, no combination",
     "evidence_limit": 4,
     "evidence_order": "exactly: aggregate_state, quoting_any, restriction_any, latest_event_ns (omit absent witnesses)"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P30",
+      "title": "Trading halted now (with reason)",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "session.venue_status.aggregate_reason",
+        "session.venue_status.aggregate_state",
+        "session.venue_status.restriction_any"
+      ]
+    }
+  ]
 }

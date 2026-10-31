@@ -245,5 +245,27 @@
     "unknown_availability": [
       "PE18"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P14",
+      "title": "Range so far at least X times the opening range",
+      "status": "implemented (provisional)",
+      "role": "operand",
+      "feature_ids": [
+        "path.window_range"
+      ]
+    },
+    {
+      "design_id": "P9",
+      "title": "Realized vol, range expansion, choppiness, trend efficiency, range position, drawdown",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "path.choppiness_fraction",
+        "path.efficiency_ratio",
+        "path.window_range"
+      ]
+    }
+  ]
 }

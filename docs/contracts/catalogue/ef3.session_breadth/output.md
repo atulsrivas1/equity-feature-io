@@ -96,3 +96,20 @@ The core contract states no reasons-reached table.
 | `breadth.session.unchanged_count` | `ef3-session-breadth-v1` | int64 | members | 1 |
 | `breadth.session.up_down_volume_ratio` | `ef3-session-breadth-v1` | float64 | ratio | 1 |
 | `breadth.session.up_volume` | `ef3-session-breadth-v1` | int64 | shares | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| M1 | Net advancing | implemented | primary | `breadth.session.direction_net_count` |
+| M2 | Advance/decline ratio with a 75% coverage gate | implemented | primary | `breadth.session.advance_decline_ratio`, `breadth.session.prior_reference_coverage_fraction` |
+| M3 | Up/down volume ratio | implemented | primary | `breadth.session.up_down_volume_ratio` |
+| M4 | Share above VWAP | implemented | primary | `breadth.session.above_vwap_fraction` |
+| M5 | Share with positive 5-minute momentum | implemented | primary | `breadth.session.positive_momentum_fraction` |
+| M6 | Share near the session high | implemented | primary | `breadth.session.near_high_fraction` |
+| M7 | Share near the session low | implemented | primary | `breadth.session.near_low_fraction` |
+| M8 | Breadth coverage gate | implemented | primary | `breadth.session.prior_reference_coverage_fraction` |
+| M9 | Broad advance at least 70% | implemented | operand | `breadth.session.advancing_count`, `breadth.session.selected_member_count` |
+| S10 | Breadth-regime presets (thrust) | partial | primary | `breadth.session.advance_decline_ratio`, `breadth.session.up_down_volume_ratio` |

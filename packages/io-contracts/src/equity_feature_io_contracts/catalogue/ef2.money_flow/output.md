@@ -75,3 +75,9 @@ The core contract states no reasons-reached table.
 | `intraday.ad_line` | `ef2-money-flow-v1` | float64 | shares | 1 |
 | `intraday.cmf` | `ef2-money-flow-v1` | float64 | fraction | 1 |
 | `intraday.obv` | `ef2-money-flow-v1` | int64 | shares | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+No design item cites a feature id of this producer.

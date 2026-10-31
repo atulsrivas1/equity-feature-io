@@ -65,3 +65,11 @@ The core contract states no reasons-reached table.
 | `channel.squeeze.bollinger_inside_keltner` | `ef2-channels-v1` | bool | boolean | 1 |
 | `channel.squeeze.lower_gap` | `ef2-channels-v1` | float64 | currency/share | 1 |
 | `channel.squeeze.upper_gap` | `ef2-channels-v1` | float64 | currency/share | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| P4 | Oscillators and bands: RSI, MACD cross, Bollinger, squeeze, ATR/ADX, Donchian | partial | primary | `channel.squeeze.bollinger_inside_keltner` |

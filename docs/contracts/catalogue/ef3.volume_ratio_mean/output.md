@@ -152,3 +152,18 @@ Order: lexicographic by feature_id within a producer; each output has its own re
 | `mean.baseline` | `ef3-volume-ratio-mean-v1` | float64 | shares | 1 |
 | `mean.numerator` | `ef3-volume-ratio-mean-v1` | float64 | shares | 1 |
 | `mean.ratio` | `ef3-volume-ratio-mean-v1` | float64 | fraction | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| S9 | Volume and liquidity presets (30) | partial | primary | `mean.ratio` |
+| V10 | Volume at least 1.5x and day change at least 1% | implemented | primary | `mean.ratio` |
+| V11 | Volume versus price and VWAP divergence | implemented | primary | `mean.ratio` |
+| V21 | Session volume at least X times the mean of the prior 20 sessions | implemented | primary | `mean.ratio` |
+| V22 | 5-day average volume over 63-day average volume | implemented | primary | `mean.ratio` |
+| V6 | Volume versus typical (1.5x to 5x, dry-up) | implemented | primary | `mean.ratio` |
+| W1 | System watchlist, 5-group matching, minimum 2 groups | out_of_library_scope | primary | `mean.ratio` |
+| W2 | Symmetrical bearish catalogue | out_of_library_scope | primary | `mean.ratio` |

@@ -213,5 +213,79 @@
       "P28",
       "R05"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "S9",
+      "title": "Volume and liquidity presets (30)",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "mean.ratio"
+      ]
+    },
+    {
+      "design_id": "V10",
+      "title": "Volume at least 1.5x and day change at least 1%",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "mean.ratio"
+      ]
+    },
+    {
+      "design_id": "V11",
+      "title": "Volume versus price and VWAP divergence",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "mean.ratio"
+      ]
+    },
+    {
+      "design_id": "V21",
+      "title": "Session volume at least X times the mean of the prior 20 sessions",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "mean.ratio"
+      ]
+    },
+    {
+      "design_id": "V22",
+      "title": "5-day average volume over 63-day average volume",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "mean.ratio"
+      ]
+    },
+    {
+      "design_id": "V6",
+      "title": "Volume versus typical (1.5x to 5x, dry-up)",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "mean.ratio"
+      ]
+    },
+    {
+      "design_id": "W1",
+      "title": "System watchlist, 5-group matching, minimum 2 groups",
+      "status": "out_of_library_scope",
+      "role": "primary",
+      "feature_ids": [
+        "mean.ratio"
+      ]
+    },
+    {
+      "design_id": "W2",
+      "title": "Symmetrical bearish catalogue",
+      "status": "out_of_library_scope",
+      "role": "primary",
+      "feature_ids": [
+        "mean.ratio"
+      ]
+    }
+  ]
 }

@@ -209,5 +209,22 @@
   "known_limits": [
     "TD10: the declared basis is trusted and no action facts are consumed; no split is detected (PO-4). EF6 may add action facts (a new optional REFERENCE role) that mark windows unavailable; non-breaking"
   ],
-  "unit_additions": []
+  "unit_additions": [],
+  "design_items": [
+    {
+      "design_id": "S1",
+      "title": "Candlestick presets (80 patterns)",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "candle.body_fraction",
+        "candle.doji",
+        "candle.engulfing_bearish",
+        "candle.engulfing_bullish",
+        "candle.inside_bar",
+        "candle.lower_shadow_fraction",
+        "candle.upper_shadow_fraction"
+      ]
+    }
+  ]
 }

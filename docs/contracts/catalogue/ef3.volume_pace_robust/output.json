@@ -231,5 +231,52 @@
       "P28",
       "R05"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "S9",
+      "title": "Volume and liquidity presets (30)",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "pace.ratio"
+      ]
+    },
+    {
+      "design_id": "V1",
+      "title": "5-minute volume at least N times the same-minute median, with a pace floor",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "pace.ratio"
+      ]
+    },
+    {
+      "design_id": "V2",
+      "title": "15-minute sustained volume",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "pace.ratio"
+      ]
+    },
+    {
+      "design_id": "V6",
+      "title": "Volume versus typical (1.5x to 5x, dry-up)",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "pace.ratio"
+      ]
+    },
+    {
+      "design_id": "V7",
+      "title": "Top 5%/1% of own same-minute history; robust z at least 3",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "pace.robust_z"
+      ]
+    }
+  ]
 }

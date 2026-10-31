@@ -167,3 +167,9 @@ Order: lexicographic by feature id within a producer; each output has its own re
 | `projection.up_dollar_volume_fraction` | `ef4-bar-projection-v1` | float64 | fraction | 1 |
 | `projection.up_volume` | `ef4-bar-projection-v1` | int64 | shares | 1 |
 | `projection.up_volume_fraction` | `ef4-bar-projection-v1` | float64 | fraction | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+No design item cites a feature id of this producer.

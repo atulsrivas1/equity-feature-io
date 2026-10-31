@@ -304,5 +304,16 @@
     "zero_denominator": [
       "V21"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "V14",
+      "title": "Average trade size, spread, book imbalance",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "quote.microprice.last"
+      ]
+    }
+  ]
 }

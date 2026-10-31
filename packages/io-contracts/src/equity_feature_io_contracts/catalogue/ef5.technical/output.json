@@ -184,5 +184,36 @@
       ],
       "aliases": []
     }
+  ],
+  "design_items": [
+    {
+      "design_id": "M10",
+      "title": "Core funds mean session return",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "technical.session_return_fraction"
+      ]
+    },
+    {
+      "design_id": "P1",
+      "title": "Return over a window (10s to 60m, session, 1-60d, ATR-normalised)",
+      "status": "partial",
+      "role": "operand",
+      "feature_ids": [
+        "technical.session_return_fraction"
+      ]
+    },
+    {
+      "design_id": "P10",
+      "title": "Opening drive, consecutive trend windows, velocity, acceleration",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "technical.momentum_acceleration_fraction_per_second_squared",
+        "technical.price_velocity_fraction_per_second",
+        "technical.signed_trend_window_count"
+      ]
+    }
   ]
 }

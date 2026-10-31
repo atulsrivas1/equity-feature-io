@@ -288,5 +288,62 @@
       "P28",
       "R05"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "M20",
+      "title": "Volatility-index close or percentile of 252 closes",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "robust.percentile_rank"
+      ]
+    },
+    {
+      "design_id": "P8",
+      "title": "Relative strength vs SPY/QQQ/sector, residual, top/bottom decile",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "cohort.percentile_rank",
+        "cohort.rank"
+      ]
+    },
+    {
+      "design_id": "S5",
+      "title": "Relative strength (12) and cross-sectional deciles (10)",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "cohort.percentile_rank"
+      ]
+    },
+    {
+      "design_id": "U8",
+      "title": "20-session median dollar volume",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "robust.median"
+      ]
+    },
+    {
+      "design_id": "V7",
+      "title": "Top 5%/1% of own same-minute history; robust z at least 3",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "robust.percentile_rank"
+      ]
+    },
+    {
+      "design_id": "V9",
+      "title": "Absolute volume; decile by dollar volume",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "cohort.rank"
+      ]
+    }
+  ]
 }

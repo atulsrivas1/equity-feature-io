@@ -84,3 +84,13 @@ The core contract states no reasons-reached table.
 | `adaptive.volume.peak_relative_rate` | `ef3-adaptive-volume-v1` | float64 | ratio | 1 |
 | `adaptive.volume.peak_relative_rate_event_ns` | `ef3-adaptive-volume-v1` | int64 | utc_ns | 1 |
 | `adaptive.volume.scored_count` | `ef3-adaptive-volume-v1` | int64 | observations | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| V3 | Pace versus own EWMA pace | implemented | primary | `adaptive.volume.baseline_rate`, `adaptive.volume.peak_relative_rate` |
+| V4 | Volume acceleration | implemented | primary | `adaptive.volume.peak_relative_acceleration` |
+| V5b | End-of-day maximum 5-minute multiple | partial | primary | `adaptive.volume.peak_relative_rate` |
