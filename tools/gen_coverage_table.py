@@ -294,6 +294,13 @@ def link_md(o: dict[str, Any], which: str) -> str:
     return f"[{link['kind']}]({link['core_link']})"
 
 
+def output_links_md(o: dict[str, Any]) -> str:
+    """Input and output links; one link when both are the same pointer (core documents, manifest rows)."""
+    if o["input_contract"] == o["output_contract"]:
+        return link_md(o, "output_contract") + " (input and output)"
+    return link_md(o, "input_contract") + " " + link_md(o, "output_contract")
+
+
 def coverage_md(doc: dict[str, Any]) -> bytes:
     c = doc["counts"]
     L = [f"<!-- {GENERATED} -->", "", "# Feature coverage table", "", f"Scope: {WORDING}. {doc['header']}", ""]
@@ -322,7 +329,7 @@ def coverage_md(doc: dict[str, Any]) -> bytes:
             status = item["status"] + (" (provisional)" if item["provisional"] else "")
             if item["status"] == "partial" and item["status_basis"] == "derived":
                 status += ": " + item["rollup"]
-            outs = "<br>".join(f"`{o['feature_id']}` {o['contract_status']} {link_md(o, 'input_contract')} {link_md(o, 'output_contract')}" for o in item["outputs"]) or "none"
+            outs = "<br>".join(f"`{o['feature_id']}` {o['contract_status']} {output_links_md(o)}" for o in item["outputs"]) or "none"
             L.append(f"| {item['design_id']} | {cat.cell(item['title'])} | {cat.cell(status)} | {outs} |")
         L.append("")
     L += ["## Catalogue ids cited by no item", "", f"{len(doc['extras'])} ids; each is an extra, not an error.", ""]
