@@ -10,7 +10,7 @@ Scope: internal, synthetic, pre-release. Derived from core commit 73848a9d9e99; 
 
 > DV1 outputs: manifest says delivered, catalogue pages pending.
 
-Catalogue version 0.1.0a6. Machine-readable copy: [coverage.json](coverage.json), schema `ef-coverage1` in [coverage.schema.json](coverage.schema.json). Back to the [contract catalogue](../catalogue/INDEX.md).
+Catalogue version 0.1.0a7. Machine-readable copy: [coverage.json](coverage.json), schema `ef-coverage1` in [coverage.schema.json](coverage.schema.json). Back to the [contract catalogue](../catalogue/INDEX.md).
 
 ## Counts
 
