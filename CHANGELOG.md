@@ -4,6 +4,8 @@ Internal, synthetic, pre-release. `tools/check_header_crosscheck.py` now also co
 
 Verified: on io main cc2cf31 and workers main (local checkout), `--workers-root` run exits 0 with io OK 20, NOT_DECLARED 12 (12 recorded) and workers OK 10, NOT_DECLARED 22 (22 recorded), no mismatch; run without `--workers-root` exits 0 and says the workers layer was not read; nonexistent `--workers-root` exits 2. Seeded temporary tree (outside the repo): wrong dtype, unit, unknown feature id, wrong algorithm_version and wrong schema_version are each reported with file and line, exit 1. `verify_versions`, `check_extraction`, `check_contract_catalogue`, `verify_contract_catalogue` pass against core origin/main 3ea6efc.
 
+Review fix: a dtype literal outside the catalogue's own dtype values (for example int8) was not flagged; the checker now also knows common dtype names (int/uint 8 to 64, float16/32/64, decimal, bool, string, object). Re-seeded in a scratch tree: dtype int8, unit bps and schema_version 2 are each flagged with file and line, exit 1. A dtype built by a comprehension over ids (not a literal pair), as in the channels module, is not compared by design.
+
 Not verified: no Linux run; no hosted CI (none by decision); values the code builds or computes rather than states as literals cannot be compared and stay as accepted NOT_DECLARED records; no review yet.
 
 ## Unreleased - check_input and check_output hardening (RL-01-21)

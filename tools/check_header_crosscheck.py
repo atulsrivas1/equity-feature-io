@@ -14,7 +14,7 @@ For every catalogue producer and each layer (io, workers) it compares what the c
   segment a catalogue feature-id namespace) must be one of that producer's catalogue feature ids; otherwise MISMATCH. Every
   literal equal to a catalogue feature id is counted as a declared id;
 * dtype and unit (v2): in a dict that maps a catalogue feature id directly to a literal, or in a tuple or list that holds exactly
-  one catalogue feature id, a literal that is a catalogue dtype value (or unit value) must equal that feature id's catalogue dtype
+  one catalogue feature id, a literal that is a catalogue dtype value or a common dtype name such as int8 (or a catalogue unit value) must equal that feature id's catalogue dtype
   (or unit); otherwise MISMATCH;
 * schema_version (v2): a ``schema_version`` dict key or keyword whose literal is a digit string, in a container that holds a
   producer identity or catalogue feature id, must equal the catalogue schema_version; otherwise MISMATCH;
@@ -47,6 +47,8 @@ ACCEPTED = Path(__file__).resolve().parent / "header_crosscheck_accepted.json"
 VERSION_LIKE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*-v\d+$")
 FEATURE_LIKE = re.compile(r"^[a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+$")
 DIGITS = re.compile(r"^\d+$")
+DTYPE_NAMES = {f"{k}{n}" for k in ("int", "uint") for n in (8, 16, 32, 64)} | {"float16", "float32", "float64", "bool", "string", "object"} | {f"decimal{n}" for n in (32, 64, 128, 256)}
+DTYPE_NAMES = {f"{k}{n}" for k in ("int", "uint") for n in (8, 16, 32, 64)} | {"float16", "float32", "float64", "bool", "string", "object"} | {f"decimal{n}" for n in (32, 64, 128, 256)}
 
 
 def sources(roots: list[Path]) -> list[Path]:
@@ -182,7 +184,7 @@ def main() -> int:
         for h in out["headers"]:
             features[h["feature_id"]] = {"producer_id": p["producer_id"], "dtype": h["dtype"], "unit": h["unit"], "schema_version": out["schema_version"]}
     cat: dict[str, object] = {"features": features, "namespaces": {f.split(".")[0] for f in features},
-                              "dtypes": {m["dtype"] for m in features.values()}, "units": {m["unit"] for m in features.values()}}
+                              "dtypes": {m["dtype"] for m in features.values()} | DTYPE_NAMES, "units": {m["unit"] for m in features.values()}}
     versions = {str(p["algorithm_version"]) for p in producers}
     layers = {"io": scan(sources([ROOT / "packages", ROOT / "examples"]), ROOT, producers, versions, cat)}
     if args.workers_root is not None:
