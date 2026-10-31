@@ -25,7 +25,7 @@ Catalogue version 0.1.0a6. Machine-readable copy: [coverage.json](coverage.json)
 
 Cited output ids: 148. By contract status: frozen 72; proposed_not_frozen 34 (of which pointer to a core proposal, no io page: 25); core_registry 34; planned 8. Catalogue ids cited by no item: 95 (listed in coverage.json under extras).
 
-`contract_status` values: `frozen` (io catalogue page, frozen), `proposed_not_frozen` (page or core proposal whose freeze text says proposed), `core_registry` (implemented in the core registry; no io-published producer contract page), `planned` (DV1 output named in the ownership manifest only). Links are catalogue pages or typed pointers to a core document at a pinned commit; none is blank.
+`contract_status` values: `frozen` (io catalogue page, frozen), `proposed_not_frozen` (page or core proposal whose freeze text says proposed), `core_registry` (implemented in the core registry; no io-published producer contract page), `planned` (DV1 output named in the ownership manifest only). An id with an io catalogue page counts as delivered, following the ownership manifest (delivered, not accepted), even when the page is proposed; this changes no row status. Links are catalogue pages or typed pointers to a core document at a pinned commit; none is blank.
 
 ## company-events
 

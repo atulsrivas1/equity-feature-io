@@ -300,6 +300,7 @@ def coverage_md(doc: dict[str, Any]) -> bytes:
           f"Catalogue ids cited by no item: {c['catalogue_ids_not_cited_by_any_item']} (listed in coverage.json under extras).", "",
           "`contract_status` values: `frozen` (io catalogue page, frozen), `proposed_not_frozen` (page or core proposal whose freeze text says proposed), "
           "`core_registry` (implemented in the core registry; no io-published producer contract page), `planned` (DV1 output named in the ownership manifest only). "
+          "An id with an io catalogue page counts as delivered, following the ownership manifest (delivered, not accepted), even when the page is proposed; this changes no row status. "
           "Links are catalogue pages or typed pointers to a core document at a pinned commit; none is blank.", ""]
     families: dict[str, list[dict[str, Any]]] = {}
     for item in doc["items"]:
