@@ -84,6 +84,13 @@ The adapter module on each page is labelled the reference storage module: the pr
 
 Every core top-level key is either parsed into a view, listed under `excluded_core_keys` in `index.json` with a reason (calculation semantics, decision record, test evidence, process, per-source matrix), or listed as unparsed. Unparsed keys are never dropped. The gate fails on any unparsed key, so a new core key forces an explicit decision in the extractor.
 
+## Feature coverage table
+
+Which design features the library serves, with each cited output id linked to its catalogue page or, where the catalogue has no page, to a typed pointer to a core document: see [coverage/COVERAGE.md](coverage/COVERAGE.md) (machine-readable [coverage.json](coverage/coverage.json), schema `ef-coverage1`). Each id has one `contract_status`: `frozen`, `proposed_not_frozen`, `core_registry` (implemented in the core registry; no io-published producer contract page) or `planned`. Generated from the core design coverage map; internal, synthetic, pre-release; not a release claim. This table is not part of the packaged catalogue data.
+
+    python tools/gen_coverage_table.py --core-root <core checkout> [--core-ref origin/main]    # writes docs/contracts/coverage/
+    python tools/check_coverage_table.py --core-root <core checkout> [--self-test]             # R1-R4, wording, schema, docs copy == regeneration
+
 ## Maintainers
 
     python tools/gen_contract_catalogue.py --core-root <core checkout> [--core-ref origin/main]   # writes both copies
