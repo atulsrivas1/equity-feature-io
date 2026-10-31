@@ -2,11 +2,13 @@
 
 # Feature coverage table
 
-Scope: internal, synthetic, pre-release. Derived from core commit c7e3f6074ead; judgements are asserted by the Product Owner with records; internal, synthetic, pre-release; not a release claim.
+Scope: internal, synthetic, pre-release. Derived from core commit 73848a9d9e99; judgements are asserted by the Product Owner with records; internal, synthetic, pre-release; not a release claim.
 
 > Core-registry outputs: implemented in the core registry; no io-published producer contract page.
 
 > EF1 outputs: proposed, not frozen (RL-01-20).
+
+> DV1 outputs: manifest says delivered, catalogue pages pending.
 
 Catalogue version 0.1.0a6. Machine-readable copy: [coverage.json](coverage.json), schema `ef-coverage1` in [coverage.schema.json](coverage.schema.json). Back to the [contract catalogue](../catalogue/INDEX.md).
 

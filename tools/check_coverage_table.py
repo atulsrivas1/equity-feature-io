@@ -1,4 +1,4 @@
-"""Gate for the feature coverage table: rules R1 to R4, wording, schema and regeneration (docs copy only).
+"""Gate for the feature coverage table: rules R1 to R8, the D2 marker, wording, schema and regeneration (docs copy only).
 
 Internal, synthetic, pre-release. Writes nothing.
 
@@ -12,6 +12,13 @@ Rules checked in this change (rules R5 to R8 and the DV1 marker expiry are a lat
 * R2 every catalogue feature id is cited by an item or listed under ``extras`` (informational count).
 * R3 design ids are unique; item count and per-family counts equal the declared design basis.
 * R4 derived statuses equal the statuses pinned in the core map row by row, and equal the pinned counts below.
+* R5 every record the map cites exists in core and is listed under ``sources.records``. R6 manifest cross-check: a cited
+  output's release equals the manifest ``planned_delivery`` (or the catalogue family of its page); a manifest row that says
+  ``implemented_by_this_packet`` must be in the catalogue unless the ``pending_catalogue`` marker lists it. R7 every evidence
+  ref resolves to a file in core. R8 an assertion that carries ``asserted.contract_sha256`` (feature id to the sha256 of its
+  catalogue source contract) fails once the contract moved; no row carries a stamp today, so R8 is exercised by its fixture only.
+* D2 marker ``pending_catalogue`` (release DV1, expires_at CAT-DV1): its ids must equal the planned DV1 ids the map cites,
+  the generated output must print the DV1 banner, and the gate FAILS if the catalogue already has the DV1 family.
 * Wording: no provider names and no banned words in the generated text; schema: coverage.json validates against coverage.schema.json.
 * R9 (docs part): the committed files equal a fresh regeneration from core. The packaged copy is not part of this change.
 """
@@ -122,6 +129,71 @@ def check_document(doc: dict[str, Any], core: gen.Core, index: dict[str, Any], p
     return errors
 
 
+def core_has(core: gen.Core, path: str) -> bool:
+    return core.exists(path)
+
+
+def rules_5_to_8(core: gen.Core, map_doc: dict[str, Any], doc: dict[str, Any], index: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
+    """R5 records, R6 manifest cross-check, R7 evidence refs, R8 asserted freshness, and the D2 marker (shape, coverage, expiry)."""
+    errors: list[str] = []
+    rows = gen.manifest_rows(manifest)
+    listed = set(map_doc.get("sources", {}).get("records", {}).values())
+    for rel in sorted(listed):
+        if not core_has(core, rel):
+            errors.append(f"R5: record {rel} listed in the map does not exist in core")
+    producer_of = index["by_feature_id"]
+    producers = {p["producer_id"]: p for p in index["producers"]}
+    contract_sha = {c["contract_key"]: c["source"]["sha256_lf"] for c in index["contracts"]}
+    planned_cited: set[str] = set()
+    for item in map_doc["items"]:
+        did = item["design_id"]
+        asserted = item.get("asserted")
+        if asserted:
+            rec = asserted.get("record", "")
+            if not core_has(core, rec):
+                errors.append(f"R5: {did} cites record {rec}, which does not exist in core")
+            elif rec not in listed:
+                errors.append(f"R5: {did} cites record {rec}, which is not listed under sources.records")
+            stamps = asserted.get("contract_sha256")
+            if stamps is not None:
+                for fid, stamped in sorted(stamps.items()):
+                    pid = producer_of.get(fid)
+                    if pid is None:
+                        errors.append(f"R8: {did} stamps {fid}, which has no io catalogue page")
+                    elif contract_sha[producers[pid]["contract_key"]] != stamped:
+                        errors.append(f"R8: {did} assertion is stale: {fid} contract sha256 moved since the stamp; the Product Owner re-confirms")
+        for e in item.get("evidence", []):
+            if not core_has(core, e.get("ref", "")):
+                errors.append(f"R7: {did} evidence {e.get('kind')} {e.get('ref')} does not resolve in core")
+        for o in item["outputs"]:
+            row = rows.get(o["id"])
+            if row is not None and row["planned_delivery"] != o["release"]:
+                errors.append(f"R6: {did} cites {o['id']} as {o['release']}, the ownership manifest says {row['planned_delivery']}")
+            pid = producer_of.get(o["id"])
+            if pid is not None and producers[pid]["family"] != o["release"]:
+                errors.append(f"R6: {did} cites {o['id']} as {o['release']}, its catalogue page is family {producers[pid]['family']}")
+            if o["release"] == "DV1" and pid is None:
+                planned_cited.add(o["id"])
+    marker = map_doc.get("pending_catalogue")
+    for fid, row in sorted(rows.items()):
+        if row["implemented"] and fid not in producer_of and not (marker and fid in marker.get("ids", [])):
+            errors.append(f"R6: the manifest says {fid} is implemented, the catalogue lacks it (only the pending_catalogue marker is exempt)")
+    if marker:
+        if marker.get("release") != "DV1" or marker.get("expires_at") != "CAT-DV1":
+            errors.append("D2: pending_catalogue must name release DV1 and expires_at CAT-DV1")
+        if "DV1" in index["families_present"]:
+            errors.append("D2: pending_catalogue marker is present but the catalogue already has the DV1 family; CAT-DV1's PR removes the marker")
+        if set(marker.get("ids", [])) != planned_cited:
+            only_marker = sorted(set(marker.get("ids", [])) - planned_cited)
+            only_map = sorted(planned_cited - set(marker.get("ids", [])))
+            errors.append(f"D2: marker ids differ from the planned DV1 ids the map cites: only in marker {only_marker}, only in map {only_map}")
+        if gen.BANNER_DV1 not in doc.get("banners", []):
+            errors.append("D2: marker present but the DV1 banner is not in the generated output")
+    elif planned_cited:
+        errors.append(f"D2: planned DV1 ids are cited with no pending_catalogue marker: {sorted(planned_cited)}")
+    return errors
+
+
 def wording_errors(files: dict[str, bytes]) -> list[str]:
     errors = []
     for name, data in files.items():
@@ -144,6 +216,8 @@ def run_checks(core_root: Path, ref: str, map_doc: dict[str, Any] | None = None,
     index = json.loads(gen.CATALOGUE_INDEX.read_text(encoding="utf-8"))
     pinned = {i["design_id"]: i["status"] for i in use["items"]}
     errors = check_document(doc, core, index, problems, pinned)
+    manifest = json.loads(core.read(gen.MANIFEST_PATH)[0].decode("utf-8"))
+    errors += rules_5_to_8(core, use, doc, index, manifest)
     if not problems:
         files = {"COVERAGE.md": gen.coverage_md(doc), "coverage.json": gen.cat.dumps(doc), "coverage.schema.json": gen.cat.dumps(gen.SCHEMA_DOC)}
         errors += wording_errors(files)
@@ -188,6 +262,35 @@ def self_test(core_root: Path, ref: str) -> list[str]:
     expect("duplicate design id", lambda d: d["items"].append(copy.deepcopy(item(d, "P3"))), "R3: duplicate design_id P3")
     expect("item count", lambda d: d["design_basis"].update(item_count=165), "R3: item_count 165")
     expect("family counts", lambda d: d["design_basis"]["family_counts"].update({"presets": 99}), "R3: family_counts")
+    live_index = json.loads(gen.CATALOGUE_INDEX.read_text(encoding="utf-8"))
+    asserted_item = next(i for i in base["items"] if i.get("asserted"))["design_id"]
+    expect("R5 unknown record", lambda d: item(d, asserted_item)["asserted"].update(record="docs/plans/records/nope.md"), "R5: " + asserted_item + " cites record")
+    expect("R5 record not listed", lambda d: d["sources"]["records"].clear(), "R5: " + asserted_item + " cites record")
+    paged = next((i["design_id"], n, o) for i in base["items"] for n, o in enumerate(i["outputs"]) if o["id"] in live_index["by_feature_id"])
+    other = "EF2" if paged[2]["release"] != "EF2" else "EF3"
+    expect("R6 release disagrees with the catalogue family", lambda d: item(d, paged[0])["outputs"].__setitem__(paged[1], {**paged[2], "release": other}), "R6: " + paged[0] + " cites " + paged[2]["id"])
+    expect("R7 evidence does not resolve", lambda d: item(d, "P3")["evidence"].append({"kind": "gate", "ref": "tools/no_such_gate.py"}), "R7: P3 evidence")
+    stamped = next((i for i in base["items"] if i.get("asserted") and any(o["id"] in live_index["by_feature_id"] for o in i["outputs"])), None)
+    if stamped is not None:
+        sid = next(o["id"] for o in stamped["outputs"] if o["id"] in live_index["by_feature_id"])
+        expect("R8 stale stamp", lambda d: item(d, stamped["design_id"])["asserted"].update(contract_sha256={sid: "0" * 64}), "R8: " + stamped["design_id"] + " assertion is stale")
+    else:
+        failures.append("self-test R8: no asserted row cites a catalogue id to stamp")
+    expect("D2 marker wrong expiry", lambda d: d["pending_catalogue"].update(expires_at="never"), "D2: pending_catalogue must name")
+    expect("D2 marker id not planned", lambda d: d["pending_catalogue"]["ids"].append("candle.body_fraction"), "D2: marker ids differ")
+    expect("D2 marker removed while DV1 ids planned", lambda d: d.pop("pending_catalogue"), "D2: planned DV1 ids are cited with no pending_catalogue marker")
+    core_obj = gen.Core(core_root, ref)
+    manifest = json.loads(core_obj.read(gen.MANIFEST_PATH)[0].decode("utf-8"))
+    built, _ = gen.build(core_root, ref)
+    flagged = copy.deepcopy(manifest)
+    victim = next(r for r in flagged["outputs"] if r["canonical_name"] not in live_index["by_feature_id"])
+    victim["implemented_by_this_packet"] = True
+    if not any("R6: the manifest says" in e for e in rules_5_to_8(core_obj, base, built, live_index, flagged)):
+        failures.append("self-test R6 manifest implemented without catalogue: no finding")
+    with_dv1 = copy.deepcopy(live_index)
+    with_dv1["families_present"] = sorted(with_dv1["families_present"] + ["DV1"])
+    if not any("already has the DV1 family" in e for e in rules_5_to_8(core_obj, base, built, with_dv1, manifest)):
+        failures.append("self-test D2 expiry (catalogue has DV1 while marker present): no finding")
     doc, problems = gen.build(core_root, ref)
     shadow = copy.deepcopy(doc)
     one = next(o for i in shadow["items"] for o in i["outputs"] if o["producer_id"] is not None)
@@ -233,9 +336,9 @@ def main() -> int:
             print("  " + e)
         print("Fix the core map (core PR) or regenerate with: python tools/gen_coverage_table.py --core-root <core> --core-ref " + args.core_ref)
         return 1
-    print(f"coverage table OK (R1-R4, R1b, wording, schema, docs copy == regeneration from core {args.core_ref}"
+    print(f"coverage table OK (R1-R8, R1b, D2 marker, wording, schema, docs copy == regeneration from core {args.core_ref}"
           + ("; self-test fixtures all failed as expected" if args.self_test else "") + ")")
-    print("Not checked here: R5-R8 and the DV1 marker expiry (later change), packaged copy (CV2), pre-merge wiring (CV3).")
+    print("Not checked here: packaged copy (CV2), pre-merge wiring (CV3).")
     return 0
 
 
