@@ -4,7 +4,7 @@
 
 Scope: internal, synthetic, pre-release. Authority: core frozen contract; on conflict core wins and the gate fails.
 
-Catalogue version 0.1.0a6; families present: EF1, EF2, EF3, EF4, EF5. Schema `ef-contract-catalogue1`, described in [CATALOGUE.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/CATALOGUE.md).
+Catalogue version 0.1.0a7; families present: EF1, EF2, EF3, EF4, EF5. Schema `ef-contract-catalogue1`, described in [CATALOGUE.md](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/CATALOGUE.md).
 
 Each producer has an input view (what an adapter supplies) and an output view (what a consumer receives), as `.md` for reading and `.json` for programs, at `<producer_id>/input.*` and `<producer_id>/output.*`.
 

@@ -8,7 +8,7 @@
     "EF1 outputs: proposed, not frozen (RL-01-20).",
     "DV1 outputs: manifest says delivered, catalogue pages pending."
   ],
-  "catalogue_version": "0.1.0a6",
+  "catalogue_version": "0.1.0a7",
   "generated_from": {
     "core_map": {
       "path": "docs/plans/design-coverage-map.json",
@@ -20,7 +20,7 @@
       "core_commit": "c0ffedef4a324274774cbaf6946387015d3a11ef",
       "sha256_lf": "dce023c7a85e3731fe8c9e4b54d64f7b13cd8fd20a1de1156f8965494d02c5c5"
     },
-    "io_catalogue_index_sha256": "6e25e9d893ecec4b8ce15b5ac74fa3324cb5d1e8275cae333e331aa8fe294e66",
+    "io_catalogue_index_sha256": "98ec1e0ae1a5a1a28a661d16d161ed54bb9ef97b95452346f5618098a1f94b17",
     "design_basis": {
       "repo": "watchyourlist-design",
       "commit": "c439067644a0f5f0ef4d64138ff23e8bfcc9e81f",

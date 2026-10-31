@@ -12,7 +12,7 @@ CORE = {"equity-feature-contracts": "0.0.4a6", "equity-features": "0.0.4a7", "eq
 
 # Distributions owned by this repository (examples included).
 OWN = {
-    "equity-feature-io-contracts": "0.1.0a6",
+    "equity-feature-io-contracts": "0.1.0a7",
     "equity-feature-io-sdk": "0.1.0a3",
     "equity-feature-acquisition": "0.1.0a0",
     "equity-feature-files": "0.1.0a0",
