@@ -92,7 +92,7 @@ How to find a design feature. `catalogue/INDEX.md` has no pointer to the coverag
 
 Status words in the table: `implemented` (every load-bearing output the item cites is delivered), `partial` (some of the feature is delivered, or a cited output is not yet delivered or not frozen), `missing` (no output serves the feature; the row has no producer and no contract links), `differs` (the library has an output for the feature, but its definition is not the one the design describes, so values would silently differ; the row names the existing output and the planned variant, and stays `differs` until the variant exists with evidence), and `out_of_library_scope` (the design item is consumer-side, for example a threshold or a screen). Partial, differs and out_of_library_scope are asserted by the Product Owner with a record; implemented and missing are derived.
 
-The cold-read test of this layout (rule R10) is specified in [COLD_READ_R10.md](COLD_READ_R10.md); its record is pending an independent blind reader.
+The cold-read test of this layout (rule R10) is specified in [COLD_READ_R10.md](COLD_READ_R10.md); its record (one run on 2026-10-31, pass with limits) is in that file.
 
 ## Maintainers
 

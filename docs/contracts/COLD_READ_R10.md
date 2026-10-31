@@ -2,7 +2,7 @@
 
 Internal, synthetic, pre-release. Rule R10 of the coverage table design (acceptance criterion 3, ruling X8): a fresh reader who has not seen this repository finds, for three named design features, the status, the producer, the input contract and the output contract in under 5 minutes each. Failure means the layout is fixed, not the test.
 
-**Record status: PENDING INDEPENDENT BLIND READER. No cold read has been run.** The author of the coverage table cannot be the reader. This file holds the protocol and the record only. The expected answers are deliberately not in the repository; the coordinator holds them (they were given in the pull request that introduced this file), so a reader who is pointed at this file cannot see them.
+**Record status: RUN once on 2026-10-31 by a reader with no project knowledge; PASS with limits (see "Limits of this record").** The author of the coverage table was not the reader. This file holds the protocol and the record only; the expected answers are not in the repository.
 
 ## Protocol (give this section, and only this section, to the reader)
 
@@ -24,16 +24,23 @@ Also note, once, how many pages you opened before you found the coverage table, 
 - The INDEX pointer to the coverage table is deferred to CV2 (changing `INDEX.md` changes packaged bytes). Until then the path from `INDEX.md` is: its link to `CATALOGUE.md`, then the section "Feature coverage table", then `coverage/COVERAGE.md`. Record the extra hop; if it is the reason for a miss, that is a layout finding for CV2, not a reason to change the protocol.
 - Features were chosen per ruling X8: one implemented row on an EF3, EF4 or EF5 producer (V4), one `differs` row (P40), one `missing` row (P16). P5 and P10 are not used. Core-registry and planned-only features are not used for the timed test.
 
-## Record (appended by the reader's runner)
+## Record (run of 2026-10-31, repository at PR 80 head 57ac19c, docs-copy route)
 
 | Field | Value |
 | --- | --- |
-| Status | PENDING INDEPENDENT BLIND READER |
-| Reader and their prior knowledge of the repository | |
-| Date, route (docs copy or installed package) | |
-| V4: time, answers, correct? | |
-| P40: time, answers, correct? | |
-| P16: time, answers, correct? | |
-| Pages opened before the coverage table | |
-| Layout findings | |
-| Result (pass or fix the layout) | |
+| Status | RUN, PASS with limits |
+| Reader and their prior knowledge of the repository | A Claude sub-agent with no project knowledge. It opened this file, so it also saw the "Notes for the person running the read" section above, which names the hop INDEX.md, CATALOGUE.md, "Feature coverage table", coverage/COVERAGE.md. The read was therefore not fully blind. |
+| Date, route | 2026-10-31, docs copy (installed-package route not run; it waits for CV2) |
+| V4: time, answers, correct? | Under 5 minutes (not stopwatch-timed; three tool calls once COVERAGE.md was open). Status implemented; producer `ef3.adaptive_volume`; input and output pages under `catalogue/ef3.adaptive_volume/`. Consistent between the COVERAGE.md row and the producer output page "Design items served". |
+| P40: time, answers, correct? | Under 5 minutes (not stopwatch-timed). Status differs; existing output on `ef3.relative_stats` with its input and output pages; the planned variant has no io page and links to a core ownership-manifest pointer. Consistent with the producer output page. |
+| P16: time, answers, correct? | Under 5 minutes (not stopwatch-timed). Status missing; no producer; no contract links. Consistent with the status definition in CATALOGUE.md. |
+| Pages opened before the coverage table | 2 (INDEX.md, CATALOGUE.md), then COVERAGE.md |
+| Layout findings | INDEX.md links CATALOGUE.md only by an absolute GitHub URL, not a relative link. INDEX.md has no pointer to the coverage table (deferred to CV2). COVERAGE.md has no producer column; the producer is read from the link folder name or the output page. Also noted: INDEX.md alone cannot answer design-id questions (its lookup is by output feature id); CATALOGUE.md is long and the coverage section is near its end; the planned-variant link is a core JSON pointer, different in kind from the others; terms not understood on first read: EF3/EF4/EF5 family, core registry, DV1, ownership manifest, provisional. |
+| Result (pass or fix the layout) | PASS on all three features against the criterion (status, producer or none, input and output links found within 5 minutes each), with the limits below. Layout fixes recommended for CV2: relative link from INDEX.md to the coverage table, and a producer column in COVERAGE.md. |
+
+## Limits of this record
+
+- Not fully blind: the reader followed the hop named in the notes section of this file. Without it, an INDEX.md-only reader would have had to follow the absolute web URL (the main branch, which may differ from the checkout) or guess.
+- Not stopwatch-timed: "under 5 minutes" is the reader's account of the number of steps, not a measured time.
+- No answer key was available to the reader: "correct" means the answers were consistent across COVERAGE.md and the producer pages, not that they were checked against an independent key.
+- One reader, one run, docs-copy route only. The installed-package route is open until CV2.
