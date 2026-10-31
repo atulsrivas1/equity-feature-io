@@ -16,7 +16,7 @@ For every catalogue producer and each layer (io, workers) it compares what the c
 * dtype and unit (v2): in a dict that maps a catalogue feature id directly to a literal, or in a tuple or list that holds exactly
   one catalogue feature id, a literal that is a catalogue dtype value or a common dtype name such as int8 (or a catalogue unit value) must equal that feature id's catalogue dtype
   (or unit); otherwise MISMATCH;
-* schema_version (v2): a ``schema_version`` dict key or keyword whose literal is a digit string, in a container that holds a
+* schema_version (v2): a ``schema_version`` key of a dict literal (not a ``dict(...)`` or call keyword) whose literal is a digit string, in a container that holds a
   producer identity or catalogue feature id, must equal the catalogue schema_version; otherwise MISMATCH;
 * otherwise the producer is OK (identity and algorithm_version both declared in one container and equal) or NOT_DECLARED (the code
   does not state both as literals together, so nothing can be compared; counted and shown, never reported as OK). Every
@@ -82,12 +82,10 @@ def mapped(node: ast.AST, key: str) -> list[tuple[str, int]]:
 
 
 def schema_literals(node: ast.AST) -> list[tuple[str, int]]:
-    """Digit-string literals bound to ``schema_version`` as a dict key or a keyword argument."""
+    """Digit-string literals bound to ``schema_version`` as a key of a dict literal."""
     pairs: list[tuple[str, ast.AST]] = []
     if isinstance(node, ast.Dict):
         pairs = [(k.value, v) for k, v in zip(node.keys, node.values) if isinstance(k, ast.Constant) and isinstance(k.value, str)]
-    elif isinstance(node, ast.Call):
-        pairs = [(k.arg, k.value) for k in node.keywords if k.arg]
     return [(v.value, v.lineno) for k, v in pairs if k == "schema_version" and isinstance(v, ast.Constant) and isinstance(v.value, str) and DIGITS.match(v.value)]
 
 
@@ -142,8 +140,8 @@ def scan(paths: list[Path], base: Path, producers: list[dict[str, object]], vers
                 if v in units and v != m["unit"]:
                     find(m["producer_id"], f"MISMATCH {m['producer_id']}: {rel}:{line} declares unit {v!r} for {fid!r}, catalogue states {m['unit']!r}")
         for node in ast.walk(tree):
-            if isinstance(node, (ast.Dict, ast.Call)):
-                near = {v for _, group in containers(node) for v, _ in group} if isinstance(node, ast.Dict) else set()
+            if isinstance(node, ast.Dict):
+                near = {v for _, group in containers(node) for v, _ in group}
                 for v, line in schema_literals(node):
                     for pid in schema:
                         if pid in near and v != schema[pid]:
