@@ -89,3 +89,13 @@ The core contract states no reasons-reached table.
 | `intraday.stoch_d` | `intraday-momentum-v1` | float64 | stochastic points | 1 |
 | `intraday.stoch_k` | `intraday-momentum-v1` | float64 | stochastic points | 1 |
 | `intraday.williams_r` | `intraday-momentum-v1` | float64 | Williams %R points | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| P12 | Stochastic, ROC, Keltner, pivots, Fibonacci, Ichimoku | partial | primary | `intraday.stoch_d`, `intraday.stoch_k`, `intraday.williams_r` |
+| P4 | Oscillators and bands: RSI, MACD cross, Bollinger, squeeze, ATR/ADX, Donchian | partial | primary | `intraday.adx`, `intraday.macd_histogram`, `intraday.macd_line`, `intraday.macd_signal` |
+| S3 | Technical presets (73) and momentum presets (21) | partial | primary | `intraday.adx`, `intraday.macd_line`, `intraday.stoch_k` |

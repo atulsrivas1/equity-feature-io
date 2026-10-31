@@ -120,5 +120,6 @@
       "calculated_unavailable",
       "outside_tolerance|within_tolerance"
     ]
-  }
+  },
+  "design_items": []
 }

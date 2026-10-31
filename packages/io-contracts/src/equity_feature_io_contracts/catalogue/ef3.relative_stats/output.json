@@ -136,5 +136,53 @@
       "row_id": "row_id slot:<i> as emitted by the merged EF2 libraries (packages/intraday _flow.py: EvidenceRow(entity, feature, input_id, f'slot:{i}', ...)); the role is the input_id (instrument or benchmark); fixtures write instrument:slot:i as input:row"
     },
     "lost_slot_reasons": "for n < min_pairs, and for daily or intraday windows with holes, reasons are the causes of the lost pairs or slots only; insufficient_history is added ONLY when the window is not wholly inside the grid (RS01, DV01, RV01); on an AVAILABLE relative_stats output those same causes are carried as reasons and excluded evidence rows (existing rows only: null, unknown, future-known, gap; absent slots have no row)"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P40",
+      "title": "Beta to SPY/QQQ over N sessions",
+      "status": "differs",
+      "role": "existing_differs",
+      "feature_ids": [
+        "relative.beta"
+      ]
+    },
+    {
+      "design_id": "P41",
+      "title": "Correlation to SPY/QQQ",
+      "status": "differs",
+      "role": "existing_differs",
+      "feature_ids": [
+        "relative.correlation"
+      ]
+    },
+    {
+      "design_id": "P42",
+      "title": "Beta and correlation to the sector fund",
+      "status": "differs",
+      "role": "existing_differs",
+      "feature_ids": [
+        "relative.beta",
+        "relative.correlation"
+      ]
+    },
+    {
+      "design_id": "P8",
+      "title": "Relative strength vs SPY/QQQ/sector, residual, top/bottom decile",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "relative.residual_return"
+      ]
+    },
+    {
+      "design_id": "S5",
+      "title": "Relative strength (12) and cross-sectional deciles (10)",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "relative.residual_return"
+      ]
+    }
+  ]
 }

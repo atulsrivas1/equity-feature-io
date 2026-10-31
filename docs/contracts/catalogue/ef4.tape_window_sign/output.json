@@ -285,5 +285,28 @@
       "W11c",
       "W11d"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "V18",
+      "title": "Large-print uptick versus downtick volume",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "tape.tick.down_volume",
+        "tape.tick.imbalance",
+        "tape.tick.net_volume",
+        "tape.tick.up_volume"
+      ]
+    },
+    {
+      "design_id": "V19",
+      "title": "Opening-period (09:30-10:15) uptick share",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "tape.tick.imbalance"
+      ]
+    }
+  ]
 }

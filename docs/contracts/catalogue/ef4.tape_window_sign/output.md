@@ -132,3 +132,12 @@ Order: lexicographic by feature_id within a producer; each output has its own re
 | `tape.window.count` | `ef4-tape-window-v1` | int64 | trades | 1 |
 | `tape.window.notional` | `ef4-tape-window-v1` | decimal128 | currency coefficient / 10^price_scale | 1 |
 | `tape.window.volume` | `ef4-tape-window-v1` | int64 | shares | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| V18 | Large-print uptick versus downtick volume | partial | primary | `tape.tick.down_volume`, `tape.tick.imbalance`, `tape.tick.net_volume`, `tape.tick.up_volume` |
+| V19 | Opening-period (09:30-10:15) uptick share | partial | primary | `tape.tick.imbalance` |

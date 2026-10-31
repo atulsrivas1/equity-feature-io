@@ -144,3 +144,11 @@ Order: lexicographic by feature_id within a producer; each output has its own re
 | `vwap.path.point_count` | `ef4-vwap-path-v1` | int64 | points | 1 |
 | `vwap.slope.endpoint` | `ef4-vwap-path-v1` | float64 | currency/share/second | 1 |
 | `vwap.slope.ols` | `ef4-vwap-path-v1` | float64 | currency/share/second | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| P5 | VWAP: above/below, reclaim, slope, deviation | partial | primary | `vwap.path.last`, `vwap.slope.endpoint`, `vwap.slope.ols` |

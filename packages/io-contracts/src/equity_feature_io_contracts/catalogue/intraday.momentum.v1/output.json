@@ -358,5 +358,41 @@
     },
     "evidence": "R17 rules: actually supplied consumed or knowledge-excluded dependency rows, row_id slot:<global_index>, boundary completed_interval, sorted feature id then slot, truncated to the result-wide evidence_limit",
     "evidence_rule": "missing_input outputs have empty evidence rows; evidence lists only consumed rows or knowledge-excluded rows of dependency slots actually supplied"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P12",
+      "title": "Stochastic, ROC, Keltner, pivots, Fibonacci, Ichimoku",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "intraday.stoch_d",
+        "intraday.stoch_k",
+        "intraday.williams_r"
+      ]
+    },
+    {
+      "design_id": "P4",
+      "title": "Oscillators and bands: RSI, MACD cross, Bollinger, squeeze, ATR/ADX, Donchian",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "intraday.adx",
+        "intraday.macd_histogram",
+        "intraday.macd_line",
+        "intraday.macd_signal"
+      ]
+    },
+    {
+      "design_id": "S3",
+      "title": "Technical presets (73) and momentum presets (21)",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "intraday.adx",
+        "intraday.macd_line",
+        "intraday.stoch_k"
+      ]
+    }
+  ]
 }

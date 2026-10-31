@@ -154,3 +154,15 @@ Order: lexicographic by feature_id within a producer; each output has its own re
 | `pace.baseline_median` | `ef3-volume-pace-robust-v1` | float64 | shares | 1 |
 | `pace.ratio` | `ef3-volume-pace-robust-v1` | float64 | fraction | 1 |
 | `pace.robust_z` | `ef3-volume-pace-robust-v1` | float64 | fraction | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| S9 | Volume and liquidity presets (30) | partial | primary | `pace.ratio` |
+| V1 | 5-minute volume at least N times the same-minute median, with a pace floor | implemented | primary | `pace.ratio` |
+| V2 | 15-minute sustained volume | implemented | primary | `pace.ratio` |
+| V6 | Volume versus typical (1.5x to 5x, dry-up) | implemented | primary | `pace.ratio` |
+| V7 | Top 5%/1% of own same-minute history; robust z at least 3 | implemented | primary | `pace.robust_z` |

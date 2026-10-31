@@ -359,6 +359,47 @@ def index_md(index: dict[str, Any]) -> bytes:
     return "\n".join(L).encode("utf-8")
 
 
+def attach_design_items(files: dict[str, bytes], core_root: Path, ref: str) -> None:
+    """Reverse view (RL-01-15, CV1 part 3): add to each producer output page the design items that cite its feature ids.
+
+    Only ids that have a catalogue page appear (core-registry, planned and EF1-pointer ids appear in the coverage table only).
+    Items come from the core design coverage map; statuses are those of the coverage table.
+    """
+    import gen_coverage_table as cov  # noqa: PLC0415 - lazy: gen_coverage_table imports this module
+
+    doc, problems = cov.build(core_root, ref)
+    if problems:
+        raise SystemExit("coverage table: ids do not resolve:\n  " + "\n  ".join(problems))
+    by_producer: dict[str, list[dict[str, Any]]] = {}
+    for item in doc["items"]:
+        mine: dict[str, list[str]] = {}
+        roles: dict[str, str] = {}
+        for o in item["outputs"]:
+            if o["producer_id"] is not None:
+                mine.setdefault(o["producer_id"], []).append(o["feature_id"])
+                roles.setdefault(o["producer_id"], o["role"])
+        for pid, ids in mine.items():
+            by_producer.setdefault(pid, []).append({
+                "design_id": item["design_id"], "title": item["title"], "status": item["status"] + (" (provisional)" if item["provisional"] else ""),
+                "role": roles[pid], "feature_ids": sorted(set(ids))})
+    for name in sorted(k for k in files if k.endswith("/output.json")):
+        pid = name.split("/")[0]
+        view = json.loads(files[name].decode("utf-8"))
+        items = sorted(by_producer.get(pid, []), key=lambda i: i["design_id"])
+        view["design_items"] = items
+        files[name] = dumps(view)
+        md = files[pid + "/output.md"].decode("utf-8").rstrip("\n").split("\n")
+        md += ["", "## Design items served", "",
+               "Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the "
+               "[coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.", ""]
+        if items:
+            md += ["| design item | title | status | role | feature ids |", "| --- | --- | --- | --- | --- |"]
+            md += [f"| {i['design_id']} | {cell(i['title'])} | {i['status']} | {i['role']} | " + ", ".join(f"`{f}`" for f in i["feature_ids"]) + " |" for i in items]
+        else:
+            md += ["No design item cites a feature id of this producer."]
+        files[pid + "/output.md"] = ("\n".join(md) + "\n").encode("utf-8")
+
+
 def generate(core_root: Path, ref: str) -> dict[str, bytes]:
     """Return {relative path: bytes} of the whole catalogue (deterministic)."""
     files: dict[str, bytes] = {}
@@ -415,6 +456,7 @@ def generate(core_root: Path, ref: str) -> dict[str, bytes]:
     families = sorted({p["family"] for p in producers_index})
     index = {"schema": SCHEMA, "generated": GENERATED, "wording": WORDING, "authority": AUTHORITY, "catalogue_version": IO_CONTRACTS,
              "families_present": families, "contracts": contracts_index, "not_catalogued_core_files": deferred, "producers": producers_index, "by_feature_id": dict(sorted(by_feature.items()))}
+    attach_design_items(files, core_root, ref)
     files["index.json"] = dumps(index)
     files["INDEX.md"] = index_md(index)
     return dict(sorted(files.items()))

@@ -111,5 +111,16 @@
       "missing_action_evidence"
     ],
     "counts": "expected = closure slot count R (or the stated formula); observed = unique closure slots whose required fields, coverage and knowledge qualify"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P4",
+      "title": "Oscillators and bands: RSI, MACD cross, Bollinger, squeeze, ATR/ADX, Donchian",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "channel.squeeze.bollinger_inside_keltner"
+      ]
+    }
+  ]
 }

@@ -125,5 +125,6 @@
       "retracement": "prior_high then prior_low row",
       "unavailable": "no evidence"
     }
-  }
+  },
+  "design_items": []
 }

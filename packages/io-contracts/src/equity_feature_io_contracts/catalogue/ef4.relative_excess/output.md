@@ -171,3 +171,13 @@ Order: lexicographic by feature id within a producer; each output has its own re
 | `relative.session.secondary.window_excess_fraction` | `ef4-relative-excess-v1` | float64 | fraction | 1 |
 | `relative.session.sector.prior_close_excess_fraction` | `ef4-relative-excess-v1` | float64 | fraction | 1 |
 | `relative.session.sector.window_excess_fraction` | `ef4-relative-excess-v1` | float64 | fraction | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| M11 | Core-fund return spread (population standard deviation) | differs | existing_differs | `core.benchmark_return_dispersion_fraction` |
+| M12 | Core funds moving together (N of 3) | implemented | primary | `core.benchmark_direction_agreement_fraction` |
+| P8 | Relative strength vs SPY/QQQ/sector, residual, top/bottom decile | implemented | primary | `relative.session.primary.window_excess_fraction` |

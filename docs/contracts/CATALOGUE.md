@@ -91,6 +91,8 @@ Which design features the library serves, with each cited output id linked to it
     python tools/gen_coverage_table.py --core-root <core checkout> [--core-ref origin/main]    # writes docs/contracts/coverage/
     python tools/check_coverage_table.py --core-root <core checkout> [--self-test]             # R1-R8, D2 marker, wording, schema, docs copy == regeneration
 
+Each producer output page ends with a "Design items served" section (and `design_items` in `output.json`): the design items that cite a feature id of that producer, with their coverage status. Only ids that have a catalogue page appear there; core-registry, planned and EF1-pointer ids appear in the coverage table only.
+
 ## Maintainers
 
     python tools/gen_contract_catalogue.py --core-root <core checkout> [--core-ref origin/main]   # writes both copies

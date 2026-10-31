@@ -75,5 +75,16 @@
       "missing_action_evidence"
     ],
     "counts": "expected = closure slot count R (or the stated formula); observed = unique closure slots whose required fields, coverage and knowledge qualify"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "S7",
+      "title": "Volatility presets (8)",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "channel.band_width.percentile"
+      ]
+    }
+  ]
 }

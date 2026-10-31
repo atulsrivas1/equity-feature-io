@@ -79,3 +79,11 @@ The core contract states no reasons-reached table.
 | `session.venue_status.latest_event_ns` | `v1` | int64 | utc_ns | 1 |
 | `session.venue_status.quoting_any` | `v1` | bool | boolean | 1 |
 | `session.venue_status.restriction_any` | `v1` | bool | boolean | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| P30 | Trading halted now (with reason) | partial | primary | `session.venue_status.aggregate_reason`, `session.venue_status.aggregate_state`, `session.venue_status.restriction_any` |

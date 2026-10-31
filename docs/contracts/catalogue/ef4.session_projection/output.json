@@ -295,5 +295,55 @@
       "CB09",
       "CB10"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P11",
+      "title": "Mean reversion: N ATR or z-score from mean/VWAP; pullback in uptrend",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "projection.close_vs_sma_fraction"
+      ]
+    },
+    {
+      "design_id": "P3",
+      "title": "Moving average state: above/below SMA or EMA, reclaim, rejection, stack",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "projection.close_above_sma",
+        "projection.close_vs_sma_fraction"
+      ]
+    },
+    {
+      "design_id": "P9",
+      "title": "Realized vol, range expansion, choppiness, trend efficiency, range position, drawdown",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "projection.distance_from_low_fraction",
+        "projection.drawdown_fraction",
+        "projection.max_drawdown_fraction"
+      ]
+    },
+    {
+      "design_id": "S6",
+      "title": "Mean-reversion presets (10)",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "projection.close_vs_sma_fraction"
+      ]
+    },
+    {
+      "design_id": "V13",
+      "title": "Setup components (momentum, retest, pullbacks, SPY 5d, dollar volume)",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "projection.drawdown_fraction"
+      ]
+    }
+  ]
 }

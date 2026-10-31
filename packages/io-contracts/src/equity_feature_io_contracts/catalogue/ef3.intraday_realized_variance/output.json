@@ -117,5 +117,26 @@
       "row_id": "row_id slot:<i> as emitted by the merged EF2 libraries (packages/intraday _flow.py: EvidenceRow(entity, feature, input_id, f'slot:{i}', ...)); the role is the input_id (instrument or benchmark); fixtures write instrument:slot:i as input:row"
     },
     "lost_slot_reasons": "for n < min_pairs, and for daily or intraday windows with holes, reasons are the causes of the lost pairs or slots only; insufficient_history is added ONLY when the window is not wholly inside the grid (RS01, DV01, RV01); on an AVAILABLE relative_stats output those same causes are carried as reasons and excluded evidence rows (existing rows only: null, unknown, future-known, gap; absent slots have no row)"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P9",
+      "title": "Realized vol, range expansion, choppiness, trend efficiency, range position, drawdown",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "intraday.realized_variance",
+        "intraday.realized_volatility"
+      ]
+    },
+    {
+      "design_id": "S7",
+      "title": "Volatility presets (8)",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "intraday.realized_volatility"
+      ]
+    }
+  ]
 }

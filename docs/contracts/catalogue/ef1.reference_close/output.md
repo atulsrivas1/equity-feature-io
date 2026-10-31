@@ -67,3 +67,9 @@ The core contract states no reasons-reached table.
 | `reference.close.comparison_state` | `v1` | string | state | 1 |
 | `reference.close.supplied_price` | `v1` | decimal128 | currency/share | 1 |
 | `reference.close.within_tolerance` | `v1` | bool | boolean | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+No design item cites a feature id of this producer.

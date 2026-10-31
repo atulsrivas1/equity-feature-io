@@ -75,3 +75,11 @@ The core contract states no reasons-reached table.
 | `trend.ichimoku.leading_span_a_observed` | `ef2-channels-v1` | float64 | currency/share | 1 |
 | `trend.ichimoku.leading_span_b_displayed` | `ef2-channels-v1` | float64 | currency/share | 1 |
 | `trend.ichimoku.leading_span_b_observed` | `ef2-channels-v1` | float64 | currency/share | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| P12 | Stochastic, ROC, Keltner, pivots, Fibonacci, Ichimoku | partial | primary | `trend.ichimoku.base_line` |

@@ -313,5 +313,34 @@
       "CB09",
       "CB10"
     ]
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "M11",
+      "title": "Core-fund return spread (population standard deviation)",
+      "status": "differs",
+      "role": "existing_differs",
+      "feature_ids": [
+        "core.benchmark_return_dispersion_fraction"
+      ]
+    },
+    {
+      "design_id": "M12",
+      "title": "Core funds moving together (N of 3)",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "core.benchmark_direction_agreement_fraction"
+      ]
+    },
+    {
+      "design_id": "P8",
+      "title": "Relative strength vs SPY/QQQ/sector, residual, top/bottom decile",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "relative.session.primary.window_excess_fraction"
+      ]
+    }
+  ]
 }

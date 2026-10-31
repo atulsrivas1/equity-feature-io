@@ -116,3 +116,11 @@ Order: lexicographic by feature_id within a producer; each output has its own re
 | feature_id | algorithm_version | dtype | unit | schema_version |
 | --- | --- | --- | --- | --- |
 | `tape.top_k_notional` | `ef4-top-k-notional-v1` | top_k_trades | bounded original trade-row evidence | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| V17 | Large prints at least $100k: count, share, size-weighted price versus VWAP | partial | primary | `tape.top_k_notional` |

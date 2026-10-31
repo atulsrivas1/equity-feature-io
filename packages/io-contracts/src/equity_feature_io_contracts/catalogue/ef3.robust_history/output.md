@@ -158,3 +158,16 @@ Order: lexicographic by feature_id within a producer; each output has its own re
 | `robust.median` | `ef3-robust-history-v1` | float64 | operand-defined | 1 |
 | `robust.percentile_rank` | `ef3-robust-history-v1` | float64 | fraction | 1 |
 | `robust.quantile` | `ef3-robust-history-v1` | float64 | operand-defined | 1 |
+
+## Design items served
+
+Design items (from the core design coverage map) that cite a feature id of this producer. Status is the one in the [coverage table](https://github.com/atulsrivas1/equity-feature-io/blob/main/docs/contracts/coverage/COVERAGE.md); internal, synthetic, pre-release.
+
+| design item | title | status | role | feature ids |
+| --- | --- | --- | --- | --- |
+| M20 | Volatility-index close or percentile of 252 closes | partial | primary | `robust.percentile_rank` |
+| P8 | Relative strength vs SPY/QQQ/sector, residual, top/bottom decile | implemented | primary | `cohort.percentile_rank`, `cohort.rank` |
+| S5 | Relative strength (12) and cross-sectional deciles (10) | implemented | primary | `cohort.percentile_rank` |
+| U8 | 20-session median dollar volume | partial | primary | `robust.median` |
+| V7 | Top 5%/1% of own same-minute history; robust z at least 3 | implemented | primary | `robust.percentile_rank` |
+| V9 | Absolute volume; decile by dollar volume | partial | primary | `cohort.rank` |

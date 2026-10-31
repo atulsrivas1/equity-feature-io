@@ -87,5 +87,16 @@
       "retracement": "prior_high then prior_low row",
       "unavailable": "no evidence"
     }
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "P12",
+      "title": "Stochastic, ROC, Keltner, pivots, Fibonacci, Ichimoku",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "retracement.level"
+      ]
+    }
+  ]
 }

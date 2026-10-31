@@ -261,5 +261,35 @@
     },
     "aligned_with": "contract E reason table (DP-Q1): future_market is incomplete_coverage ordered after governed_gap; empty_universe precedes zero_denominator",
     "rule": "all applicable reasons retained lexically; status follows the first applicable reason in precedence; value null exactly when not available; available requires observed = expected"
-  }
+  },
+  "design_items": [
+    {
+      "design_id": "V3",
+      "title": "Pace versus own EWMA pace",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "adaptive.volume.baseline_rate",
+        "adaptive.volume.peak_relative_rate"
+      ]
+    },
+    {
+      "design_id": "V4",
+      "title": "Volume acceleration",
+      "status": "implemented",
+      "role": "primary",
+      "feature_ids": [
+        "adaptive.volume.peak_relative_acceleration"
+      ]
+    },
+    {
+      "design_id": "V5b",
+      "title": "End-of-day maximum 5-minute multiple",
+      "status": "partial",
+      "role": "primary",
+      "feature_ids": [
+        "adaptive.volume.peak_relative_rate"
+      ]
+    }
+  ]
 }
